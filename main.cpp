@@ -398,17 +398,7 @@ int main(int argc, char **argv) {
 
         // END INTERCEPTION CALC //
 
-        // BEGIN DISPLAY MATS //
 
-        cv::imshow("Thresholded Image", imgThresholded);
-        cv::moveWindow("Thresholded Image", 0, 0);
-        imgBGR = imgBGR + imgLines + contourImage;
-        cv::imshow("Original", imgBGR);
-        cv::moveWindow("Original", 0, 600);
-        cv::imshow("Top down view", topDown);
-        cv::moveWindow("Top down view", 800, 600);
-
-        // END DISPLAY MATS //
 
         // BEGIN TOPDOWN TEXT DRAWING
 
@@ -424,11 +414,21 @@ int main(int argc, char **argv) {
 
         // END TOPDOWN TEXT DRAWING //
 
+        // BEGIN DISPLAY MATS //
 
+        cv::imshow("Thresholded Image", imgThresholded);
+        cv::moveWindow("Thresholded Image", 0, 0);
+        imgBGR = imgBGR + imgLines + contourImage;
+        cv::imshow("Original", imgBGR);
+        cv::moveWindow("Original", 0, 600);
+        cv::imshow("Top down view", topDown);
+        cv::moveWindow("Top down view", 800, 600);
+
+        // END DISPLAY MATS //
 
         // END OF LOOP //
 
-        if (cv::waitKey(30) == 27) {
+        if (cv::waitKey(1) == 27) { //TODO find best value for performance
             std::cout << "esc key pressed; ending program" << std::endl;
             break;
         }

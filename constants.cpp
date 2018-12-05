@@ -8,10 +8,10 @@ using namespace std;
 int LOW_HUE = 0;
 int HIGH_HUE = 5;
 
-int LOW_SATURATION = 126;
+int LOW_SATURATION = 149;
 int HIGH_SATURATION = 255;
 
-int LOW_VALUE = 92;
+int LOW_VALUE = 110;
 int HIGH_VALUE = 255;
 
 int MORPHOLOGICAL_OPENING_SIZE = 10;
