@@ -11,39 +11,6 @@
 using realClock = std::chrono::high_resolution_clock;
 
 
-
-class circularBufferPoint2f {
-private:
-    std::vector<cv::Point2f> contents;
-public:
-    explicit circularBufferPoint2f(std::vector<cv::Point2f> input) {
-        contents = input;
-    }
-
-    void reset(std::vector<cv::Point2f> input) {
-        contents = input;
-    }
-
-    int getLength() {
-        return contents.size();
-    }
-
-    std::vector<cv::Point2f> getVector(){
-        return contents;
-    };
-
-    void push(cv::Point inputPoint) {
-        // simple rotation to the right
-        std::rotate(contents.rbegin(), contents.rbegin() + 1, contents.rend());
-        // replace first element
-        contents[0] = inputPoint;
-    }
-
-    cv::Point getElement(int index) {
-        return contents[index];
-    }
-};
-
 template<typename T, typename A>
 void circularPush ( std::vector<T,A> vec, T element ) {
     std::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());
@@ -51,29 +18,16 @@ void circularPush ( std::vector<T,A> vec, T element ) {
     vec[0] = element;
 }
 
+class Camera {
+    public:
+        cv::VideoCapture cap;
+        explicit Camera(){
 
+        }
+    };
 
-
-int main(int argc, char **argv) {
-    auto startTime = realClock::now();
-
-
-
-    // INIT CAMERA
-    cv::VideoCapture cap(0);
-    std::vector<cv::Point2f> defaultBuffer = {cv::Point2f(2,2)};
-    circularBufferPoint2f buffer(defaultBuffer);
-
-    if (!cap.isOpened()) {
-        std::cout << "webcam failure; is another openCV program running?" << std::endl;
-        return -1;
-    }
-
-
-    cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
-
-    std::cout << "starting control window" << std::endl;
-
+class Interface {
+public:
     int iLowH = LOW_HUE;
     int iHighH = HIGH_HUE;
 
@@ -82,25 +36,49 @@ int main(int argc, char **argv) {
 
     int iLowV = LOW_VALUE;
     int iHighV = HIGH_VALUE;
+    explicit Interface(){
+        cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
+        cvCreateTrackbar("LowH", "Control", &iLowH, 179); //Hue
+        cvCreateTrackbar("HighH", "Control", &iHighH, 179);
+
+        cvCreateTrackbar("LowS", "Control", &iLowS, 255); //Saturation
+        cvCreateTrackbar("HighS", "Control", &iHighS, 255);
+
+        cvCreateTrackbar("LowV", "Control", &iLowV, 255); //Value
+        cvCreateTrackbar("HighV", "Control", &iHighV, 255);
+        cv::moveWindow("Control", 500, 500);
+    }
+};
+
+class ImageProcessor{
+public:
+    cv::Mat convertThresholded(cv::Mat imgBGR){
+
+    }
+};
+
+void init() {
+    Camera cam;
+
+}
+
+
+int main(int argc, char **argv) {
+    auto startTime = realClock::now();
+
+
+
+    // INIT CAMERA
+    //Camera cameraObj = Camera(); // Starts camera
+    Interface interfaceObj; // Starts interface
+
+
+
+
 
     int previousX = -1;
     int previousY = -1;
     int frameCounter = 0;
-
-
-    //Create trackbars in "Control" window
-
-    // TODO find out why this does not require cv:: ?
-
-    cvCreateTrackbar("LowH", "Control", &iLowH, 179); //Hue
-    cvCreateTrackbar("HighH", "Control", &iHighH, 179);
-
-    cvCreateTrackbar("LowS", "Control", &iLowS, 255); //Saturation
-    cvCreateTrackbar("HighS", "Control", &iHighS, 255);
-
-    cvCreateTrackbar("LowV", "Control", &iLowV, 255); //Value
-    cvCreateTrackbar("HighV", "Control", &iHighV, 255);
-
 
     cv::Mat imgBGR;
     cv::Mat imgLines;
@@ -109,41 +87,51 @@ int main(int argc, char **argv) {
     cv::Point2f meanPoint;
     meanPoint = cv::Point2f(-1,-1);
 
+    // START CAMERA INIT //
+
+    std::cout << "init camera";
+    cv::VideoCapture cap(0);
+    if (!cap.isOpened()) {
+        std::cout << "webcam failure; is another openCV program running?" << std::endl;
+        return -1;
+    }
+
+    // END CAMERA INIT //
+
+    // START LOOP
     while (true) {
-
-
         std::vector<cv::Point> largest_contour;
         int largest_area = 0;
-        int largest_contour_index = 0;
-        cv::Rect bounding_rect;
+
 
         auto startFrameTime = realClock::now();
 
 
         frameCounter++;
 
-        // IMAGE CAPTURE //
 
 
-        bool captureSuccess = cap.read(imgBGR); // read frame from camera
+        // START IMAGE CAPTURE //
 
+        bool captureSuccess = cap.read(imgBGR);
         if (!captureSuccess) {
             std::cout << "Cannot read a frame from video stream" << std::endl;
             break;
         }
 
-        if (frameCounter % 30 == 1) {
-            imgLines = cv::Mat::zeros(imgBGR.size(), CV_8UC3);
-        }
+        //
 
+
+        // END IMAGE CAPTURE //
+
+        // START IMAGE CONVERSION //
 
         cv::Mat imgHSV;
-
         cv::cvtColor(imgBGR, imgHSV, cv::COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
 
         cv::Mat imgThresholded;
 
-        cv::inRange(imgHSV, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV), imgThresholded);
+        cv::inRange(imgHSV, cv::Scalar(interfaceObj.iLowH, interfaceObj.iLowS, interfaceObj.iLowV), cv::Scalar(interfaceObj.iHighH, interfaceObj.iHighS, interfaceObj.iHighV), imgThresholded);
 
         // some filtering
 
@@ -153,12 +141,10 @@ int main(int argc, char **argv) {
         dilate(imgThresholded, imgThresholded,
                getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
 
-        //morphological closing
-//        dilate(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(MORPHOLOGICAL_CLOSING_SIZE, MORPHOLOGICAL_CLOSING_SIZE)));
-//        erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(MORPHOLOGICAL_CLOSING_SIZE, MORPHOLOGICAL_CLOSING_SIZE)));
+        // END IMAGE CONVERSION //
 
 
-        // CONTOUR FINDING //
+        // START CONTOUR FINDING //
         std::vector<std::vector<cv::Point> > contours;
         cv::Mat contourOutput = imgThresholded.clone();
         cv::findContours(contourOutput, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
@@ -171,12 +157,13 @@ int main(int argc, char **argv) {
         colors[2] = cv::Scalar(0, 0, 255);
 
         std::vector<std::vector<cv::Point>> contours_poly(contours.size());
-        cv::Point2f onecenter;
+        cv::Point_<float> onecenter;
         float oneradius;
 
         for (size_t idx = 0; idx < contours.size(); idx++) {
 
             cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+            // TODO find difference between drawContours here and 20 lines below
 
             double a = contourArea(contours[idx], false);  //  Find the area of contour
             if (a > largest_area) {
@@ -184,7 +171,6 @@ int main(int argc, char **argv) {
                 largest_area = a;
 
                 largest_contour = contours[idx];
-                largest_contour_index = idx;                //Store the index of largest contour
                 cv::approxPolyDP(cv::Mat(contours[idx]), contours_poly[idx], 3, true);
 
                 cv::minEnclosingCircle((cv::Mat) contours_poly[idx], onecenter, oneradius);
@@ -192,6 +178,10 @@ int main(int argc, char **argv) {
 
             }
         }
+
+        // END CONTOUR FINDING //
+
+        // START CONTOUR, BALL DRAWING //
         cv::Mat drawing = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);;
         cv::Scalar color = cv::Scalar(255, 255, 255);
 
@@ -201,9 +191,15 @@ int main(int argc, char **argv) {
         }
         cv::circle(contourImage, onecenter, (int) oneradius, color, 2, 8, 0);
 
-        // IMAGE DRAWING //
+        // END CONTOUR, BALL DRAWING //
 
 
+        // DRAWING BALL TRAIL START START //
+
+        // refresh trail every 30 frames
+        if (frameCounter % 30 == 1) {
+            imgLines = cv::Mat::zeros(imgBGR.size(), CV_8UC3);
+        }
 
         int currentX = onecenter.x;
         int currentY = onecenter.y;
@@ -211,25 +207,16 @@ int main(int argc, char **argv) {
         if (previousX >= 0 && previousY >= 0 && currentX >= 0 && currentY >= 0) {
 
             cv::line(imgLines, cv::Point(currentX, currentY), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0), 10);
+            // drawing blue line on original image
         }
 
         previousX = currentX;
         previousY = currentY;
 
-        // SPEED LINE //
+        // DRAWING BALL TRAIL END //
 
 
-        cv::imshow("Thresholded Image", imgThresholded);
-        cv::moveWindow("Thresholded Image", 0, 0);
-        imgBGR = imgBGR + imgLines + contourImage;
-        cv::imshow("Original", imgBGR);
-        cv::moveWindow("Original", 0, 600);
-
-
-
-
-        // DISTANCE AND ANGLE CALCULATION //
-
+        // START CARTESIAN X,Y CALCULATION //
         float distance = (REAL_RADIUS * FOCAL_LENGTH) / oneradius;
 
 
@@ -244,9 +231,13 @@ int main(int argc, char **argv) {
         x = distance * cos(angleRadians);
         y = distance * sin(angleRadians);
 
+        // END X,Y CALCULATION //
 
 
+        // TODO find out difference prevX, previousX, x, currentX
 
+
+        // START POSITION MEAN CALCULATION //
 
         cv::Point2f prevPoint;
 
@@ -260,8 +251,11 @@ int main(int argc, char **argv) {
 
         cv::Point2f prevMean = meanPoint;
         std::vector<double> timeVector;
+        std::vector<cv::Point2f> pointBuffer;
+
 
         if (frameCounter < BUFFER_SIZE){
+            pointBuffer.push_back(cartesianPoint);
             meanPoint = cartesianPoint;
 
 //            auto currentTime= realClock::now() - startTime;
@@ -269,37 +263,31 @@ int main(int argc, char **argv) {
 //            timeVector.push_back(currentTimeSeconds);
             //push back
         }
-
-        if (frameCounter == BUFFER_SIZE) {
-            std::vector<cv::Point2f> v = {cartesianPoint, prevPoint};
-            buffer.reset(v);
-        }
-
-        if (frameCounter > BUFFER_SIZE){
-            buffer.push(cartesianPoint);
-        }
-
         if (frameCounter >=  BUFFER_SIZE) {
-            std::vector<cv::Point2f> points=buffer.getVector();
-            cv::Point2f zero(0.0f, 0.0f);
-            cv::Point2f sum  = accumulate(points.begin(), points.end(), zero);
+            // circular push
+            circularPush(pointBuffer, cartesianPoint);
 
-            meanPoint = cv::Point2f(sum.x / points.size(), sum.y / points.size());
+            // calculate mean of points
+
+            cv::Point2f zero(0.0f, 0.0f);
+            cv::Point2f sum  = accumulate(pointBuffer.begin(), pointBuffer.end(), zero);
+
+            meanPoint = cv::Point2f(sum.x / pointBuffer.size(), sum.y / pointBuffer.size());
 
 //            auto currentTime= realClock::now() - startTime;
 //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
 //            circularPush(timeVector, currentTimeSeconds);
-
-
         }
+
+        // END POSITION MEAN CALCULATION //
+
         // atan uses radians
 
-        // BALL SPEED CALC //
         auto endFrameTime = realClock::now();
         auto dT = (startFrameTime - endFrameTime);
         double dTime = std::chrono::duration<double>(dT).count(); //convert to seconds
 
-
+        // BEGIN BALL SPEED CALC  //
 
         cv::Point2f speedPoint;
 
@@ -308,13 +296,13 @@ int main(int argc, char **argv) {
         // TODO calculate average derivative
         if (COMPLICATED_DIFFERENCE_CALCULATION && frameCounter >=  BUFFER_SIZE){
 
-            std::vector<cv::Point2f> points=buffer.getVector();
-            std::vector<cv::Point2f> derivatives;
-            for (int firstIndex = 0; firstIndex < points.size()-1; ++firstIndex){
-                for (int secondIndex = firstIndex+1; secondIndex < points.size(); ++secondIndex){
 
-                    cv::Point2f firstPoint = buffer.getElement(firstIndex);
-                    cv::Point2f secondPoint = buffer.getElement(secondIndex);
+            std::vector<cv::Point2f> derivatives;
+            for (int firstIndex = 0; firstIndex < pointBuffer.size()-1; ++firstIndex){
+                for (int secondIndex = firstIndex+1; secondIndex < pointBuffer.size(); ++secondIndex){
+
+                    cv::Point2f firstPoint = pointBuffer[firstIndex];
+                    cv::Point2f secondPoint = pointBuffer[secondIndex];
                     double firstTime = timeVector[firstIndex];
                     double secondTime = timeVector[secondIndex];
 
@@ -336,16 +324,15 @@ int main(int argc, char **argv) {
             speedPoint = pointDifference/dTime;
         }
 
-
-
-
-
         float ballSpeed = sqrt(speedPoint.x*speedPoint.x + speedPoint.y*speedPoint.y);
 
         std::cout << "distance=" << distance << ", angle=" << angleDegrees << std::endl;
         std::cout << "x=" << distance << ", y=" << angleDegrees << std::endl;
         std::cout << "ballspeed in cm/s:" << ballSpeed << std::endl;
-        // DRAWING FIELD OF VIEW STUFF //
+
+        // END BALL SPEED CALC //
+
+        // DRAWING TOP DOWN MAP STUFF //
 
 
         cv::Mat topDown = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);;
@@ -375,7 +362,9 @@ int main(int argc, char **argv) {
 
         cv::line(topDown, topDownBallPos, (topDownBallPos+(speedPoint*1)), orange, 2); //speed line
 
-        // interception line
+        // END OF TOP DOWN INIT //
+
+        // BEGIN INTERCEPTION CALC //
         cv::Point2f interceptPos;
 
         if (speedPoint.x >= 0){
@@ -404,6 +393,22 @@ int main(int argc, char **argv) {
         // detemrine topdown interceptpos
         cv::line(topDown, cameraXandY, cameraXandY+(interceptPos*1), bluegray, 2); //speed line
 
+        // END INTERCEPTION CALC //
+
+        // BEGIN DISPLAY MATS //
+
+        cv::imshow("Thresholded Image", imgThresholded);
+        cv::moveWindow("Thresholded Image", 0, 0);
+        imgBGR = imgBGR + imgLines + contourImage;
+        cv::imshow("Original", imgBGR);
+        cv::moveWindow("Original", 0, 600);
+        cv::imshow("Top down view", topDown);
+        cv::moveWindow("Top down view", 800, 600);
+
+        // END DISPLAY MATS //
+
+        // BEGIN TOPDOWN TEXT DRAWING
+
         cv::String text1 = "x=" + to_string(meanPoint.x);
         cv::putText(topDown, text1, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
 
@@ -412,16 +417,12 @@ int main(int argc, char **argv) {
 
         cv::String text3 = "speed=" + to_string(ballSpeed);
         cv::putText(topDown, text3, cv::Point(10, IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
-//
-//        String text4  = "y=" + to_string(y);
-//        putText(topDown,text2,cv::Point(10,IMAGE_HEIGHT), FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2,LINE_AA);
+
+
+        // END TOPDOWN TEXT DRAWING //
 
 
 
-
-
-        cv::imshow("Top down view", topDown);
-        cv::moveWindow("Top down view", 800, 600);
         // END OF LOOP //
 
         if (cv::waitKey(30) == 27) {
@@ -443,8 +444,7 @@ int main(int argc, char **argv) {
 
 // TODO make code more function / object oriented
 // TODO refactor terms to show what is meant when talking about "x" "y" "radius" and "distance" in different contexts (real life vs pixels)
-// TODO medium term: optimize code (use less unneeded vectors, stop using namespaces)
-// TODO get rid of circularbuffer class and just use a function
+// TODO medium term: optimize code (use less unneeded vectors)
 // TODO add comments
 
 // the todos below only work when we have a camera on the robot and te robot is on the field
