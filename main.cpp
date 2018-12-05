@@ -53,7 +53,8 @@ public:
 class ImageProcessor{
 public:
     cv::Mat convertThresholded(cv::Mat imgBGR){
-
+// TODO implement
+// TODO pass interface obj here by reference?
     }
 };
 
@@ -62,6 +63,8 @@ void init() {
 
 }
 
+std::vector<double> timeVector;
+std::vector<cv::Point2f> pointVector;
 
 int main(int argc, char **argv) {
     auto startTime = realClock::now();
@@ -100,6 +103,7 @@ int main(int argc, char **argv) {
 
     // START LOOP
     while (true) {
+        frameCounter++;
         std::vector<cv::Point> largest_contour;
         int largest_area = 0;
 
@@ -107,7 +111,7 @@ int main(int argc, char **argv) {
         auto startFrameTime = realClock::now();
 
 
-        frameCounter++;
+
 
 
 
@@ -238,7 +242,7 @@ int main(int argc, char **argv) {
 
 
         // START POSITION MEAN CALCULATION //
-
+        
         cv::Point2f prevPoint;
 
         prevPoint.x = prevX;
@@ -250,12 +254,11 @@ int main(int argc, char **argv) {
         cartesianPoint.y = y;
 
         cv::Point2f prevMean = meanPoint;
-        std::vector<double> timeVector;
-        std::vector<cv::Point2f> pointBuffer;
+
 
 
         if (frameCounter < BUFFER_SIZE){
-            pointBuffer.push_back(cartesianPoint);
+            pointVector.push_back(cartesianPoint);
             meanPoint = cartesianPoint;
 
 //            auto currentTime= realClock::now() - startTime;
@@ -265,14 +268,14 @@ int main(int argc, char **argv) {
         }
         if (frameCounter >=  BUFFER_SIZE) {
             // circular push
-            circularPush(pointBuffer, cartesianPoint);
+            circularPush(pointVector, cartesianPoint);
 
             // calculate mean of points
 
             cv::Point2f zero(0.0f, 0.0f);
-            cv::Point2f sum  = accumulate(pointBuffer.begin(), pointBuffer.end(), zero);
+            cv::Point2f sum  = accumulate(pointVector.begin(), pointVector.end(), zero);
 
-            meanPoint = cv::Point2f(sum.x / pointBuffer.size(), sum.y / pointBuffer.size());
+            meanPoint = cv::Point2f(sum.x / pointVector.size(), sum.y / pointVector.size());
 
 //            auto currentTime= realClock::now() - startTime;
 //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
@@ -298,11 +301,11 @@ int main(int argc, char **argv) {
 
 
             std::vector<cv::Point2f> derivatives;
-            for (int firstIndex = 0; firstIndex < pointBuffer.size()-1; ++firstIndex){
-                for (int secondIndex = firstIndex+1; secondIndex < pointBuffer.size(); ++secondIndex){
+            for (int firstIndex = 0; firstIndex < pointVector.size()-1; ++firstIndex){
+                for (int secondIndex = firstIndex+1; secondIndex < pointVector.size(); ++secondIndex){
 
-                    cv::Point2f firstPoint = pointBuffer[firstIndex];
-                    cv::Point2f secondPoint = pointBuffer[secondIndex];
+                    cv::Point2f firstPoint = pointVector[firstIndex];
+                    cv::Point2f secondPoint = pointVector[secondIndex];
                     double firstTime = timeVector[firstIndex];
                     double secondTime = timeVector[secondIndex];
 
