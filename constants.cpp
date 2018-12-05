@@ -1,6 +1,7 @@
 //
 // Created by freek on 21/11/18.
 //
+#include <cmath>
 
 using namespace std;
 // orange ball constants outside roboteam office
