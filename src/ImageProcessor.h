@@ -6,6 +6,8 @@
 #define TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H
 
 
+#include <opencv2/core/mat.hpp>
+
 class ImageProcessor {
 public:
     cv::Mat convertThresholded(cv::Mat imgBGR) {
@@ -13,7 +15,6 @@ public:
 // TODO pass interface obj here by reference?
     }
 };
-
 
 
 #endif //TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H

@@ -7,7 +7,7 @@
 
 
 #include <cv.hpp>
-#include "constants.cpp"
+#include "Constants.h"
 
 class Interface {
 public:

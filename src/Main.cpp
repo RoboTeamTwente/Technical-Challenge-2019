@@ -1,27 +1,13 @@
-#include "Constants.h"
-#include <iostream>
-#include "opencv2/highgui/highgui.hpp"
-#include "Interface.h"
+// Main.cpp
+//
 
-#include <chrono>
-#include <opencv2/imgproc.hpp>
-
-using realClock = std::chrono::high_resolution_clock;
-
-
-template<typename T, typename A>
-void circularPush(std::vector<T, A> vec, T element) {
-    std::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());
-    // replace first element
-    vec[0] = element;
-}
-
+#include "Main.h"
 
 std::vector<double> timeVector;
 std::vector<cv::Point2f> pointVector;
 
 int main(int argc, char **argv) {
-    auto startTime = realClock::now();
+    auto startTime = std::chrono::high_resolution_clock::now();
 
 
 
@@ -62,7 +48,7 @@ int main(int argc, char **argv) {
         int largest_area = 0;
 
 
-        auto startFrameTime = realClock::now();
+        auto startFrameTime = std::chrono::high_resolution_clock::now();
 
 
 
@@ -218,7 +204,7 @@ int main(int argc, char **argv) {
             pointVector.push_back(cartesianPoint);
             meanPoint = cartesianPoint;
 
-//            auto currentTime= realClock::now() - startTime;
+//            auto currentTime= std::chrono::high_resolution_clock::now() - startTime;
 //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
 //            timeVector.push_back(currentTimeSeconds);
             //push back
@@ -234,7 +220,7 @@ int main(int argc, char **argv) {
 
             meanPoint = cv::Point2f(sum.x / pointVector.size(), sum.y / pointVector.size());
 
-//            auto currentTime= realClock::now() - startTime;
+//            auto currentTime= std::chrono::high_resolution_clock::now() - startTime;
 //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
 //            circularPush(timeVector, currentTimeSeconds);
         }
@@ -243,7 +229,7 @@ int main(int argc, char **argv) {
 
         // atan uses radians
 
-        auto endFrameTime = realClock::now();
+        auto endFrameTime = std::chrono::high_resolution_clock::now();
         auto dT = (startFrameTime - endFrameTime);
         double dTime = std::chrono::duration<double>(dT).count(); //convert to seconds
 
@@ -400,24 +386,4 @@ int main(int argc, char **argv) {
     return 0;
 
 }
-
-
-
-
-
-
-// TODO make code more function / object oriented
-// TODO refactor terms to show what is meant when talking about "x" "y" "radius" and "distance" in different contexts (real life vs pixels)
-// TODO medium term: optimize code (use less unneeded vectors)
-// TODO add comments
-
-// the todos below only work when we have a camera on the robot and te robot is on the field
-// TODO medium term: use y position in distance estimation because we are close to ground
-// TODO medium term: find edge of green field and only look within that, instead of using ypos
-// TODO medium term: ask Thijs for very efficient pixel detection code
-
-// TODO long term: correct for weird camera fish eye stuf
-// TODO long term: add object tracking so that we don't panic if the ball is partially covered
-// TODO long term: combine HSV with laplace or other edge detection for better ball pos
-// TODO long term: use other filters instead of moving average
 
