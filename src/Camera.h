@@ -10,6 +10,9 @@
 
 class Camera {
     cv::VideoCapture cap;
+    int frameCounter;
+    int previousCameraBallX;
+    int previousCameraBallY;
 };
 
 
