@@ -1,30 +1,28 @@
+#include "constants.cpp"
 #include <iostream>
 #include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
 
-#include <numeric>
-#include <ctime>
 #include <chrono>
-
-#include "constants.cpp"
+#include <opencv2/imgproc.hpp>
 
 using realClock = std::chrono::high_resolution_clock;
 
 
 template<typename T, typename A>
-void circularPush ( std::vector<T,A> vec, T element ) {
+void circularPush(std::vector<T, A> vec, T element) {
     std::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());
     // replace first element
     vec[0] = element;
 }
 
 class Camera {
-    public:
-        cv::VideoCapture cap;
-        explicit Camera(){
+public:
+    cv::VideoCapture cap;
 
-        }
-    };
+    explicit Camera() {
+        // TODO camera constructor
+    }
+};
 
 class Interface {
 public:
@@ -36,7 +34,8 @@ public:
 
     int iLowV = LOW_VALUE;
     int iHighV = HIGH_VALUE;
-    explicit Interface(){
+
+    explicit Interface() {
         cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
         cvCreateTrackbar("LowH", "Control", &iLowH, 179); //Hue
         cvCreateTrackbar("HighH", "Control", &iHighH, 179);
@@ -50,9 +49,10 @@ public:
     }
 };
 
-class ImageProcessor{
+
+class ImageProcessor {
 public:
-    cv::Mat convertThresholded(cv::Mat imgBGR){
+    cv::Mat convertThresholded(cv::Mat imgBGR) {
 // TODO implement
 // TODO pass interface obj here by reference?
     }
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
     float x = -1;
     float y = -1;
     cv::Point2f meanPoint;
-    meanPoint = cv::Point2f(-1,-1);
+    meanPoint = cv::Point2f(-1, -1);
 
     // START CAMERA INIT //
 
@@ -135,15 +135,18 @@ int main(int argc, char **argv) {
 
         cv::Mat imgThresholded;
 
-        cv::inRange(imgHSV, cv::Scalar(interfaceObj.iLowH, interfaceObj.iLowS, interfaceObj.iLowV), cv::Scalar(interfaceObj.iHighH, interfaceObj.iHighS, interfaceObj.iHighV), imgThresholded);
+        cv::inRange(imgHSV, cv::Scalar(interfaceObj.iLowH, interfaceObj.iLowS, interfaceObj.iLowV),
+                    cv::Scalar(interfaceObj.iHighH, interfaceObj.iHighS, interfaceObj.iHighV), imgThresholded);
 
         // some filtering
 
         //morphological opening
         erode(imgThresholded, imgThresholded,
-              getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
+              getStructuringElement(cv::MORPH_ELLIPSE,
+                                    cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
         dilate(imgThresholded, imgThresholded,
-               getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
+               getStructuringElement(cv::MORPH_ELLIPSE,
+                                     cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
 
         // END IMAGE CONVERSION //
 
@@ -210,7 +213,8 @@ int main(int argc, char **argv) {
 
         if (previousX >= 0 && previousY >= 0 && currentX >= 0 && currentY >= 0) {
 
-            cv::line(imgLines, cv::Point(currentX, currentY), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0), 10);
+            cv::line(imgLines, cv::Point(currentX, currentY), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
+                     10);
             // drawing blue line on original image
         }
 
@@ -242,7 +246,7 @@ int main(int argc, char **argv) {
 
 
         // START POSITION MEAN CALCULATION //
-        
+
         cv::Point2f prevPoint;
 
         prevPoint.x = prevX;
@@ -256,8 +260,7 @@ int main(int argc, char **argv) {
         cv::Point2f prevMean = meanPoint;
 
 
-
-        if (frameCounter < BUFFER_SIZE){
+        if (frameCounter < BUFFER_SIZE) {
             pointVector.push_back(cartesianPoint);
             meanPoint = cartesianPoint;
 
@@ -266,14 +269,14 @@ int main(int argc, char **argv) {
 //            timeVector.push_back(currentTimeSeconds);
             //push back
         }
-        if (frameCounter >=  BUFFER_SIZE) {
+        if (frameCounter >= BUFFER_SIZE) {
             // circular push
             circularPush(pointVector, cartesianPoint);
 
             // calculate mean of points
 
             cv::Point2f zero(0.0f, 0.0f);
-            cv::Point2f sum  = accumulate(pointVector.begin(), pointVector.end(), zero);
+            cv::Point2f sum = accumulate(pointVector.begin(), pointVector.end(), zero);
 
             meanPoint = cv::Point2f(sum.x / pointVector.size(), sum.y / pointVector.size());
 
@@ -297,26 +300,26 @@ int main(int argc, char **argv) {
         // TODO actually implement time circular buffer
         // TODO store derivatives in vector
         // TODO calculate average derivative
-        if (COMPLICATED_DIFFERENCE_CALCULATION && frameCounter >=  BUFFER_SIZE){
+        if (COMPLICATED_DIFFERENCE_CALCULATION && frameCounter >= BUFFER_SIZE) {
 
 
             std::vector<cv::Point2f> derivatives;
-            for (int firstIndex = 0; firstIndex < pointVector.size()-1; ++firstIndex){
-                for (int secondIndex = firstIndex+1; secondIndex < pointVector.size(); ++secondIndex){
+            for (int firstIndex = 0; firstIndex < pointVector.size() - 1; ++firstIndex) {
+                for (int secondIndex = firstIndex + 1; secondIndex < pointVector.size(); ++secondIndex) {
 
                     cv::Point2f firstPoint = pointVector[firstIndex];
                     cv::Point2f secondPoint = pointVector[secondIndex];
                     double firstTime = timeVector[firstIndex];
                     double secondTime = timeVector[secondIndex];
 
-                    cv::Point2f derivative = (secondPoint-firstPoint)/(secondTime-firstTime);
+                    cv::Point2f derivative = (secondPoint - firstPoint) / (secondTime - firstTime);
 
                 }
             }
 
 
-                    // calculate derivative
-                    // store in vector
+            // calculate derivative
+            // store in vector
 
 
             //calculate mean of vector
@@ -324,10 +327,10 @@ int main(int argc, char **argv) {
 
         } else {
             cv::Point2f pointDifference = prevMean - meanPoint;
-            speedPoint = pointDifference/dTime;
+            speedPoint = pointDifference / dTime;
         }
 
-        float ballSpeed = sqrt(speedPoint.x*speedPoint.x + speedPoint.y*speedPoint.y);
+        float ballSpeed = sqrt(speedPoint.x * speedPoint.x + speedPoint.y * speedPoint.y);
 
         std::cout << "distance=" << distance << ", angle=" << angleDegrees << std::endl;
         std::cout << "x=" << distance << ", y=" << angleDegrees << std::endl;
@@ -340,7 +343,7 @@ int main(int argc, char **argv) {
 
         cv::Mat topDown = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);;
 
-        cv::Point2f cameraXandY(100,240);
+        cv::Point2f cameraXandY(100, 240);
 
         cv::circle(topDown, cameraXandY, (int) 5, color, 2, 8, 0);
 
@@ -351,11 +354,13 @@ int main(int argc, char **argv) {
         float line2x = 540 * cos(0.5 * HORIZONTAL_FOV_RADIANS);
         float line2y = 540 * sin(0.5 * HORIZONTAL_FOV_RADIANS);
 
-        cv::line(topDown, cv::Point(100 + line1x, 240 + line1y), cv::Point(cameraXandY.x, cameraXandY.y), cv::Scalar(255, 255, 255), 1);
-        cv::line(topDown, cv::Point(100 + line2x, 240 + line2y), cv::Point(cameraXandY.x, cameraXandY.y), cv::Scalar(255, 255, 255), 1);
+        cv::line(topDown, cv::Point(100 + line1x, 240 + line1y), cv::Point(cameraXandY.x, cameraXandY.y),
+                 cv::Scalar(255, 255, 255), 1);
+        cv::line(topDown, cv::Point(100 + line2x, 240 + line2y), cv::Point(cameraXandY.x, cameraXandY.y),
+                 cv::Scalar(255, 255, 255), 1);
 
         cv::Scalar orange = cv::Scalar(2, 106, 253);
-        cv::Scalar bluegray = cv::Scalar (255,120,120);
+        cv::Scalar bluegray = cv::Scalar(255, 120, 120);
 
         cv::Point2f topDownBallPos;
         topDownBallPos.x = 100 + meanPoint.x * 5;
@@ -363,29 +368,29 @@ int main(int argc, char **argv) {
 
         cv::circle(topDown, topDownBallPos, (int) 5, orange, 2, 8, 0); // draw orange ball
 
-        cv::line(topDown, topDownBallPos, (topDownBallPos+(speedPoint*1)), orange, 2); //speed line
+        cv::line(topDown, topDownBallPos, (topDownBallPos + (speedPoint * 1)), orange, 2); //speed line
 
         // END OF TOP DOWN INIT //
 
         // BEGIN INTERCEPTION CALC //
         cv::Point2f interceptPos;
 
-        if (speedPoint.x >= 0){
+        if (speedPoint.x >= 0) {
             interceptPos = meanPoint;
         } else {
             float timeWhereBallXisZero = -meanPoint.x / speedPoint.x;
-            float ballYwhereBallXisZero = timeWhereBallXisZero*speedPoint.y + meanPoint.y;
+            float ballYwhereBallXisZero = timeWhereBallXisZero * speedPoint.y + meanPoint.y;
 
-            if (ballYwhereBallXisZero > 0){
+            if (ballYwhereBallXisZero > 0) {
                 // right hand
                 cv::Point2f interceptSpeed = cv::Point2f(-speedPoint.y, speedPoint.x);
                 float intersectTime = meanPoint.x / (interceptSpeed.x - speedPoint.x);
-                interceptPos = cv::Point2f(interceptSpeed.x*intersectTime, interceptSpeed.y*intersectTime);
+                interceptPos = cv::Point2f(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
             } else if (ballYwhereBallXisZero < 0) {
                 // left hand
                 cv::Point2f interceptSpeed = cv::Point2f(speedPoint.y, -speedPoint.x);
                 float intersectTime = meanPoint.x / (interceptSpeed.x - speedPoint.x);
-                interceptPos = cv::Point2f(interceptSpeed.x*intersectTime, interceptSpeed.y*intersectTime);
+                interceptPos = cv::Point2f(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
                 //determine interceptpos
             } else if (ballYwhereBallXisZero == 0) {
                 interceptPos = meanPoint;
@@ -394,7 +399,7 @@ int main(int argc, char **argv) {
         }
 
         // detemrine topdown interceptpos
-        cv::line(topDown, cameraXandY, cameraXandY+(interceptPos*1), bluegray, 2); //speed line
+        cv::line(topDown, cameraXandY, cameraXandY + (interceptPos * 1), bluegray, 2); //speed line
 
         // END INTERCEPTION CALC //
 
@@ -416,10 +421,12 @@ int main(int argc, char **argv) {
         cv::putText(topDown, text1, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
 
         cv::String text2 = "y=" + to_string(meanPoint.y);
-        cv::putText(topDown, text2, cv::Point(10, 40 * 2), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
+        cv::putText(topDown, text2, cv::Point(10, 40 * 2), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                    cv::LINE_AA);
 
         cv::String text3 = "speed=" + to_string(ballSpeed);
-        cv::putText(topDown, text3, cv::Point(10, IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
+        cv::putText(topDown, text3, cv::Point(10, IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                    cv::LINE_AA);
 
 
         // END TOPDOWN TEXT DRAWING //
