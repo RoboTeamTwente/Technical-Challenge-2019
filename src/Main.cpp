@@ -1,6 +1,7 @@
-#include "constants.cpp"
+#include "Constants.h"
 #include <iostream>
 #include "opencv2/highgui/highgui.hpp"
+#include "Interface.h"
 
 #include <chrono>
 #include <opencv2/imgproc.hpp>
@@ -15,53 +16,6 @@ void circularPush(std::vector<T, A> vec, T element) {
     vec[0] = element;
 }
 
-class Camera {
-public:
-    cv::VideoCapture cap;
-
-    explicit Camera() {
-        // TODO camera constructor
-    }
-};
-
-class Interface {
-public:
-    int iLowH = LOW_HUE;
-    int iHighH = HIGH_HUE;
-
-    int iLowS = LOW_SATURATION;
-    int iHighS = HIGH_SATURATION;
-
-    int iLowV = LOW_VALUE;
-    int iHighV = HIGH_VALUE;
-
-    explicit Interface() {
-        cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
-        cvCreateTrackbar("LowH", "Control", &iLowH, 179); //Hue
-        cvCreateTrackbar("HighH", "Control", &iHighH, 179);
-
-        cvCreateTrackbar("LowS", "Control", &iLowS, 255); //Saturation
-        cvCreateTrackbar("HighS", "Control", &iHighS, 255);
-
-        cvCreateTrackbar("LowV", "Control", &iLowV, 255); //Value
-        cvCreateTrackbar("HighV", "Control", &iHighV, 255);
-        cv::moveWindow("Control", 500, 500);
-    }
-};
-
-
-class ImageProcessor {
-public:
-    cv::Mat convertThresholded(cv::Mat imgBGR) {
-// TODO implement
-// TODO pass interface obj here by reference?
-    }
-};
-
-void init() {
-    Camera cam;
-
-}
 
 std::vector<double> timeVector;
 std::vector<cv::Point2f> pointVector;

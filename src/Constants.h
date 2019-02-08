@@ -1,18 +1,11 @@
 //
-// Created by freek on 21/11/18.
+// Created by freek on 08/02/19.
 //
+
+#ifndef TECHNICAL_CHALLENGE_2019_CONSTANTS_H
+#define TECHNICAL_CHALLENGE_2019_CONSTANTS_H
+
 #include <cmath>
-
-using namespace std;
-// orange ball constants outside roboteam office
-int LOW_HUE = 0;
-int HIGH_HUE = 5;
-
-int LOW_SATURATION = 126;
-int HIGH_SATURATION = 255;
-
-int LOW_VALUE = 92;
-int HIGH_VALUE = 255;
 
 int MORPHOLOGICAL_OPENING_SIZE = 10;
 int MORPHOLOGICAL_CLOSING_SIZE = 5;
@@ -34,3 +27,5 @@ float HORIZONTAL_FOV_RADIANS = 2*atan(HALF_MEASURING_WIDTH / MEASURING_DISTANCE 
 int BUFFER_SIZE = 4;
 
 bool COMPLICATED_DIFFERENCE_CALCULATION = false;
+
+#endif //TECHNICAL_CHALLENGE_2019_CONSTANTS_H
