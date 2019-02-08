@@ -17,4 +17,14 @@ public:
 };
 
 
+template<typename T, typename A>
+void circularPush(std::vector<T, A> vec, T element);
+
+template<typename T, typename A>
+void circularPush(std::vector<T, A> vec, T element) {
+    std::_V2::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());
+    // replace first element
+    vec[0] = element;
+}
+
 #endif //TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H
