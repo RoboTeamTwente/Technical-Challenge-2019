@@ -13,9 +13,14 @@
 #include "ImageProcessor.h"
 
 class BallFinder {
-    void findBall(int frameCounter, float x, float y, const std::chrono::time_point &startFrameTime, float oneradius,
+public:
+    void findBall(int cameraObject.frameCounter, float x, float y, const std::chrono::time_point &cameraObject.startFrameTime, float oneradius,
                  const cv::Scalar_<double> &color, int currentX, :cv::Point_<float> &topDownBallMeanPoint, cv::Mat &imgThresholded,
     float &ballSpeed, cv::Mat &topDown);
+    std::vector<double> timeVector;
+    float topDownBallX;
+    float topDownBallY;
+    cv::Point2f topDownBallMeanPoint;
 };
 
 

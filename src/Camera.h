@@ -9,10 +9,15 @@
 #include <opencv2/videoio.hpp>
 
 class Camera {
+public:
+    Camera(const std::chrono::time_point &startFrameTime); // constructor
+    bool captureImage(cv::Mat inputMat);
     cv::VideoCapture cap;
-    int frameCounter;
     int previousCameraBallX;
     int previousCameraBallY;
+    int frameCounter;
+    std::chrono::time_point startFrameTime;
+
 };
 
 

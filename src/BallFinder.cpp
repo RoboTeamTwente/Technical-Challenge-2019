@@ -1,4 +1,12 @@
-void BallFinder::findBall(int frameCounter, float x, float y, const std::chrono::time_point &startFrameTime, float oneradius,
+// CONSTRUCTOR
+explicit BallFinder::Ballfinder(){
+    topDownBallX = -1;
+    topDownBallY = -1;
+    topDownBallMeanPoint = cv::Point2f(-1, -1);
+}
+
+
+void BallFinder::findBall(int cameraObject.frameCounter, float x, float y, const std::chrono::time_point &cameraObject.startFrameTime, float oneradius,
               const cv::Scalar_<double> &color, int currentX, :cv::Point_<float> &topDownBallMeanPoint, cv::Mat &imgThresholded,
 float &ballSpeed, cv::Mat &topDown) {
 
@@ -39,7 +47,7 @@ cartesianPoint.y = y;
 cv::Point_<float> prevMean = topDownBallMeanPoint;
 
 
-if (frameCounter < BUFFER_SIZE) {
+if (cameraObject.frameCounter < BUFFER_SIZE) {
 pointVector.push_back(cartesianPoint);
 topDownBallMeanPoint = cartesianPoint;
 
@@ -48,7 +56,7 @@ topDownBallMeanPoint = cartesianPoint;
 //            timeVector.push_back(currentTimeSeconds);
 //push back
 }
-if (frameCounter >= BUFFER_SIZE) {
+if (cameraObject.frameCounter >= BUFFER_SIZE) {
 // circular push
 circularPush(pointVector, cartesianPoint);
 
@@ -69,7 +77,7 @@ topDownBallMeanPoint = cv::Point_<float>(sum.x / pointVector.size(), sum.y / poi
 // atan uses radians
 
 auto endFrameTime = std::chrono::_V2::system_clock::now();
-auto dT = (startFrameTime - endFrameTime);
+auto dT = (cameraObject.startFrameTime - endFrameTime);
 double dTime = std::chrono::duration<double>(dT).count(); //convert to seconds
 
 // START BALL SPEED CALC  //
@@ -79,7 +87,7 @@ cv::Point_<float> speedPoint;
 // TODO actually implement time circular buffer
 // TODO store derivatives in vector
 // TODO calculate average derivative
-if (COMPLICATED_DIFFERENCE_CALCULATION && frameCounter >= BUFFER_SIZE) {
+if (COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= BUFFER_SIZE) {
 
 
 std::vector<cv::Point_ < float>>

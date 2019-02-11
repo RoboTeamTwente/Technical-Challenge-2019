@@ -7,19 +7,22 @@
 
 
 #include <opencv2/core/mat.hpp>
+#include "Interface.h"
 
 class ImageProcessor {
 public:
-    cv::Mat convertThresholded(cv::Mat imgBGR) {
-// TODO implement
-// TODO pass interface obj here by reference?
-    }
+    cv::Point_<float> onecenter;
+    float oneradius;
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<std::vector<cv::Point>> contours_poly;
+    std::vector<cv::Point> largest_contour;
+    int largest_area;
+
 };
 
 
-template<typename T, typename A>
-void circularPush(std::vector<T, A> vec, T element);
 
+// TODO move this
 template<typename T, typename A>
 void circularPush(std::vector<T, A> vec, T element) {
     std::_V2::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());

@@ -5,22 +5,20 @@
 #include "ImageProcessor.h"
 #include "Interface.h"
 
-std::vector<std::vector<cv::Point>> contours;
-std::vector<std::vector<cv::Point>> contours_poly;
-std::vector<cv::Point> largest_contour;
-int largest_area;
 
 
 
-void imageConversionAndContourFinding(const Interface &interfaceObj, const cv::Mat &imgBGR,
+
+void ImageProcessor::imageConversionAndContourFinding(const Interface &interfaceObj, const cv::Mat &imgBGR,
                                       std::vector<cv::Point> &largest_contour, int largest_area,
                                       cv::Mat &imgThresholded, std::vector<std::vector<cv::Point>> &contours,
-                                      cv::cv::Point_<float> &onecenter, float &oneradius) {// START IMAGE CONVERSION //
-
+                                      cv::Point_<float> &onecenter, float &oneradius) {// START IMAGE CONVERSION //
+    largest_contour = std::vector<cv::Point>();
+    largest_area = 0;
     cv::Mat imgHSV;
     cvtColor(imgBGR, imgHSV, cv::COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
-    inRange(imgHSV, cv::Scalar(interfaceObj.iLowH, interfaceObj.iLowS, interfaceObj.iLowV),
-            cv::Scalar(interfaceObj.iHighH, interfaceObj.iHighS, interfaceObj.iHighV), imgThresholded);
+    inRange(imgHSV, cv::Scalar(interfaceObj.LOW_HUE, interfaceObj.LOW_SATURATION, interfaceObj.LOW_VALUE),
+            cv::Scalar(interfaceObj.HIGH_VALUE, interfaceObj.HIGH_SATURATION, interfaceObj.HIGH_VALUE), imgThresholded);
 
     // some filtering
 

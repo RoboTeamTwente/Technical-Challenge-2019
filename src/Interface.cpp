@@ -4,12 +4,9 @@
 
 #include "Interface.h"
 
-cv::Mat &displayMatsAndDrawText(cv::Mat &imgBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,
-                                const cv::Mat &imgThresholded, const cv::Mat &contourImage, float ballSpeed,
-                                const cv::Mat &topDown);
+// CONSTRUCTOR
+Interface::Interface() {
 
-    Interface::Interface() {
-    {
         cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
         cvCreateTrackbar("LowH", "Control", &LOW_HUE, 179); //Hue
         cvCreateTrackbar("HighH", "Control", &HIGH_HUE, 179);
@@ -20,12 +17,27 @@ cv::Mat &displayMatsAndDrawText(cv::Mat &imgBGR, const cv::Mat &imgLines, const 
         cvCreateTrackbar("LowV", "Control", &LOW_VALUE, 255); //Value
         cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
         cv::moveWindow("Control", 500, 500);
-    }
-    }
+}
 
-    cv::Mat &displayMatsAndDrawText(cv::Mat &imgBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,
+void Interface::drawContourAndBallTtrail(int previousX, int previousY, int cameraObject.frameCounter,const std::vector<std::vector<cv::Point>> &contours, const cv::Mat &contourImage,
+                                const std::vector<std::vector<cv::Point>> &contours_poly,
+                                const cv::cv::Point_<float> &onecenter, float oneradius, cv::Mat &imgBGR,
+                                cv::Mat &imgLines, cv::Mat &imgThresholded, cv::Scalar &color, int &currentX) {
+    cv::Scalar color;
+    int currentX;
+
+    color = cv::Scalar(255, 255, 255);
+    currentX = onecenter.x;// START CONTOUR, BALL DRAWING //
+    cv::Mat drawing = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);;
+    for (int i = 0; i < contours.size(); i++) {
+    drawContours(drawing, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+    }
+}
+
+void Interface::displayMatsAndDrawText(cv::Mat &imgBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,
                                 const cv::Mat &imgThresholded, const cv::Mat &contourImage, float ballSpeed,
-                                const cv::Mat &topDown) {// START DISPLAY MATS //
+                                const cv::Mat &topDown) {
+    // START DISPLAY MATS //
 
     imshow("Thresholded Image", imgThresholded);
     cv::moveWindow("Thresholded Image", 0, 0);
@@ -54,6 +66,4 @@ cv::Mat &displayMatsAndDrawText(cv::Mat &imgBGR, const cv::Mat &imgLines, const 
     // END TOPDOWN TEXT DRAWING //
 
 
-
-    return imgBGR;
 }

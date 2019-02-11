@@ -13,9 +13,8 @@
 #include "Constants.h"
 #include "ImageProcessor.h"
 #include "Interface.h"
-#include "BallFinder2.cpp"
+#include "BallFinder.h"
 #include "Camera.h"
-#include "TestClass.h"
 
 extern std::vector<double> timeVector;
 extern std::vector<cv::Point2f> pointVector;

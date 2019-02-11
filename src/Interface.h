@@ -20,6 +20,7 @@ public:
     int LOW_VALUE = 92;
     int HIGH_VALUE = 255;
 
+    // CONSTRUCTOR
     explicit Interface();
 };
 

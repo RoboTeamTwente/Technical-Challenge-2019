@@ -10,7 +10,7 @@ void cameraInit() {
     Camera cameraObj = Camera(); // Starts camera
     previousCameraBallX = -1;
     previousCameraBallY = -1;
-    frameCounter = 0;
+    cameraObject.frameCounter = 0;
 
     std::cout << "init camera";
     cv::VideoCapture cap(0);
@@ -20,19 +20,29 @@ void cameraInit() {
     }
 }
 
-void drawContourAndBallTtrail(int previousX, int previousY, int frameCounter,
-                              const std::vector<std::vector<cv::Point>> &contours, const cv::Mat &contourImage,
-                              const std::vector<std::vector<cv::Point>> &contours_poly,
-                              const cv::cv::Point_<float> &onecenter, float oneradius, cv::Mat &imgBGR,
-                              cv::Mat &imgLines, cv::Mat &imgThresholded, cv::Scalar &color, int &currentX) {
+bool Camera::captureImage(cv::Mat inputMat){
+    // START IMAGE CAPTURE //
 
-    color = cv::Scalar(255, 255, 255);
-    currentX = onecenter.x;// START CONTOUR, BALL DRAWING //
-    cv::Mat drawing = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);;
-    for (int i = 0; i < contours.size(); i++) {
-        drawContours(drawing, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+    startFrameTime = std::chrono::high_resolution_clock::now();
+
+    // get image from camera and save to cameraImageBGR
+    bool captureSuccess = cap.read(inputMat);
+
+    // check if this worked
+    if (!captureSuccess) {
+        std::cout << "Cannot read a frame from video stream" << std::endl;
+
+    } else {
+        frameCounter++;
 
     }
+    return captureSuccess;
+    // END IMAGE CAPTURE //
+}
+
+
+Camera::Camera(const std::chrono::time_point &startFrameTime) : startFrameTime(startFrameTime) {}
+}
     circle(contourImage, onecenter, (int) oneradius, color, 2, 8, 0);
 
     // END CONTOUR, BALL DRAWING //
@@ -41,7 +51,7 @@ void drawContourAndBallTtrail(int previousX, int previousY, int frameCounter,
     // DRAWING BALL TRAIL START START //
 
     // refresh trail every 30 frames
-    if (frameCounter % 30 == 1) {
+    if (cameraObject.frameCounter % 30 == 1) {
         imgLines = cv::Mat::zeros(imgBGR.size(), CV_8UC3);
     }
     int currentY = onecenter.y;
