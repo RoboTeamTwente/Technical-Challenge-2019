@@ -11,26 +11,11 @@
 
 class ImageProcessor {
 public:
-    cv::Point_<float> onecenter;
-    float oneradius;
-    std::vector<std::vector<cv::Point>> contours;
-    std::vector<std::vector<cv::Point>> contours_poly;
-    std::vector<cv::Point> largest_contour;
-    int largest_area;
-    cv::Mat imgHSV;
-    cv::Mat cameraImageThresholded;
+    cv::Mat imageConversion(cv::Mat cameraImageBGR, Interface interfaceObj);
 
-
+    void findBallContour(const cv::Mat &cameraImageThresholded, cv::Point2f &cameraImageBallCenterPoint,
+                         float &cameraImageBallRadius);
 };
 
-
-
-// TODO move this
-template<typename T, typename A>
-void circularPush(std::vector<T, A> vec, T element) {
-    std::_V2::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());
-    // replace first element
-    vec[0] = element;
-}
 
 #endif //TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H

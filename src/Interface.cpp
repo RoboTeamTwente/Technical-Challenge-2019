@@ -6,7 +6,7 @@
 
 // CONSTRUCTOR
 Interface::Interface() {
-
+        // Open control window
         cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
         cvCreateTrackbar("LowH", "Control", &LOW_HUE, 179); //Hue
         cvCreateTrackbar("HighH", "Control", &HIGH_HUE, 179);

@@ -7,9 +7,13 @@ int main(int argc, char **argv) {
     Camera cameraObject;
     BallFinder ballFinderObject;
 
-    // TODO what to do with this?
-    // TODO make not auto
-    auto startTime = std::chrono::high_resolution_clock::now();
+    cv::Mat cameraImageBGR;
+    cv::Mat cameraImageThresholded;
+
+    cv::Point2f cameraImageBallCenterPoint;
+    float cameraImageBallRadius;
+
+
 
     // START LOOP
     while (true) {
@@ -18,9 +22,12 @@ int main(int argc, char **argv) {
             continue;
         }
 
-        imageProcessorObject.imageConversion(cameraImageBGR, interfaceObj);
+        // TODO separate cameraImageBGR and stuff drawn on it (should be display mat)
 
-        imageProcessorObject.contourFinding();
+        cameraImageThresholded = imageProcessorObject.imageConversion(cameraImageBGR, interfaceObj);
+
+        imageProcessorObject.findBallContour(cameraImageThresholded, cameraImageBallCenterPoint, cameraImageBallRadius);
+
         interfaceObj.drawContourAndBallTtrail(cameraObject.previousCameraBallX, cameraObject.previousCameraBallY,
                                               cameraObject.frameCounter, contours, contourImage, contours_poly,
                                               onecenter, oneradius,
