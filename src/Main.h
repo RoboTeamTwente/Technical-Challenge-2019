@@ -16,9 +16,6 @@
 #include "BallFinder.h"
 #include "Camera.h"
 
-extern std::vector<double> timeVector;
-extern std::vector<cv::Point2f> pointVector;
-
 int main(int argc, char **argv);
 
 #endif

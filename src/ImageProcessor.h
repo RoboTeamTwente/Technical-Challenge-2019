@@ -20,6 +20,7 @@ public:
     cv::Mat imgHSV;
     cv::Mat cameraImageThresholded;
 
+
 };
 
 

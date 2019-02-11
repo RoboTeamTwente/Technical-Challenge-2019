@@ -17,7 +17,7 @@ public:
     int previousCameraBallY;
     int frameCounter;
     std::chrono::time_point startFrameTime;
-
+    cv::Mat cameraImageBGR;
 };
 
 

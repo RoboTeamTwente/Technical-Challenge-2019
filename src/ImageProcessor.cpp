@@ -9,13 +9,14 @@
 
 
 
-void ImageProcessor::imageConversionAndContourFinding(cv::Mat cameraImageBGR, Interface interfaceObj) {// START IMAGE CONVERSION //
+void ImageProcessor::imageConversion(cv::Mat cameraImageBGR, Interface interfaceObj) {// START IMAGE CONVERSION //
 //    largest_contour = std::vector<cv::Point>();
     largest_area = 0;
     cvtColor(cameraImageBGR, imgHSV, cv::COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
 
     inRange(imgHSV, cv::Scalar(interfaceObj.LOW_HUE, interfaceObj.LOW_SATURATION, interfaceObj.LOW_VALUE),
-            cv::Scalar(interfaceObj.HIGH_VALUE, interfaceObj.HIGH_SATURATION, interfaceObj.HIGH_VALUE), cameraImageThresholded);
+            cv::Scalar(interfaceObj.HIGH_VALUE, interfaceObj.HIGH_SATURATION, interfaceObj.HIGH_VALUE),
+            cameraImageThresholded);
 
     // some filtering
 
@@ -29,7 +30,9 @@ void ImageProcessor::imageConversionAndContourFinding(cv::Mat cameraImageBGR, In
 
     // END IMAGE CONVERSION //
 
-
+    // TODO find out whether to return imageThresholded or keep it as a field
+}
+void ImageProcessor::imageContourFinding(){
     // START CONTOUR FINDING //
     cv::Mat contourOutput = cameraImageThresholded.clone();
     cv::findContours(contourOutput, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
