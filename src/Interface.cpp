@@ -21,28 +21,28 @@ Interface::Interface() {
 
 void Interface::drawContourAndBallTtrail(int previousX, int previousY, int cameraObject.frameCounter,const std::vector<std::vector<cv::Point>> &contours, const cv::Mat &contourImage,
                                 const std::vector<std::vector<cv::Point>> &contours_poly,
-                                const cv::cv::Point_<float> &onecenter, float oneradius, cv::Mat &imgBGR,
-                                cv::Mat &imgLines, cv::Mat &imgThresholded, cv::Scalar &color, int &currentX) {
+                                const cv::cv::Point_<float> &onecenter, float oneradius, cv::Mat &cameraImageBGR,
+                                cv::Mat &imgLines, cv::Mat &cameraImageThresholded, cv::Scalar &color, int &currentX) {
     cv::Scalar color;
     int currentX;
 
     color = cv::Scalar(255, 255, 255);
     currentX = onecenter.x;// START CONTOUR, BALL DRAWING //
-    cv::Mat drawing = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);;
+    cv::Mat drawing = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);;
     for (int i = 0; i < contours.size(); i++) {
     drawContours(drawing, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
     }
 }
 
-void Interface::displayMatsAndDrawText(cv::Mat &imgBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,
-                                const cv::Mat &imgThresholded, const cv::Mat &contourImage, float ballSpeed,
+void Interface::displayMatsAndDrawText(cv::Mat &cameraImageBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,
+                                const cv::Mat &cameraImageThresholded, const cv::Mat &contourImage, float ballSpeed,
                                 const cv::Mat &topDown) {
     // START DISPLAY MATS //
 
-    imshow("Thresholded Image", imgThresholded);
+    imshow("Thresholded Image", cameraImageThresholded);
     cv::moveWindow("Thresholded Image", 0, 0);
-    imgBGR = imgBGR + imgLines + contourImage;
-    imshow("Original", imgBGR);
+    cameraImageBGR = cameraImageBGR + imgLines + contourImage;
+    imshow("Original", cameraImageBGR);
     cv::moveWindow("Original", 0, 600);
     imshow("Top down view", topDown);
     cv::moveWindow("Top down view", 800, 600);

@@ -7,11 +7,11 @@ explicit BallFinder::Ballfinder(){
 
 
 void BallFinder::findBall(int cameraObject.frameCounter, float x, float y, const std::chrono::time_point &cameraObject.startFrameTime, float oneradius,
-              const cv::Scalar_<double> &color, int currentX, :cv::Point_<float> &topDownBallMeanPoint, cv::Mat &imgThresholded,
+              const cv::Scalar_<double> &color, int currentX, :cv::Point_<float> &topDownBallMeanPoint, cv::Mat &cameraImageThresholded,
 float &ballSpeed, cv::Mat &topDown) {
 
 ballSpeed = sqrt(speedPoint.x * speedPoint.x + speedPoint.y * speedPoint.y);
-topDown = cv::Mat::zeros(imgThresholded.size(), CV_8UC3);// START CARTESIAN X,Y CALCULATION //
+topDown = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);// START CARTESIAN X,Y CALCULATION //
 float distance = (REAL_RADIUS * FOCAL_LENGTH) / oneradius;
 
 

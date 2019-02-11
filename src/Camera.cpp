@@ -52,7 +52,7 @@ Camera::Camera(const std::chrono::time_point &startFrameTime) : startFrameTime(s
 
     // refresh trail every 30 frames
     if (cameraObject.frameCounter % 30 == 1) {
-        imgLines = cv::Mat::zeros(imgBGR.size(), CV_8UC3);
+        imgLines = cv::Mat::zeros(cameraImageBGR.size(), CV_8UC3);
     }
     int currentY = onecenter.y;
 

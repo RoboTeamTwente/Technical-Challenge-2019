@@ -7,7 +7,7 @@
 // TODO move this
 //std::vector<cv::Point2f> pointVector;
 //
-//cv::Mat imgThresholded;
+//cv::Mat cameraImageThresholded;
 //cv::Mat contourImage;
 
 //cv::Mat imgLines;
@@ -40,22 +40,20 @@ int main(int argc, char **argv) {
             continue;
         }
 
-        imageProcessorObject.imageConversionAndContourFinding(interfaceObj, cameraImageBGR, largest_contour, largest_area,
-                                                              imgThresholded, contours,
-                                                              onecenter, oneradius);
+        imageProcessorObject.imageConversionAndContourFinding(cameraImageBGR);
 
         interfaceObj.drawContourAndBallTtrail(cameraObject.previousCameraBallX, cameraObject.previousCameraBallY,
                                  cameraObject.frameCounter, contours, contourImage, contours_poly,
                                  onecenter, oneradius,
-                                 cameraImageBGR, imgLines, imgThresholded, color, currentX);
+                                 cameraImageBGR, imgLines, cameraImageThresholded, color, currentX);
 
 
         float ballSpeed;
         cv::Mat topDown;
         findBall(cameraObject.frameCounter, topDownBallX, topDownBallY, cameraObject.startFrameTime, oneradius, color,
-                 currentX, topDownBallMeanPoint, imgThresholded, ballSpeed,
+                 currentX, topDownBallMeanPoint, cameraImageThresholded, ballSpeed,
                  topDown);
-        cameraImageBGR = displayMatsAndDrawText(cameraImageBGR, imgLines, topDownBallMeanPoint, imgThresholded, contourImage, ballSpeed,
+        cameraImageBGR = displayMatsAndDrawText(cameraImageBGR, imgLines, topDownBallMeanPoint, cameraImageThresholded, contourImage, ballSpeed,
                                         topDown);
 
 

@@ -17,6 +17,8 @@ public:
     std::vector<std::vector<cv::Point>> contours_poly;
     std::vector<cv::Point> largest_contour;
     int largest_area;
+    cv::Mat imgHSV;
+    cv::Mat cameraImageThresholded;
 
 };
 
