@@ -24,14 +24,13 @@ int main(int argc, char **argv) {
 
         // TODO separate cameraImageBGR and stuff drawn on it (should be display mat)
 
+        // Convert camera image to single channel image with only the ball remaining in it
         cameraImageThresholded = imageProcessorObject.imageConversion(cameraImageBGR, interfaceObj);
 
+        // Find ball center and radius on camera image, and store it in the variables created for this
         imageProcessorObject.findBallContour(cameraImageThresholded, cameraImageBallCenterPoint, cameraImageBallRadius);
 
-        interfaceObj.drawContourAndBallTtrail(cameraObject.previousCameraBallX, cameraObject.previousCameraBallY,
-                                              cameraObject.frameCounter, contours, contourImage, contours_poly,
-                                              onecenter, oneradius,
-                                              cameraImageBGR, imgLines, cameraImageThresholded, color, currentX);
+        interfaceObj.drawContourAndBallTrail();
 
 
 

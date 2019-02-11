@@ -6,37 +6,67 @@
 
 // CONSTRUCTOR
 Interface::Interface() {
-        // Open control window
-        cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
-        cvCreateTrackbar("LowH", "Control", &LOW_HUE, 179); //Hue
-        cvCreateTrackbar("HighH", "Control", &HIGH_HUE, 179);
+    // Open control window
+    cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
+    cvCreateTrackbar("LowH", "Control", &LOW_HUE, 179); //Hue
+    cvCreateTrackbar("HighH", "Control", &HIGH_HUE, 179);
 
-        cvCreateTrackbar("LowS", "Control", &LOW_SATURATION, 255); //Saturation
-        cvCreateTrackbar("HighS", "Control", &HIGH_SATURATION, 255);
+    cvCreateTrackbar("LowS", "Control", &LOW_SATURATION, 255); //Saturation
+    cvCreateTrackbar("HighS", "Control", &HIGH_SATURATION, 255);
 
-        cvCreateTrackbar("LowV", "Control", &LOW_VALUE, 255); //Value
-        cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
-        cv::moveWindow("Control", 500, 500);
+    cvCreateTrackbar("LowV", "Control", &LOW_VALUE, 255); //Value
+    cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
+    cv::moveWindow("Control", 500, 500);
 }
 
-void Interface::drawContourAndBallTtrail(int previousX, int previousY, int cameraObject.frameCounter,const std::vector<std::vector<cv::Point>> &contours, const cv::Mat &contourImage,
-                                const std::vector<std::vector<cv::Point>> &contours_poly,
-                                const cv::cv::Point_<float> &onecenter, float oneradius, cv::Mat &cameraImageBGR,
-                                cv::Mat &imgLines, cv::Mat &cameraImageThresholded, cv::Scalar &color, int &currentX) {
+void Interface::drawContourAndBallTrail() {
     cv::Scalar color;
     int currentX;
+    int currentY;
 
     color = cv::Scalar(255, 255, 255);
-    currentX = onecenter.x;// START CONTOUR, BALL DRAWING //
-    cv::Mat drawing = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);;
+
+    // TODO better name than "drawing"
+    cv::Mat drawing = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);
+
+    // draw contours on image
     for (int i = 0; i < contours.size(); i++) {
-    drawContours(drawing, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+        drawContours(drawing, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
     }
+
+    // draw circle of ball on image
+    circle(drawing, cameraImageBallCenterPoint, (int) cameraImageBallRadius, color, 2, 8, 0);
+
+
+
+
+    // DRAWING BALL TRAIL START START //
+
+    // refresh trail every 30 frames
+    if (cameraObject.frameCounter % 30 == 1) {
+        imgLines = cv::Mat::zeros(cameraImageBGR.size(), CV_8UC3);
+    }
+
+    currentX = cameraImageBallCenterPoint.x;
+    currentY = cameraImageBallCenterPoint.y;
+
+    if (previousX >= 0 && previousY >= 0 && currentX >= 0 && currentY >= 0) {
+
+        line(imgLines, cv::Point(currentX, currentY), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
+             10);
+        // drawing blue line on original image
+    }
+
+    previousX = currentX;
+    previousY = currentY;
+
+    // DRAWING BALL TRAIL END //
 }
 
 void Interface::displayMatsAndDrawText(cv::Mat &cameraImageBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,
-                                const cv::Mat &cameraImageThresholded, const cv::Mat &contourImage, float ballSpeed,
-                                const cv::Mat &topDown) {
+                                       const cv::Mat &cameraImageThresholded, const cv::Mat &contourImage,
+                                       float ballSpeed,
+                                       const cv::Mat &topDown) {
     // START DISPLAY MATS //
 
     imshow("Thresholded Image", cameraImageThresholded);

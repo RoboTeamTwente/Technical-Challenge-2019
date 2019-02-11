@@ -139,7 +139,7 @@ float &ballSpeed, cv::Mat &topDown) {
     // END BALL SPEED CALC //
 
     // DRAWING TOP DOWN MAP STUFF //
-    ;
+
 
     cv::Point_<float> cameraXandY(100, 240);
 
