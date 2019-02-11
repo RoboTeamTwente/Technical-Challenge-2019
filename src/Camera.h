@@ -10,14 +10,11 @@
 
 class Camera {
 public:
-    Camera(const std::chrono::time_point &startFrameTime); // constructor
+    Camera(); // constructor
     bool captureImage(cv::Mat inputMat);
     cv::VideoCapture cap;
-    int previousCameraBallX;
-    int previousCameraBallY;
     int frameCounter;
     std::chrono::time_point startFrameTime;
-    cv::Mat cameraImageBGR;
 };
 
 

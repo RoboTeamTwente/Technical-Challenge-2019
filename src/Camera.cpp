@@ -5,20 +5,6 @@
 #include "Main.h"
 #include "Camera.h"
 
-void cameraInit() {
-    // INIT CAMERA
-    Camera cameraObj = Camera(); // Starts camera
-    previousCameraBallX = -1;
-    previousCameraBallY = -1;
-    cameraObject.frameCounter = 0;
-
-    std::cout << "init camera";
-    cv::VideoCapture cap(0);
-    if (!cap.isOpened()) {
-        std::cout << "webcam failure; is another openCV program running?" << std::endl;
-        return -1;
-    }
-}
 
 bool Camera::captureImage(cv::Mat inputMat){
     // START IMAGE CAPTURE //
@@ -41,8 +27,21 @@ bool Camera::captureImage(cv::Mat inputMat){
 }
 
 // TODO ?? what to do here
-Camera::Camera(const std::chrono::time_point &startFrameTime) : startFrameTime(startFrameTime) {}
+Camera::Camera() {
+    // INIT CAMERA
+    Camera cameraObj = Camera(); // Starts camera
+    previousCameraBallX = -1;
+    previousCameraBallY = -1;
+    cameraObject.frameCounter = 0;
+
+    std::cout << "init camera";
+    cv::VideoCapture cap(0);
+    if (!cap.isOpened()) {
+        std::cout << "webcam failure; is another openCV program running?" << std::endl;
+        return -1;
+    }
 }
+
 
 
 }
