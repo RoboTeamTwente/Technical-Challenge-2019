@@ -8,6 +8,7 @@
 
 #include <cv.hpp>
 #include "Constants.h"
+#include "ImageProcessor.h"
 
 class Interface {
 public:
@@ -22,6 +23,10 @@ public:
 
     // CONSTRUCTOR
     explicit Interface();
+    cv::Mat cameraImageTrailOverlay;
+    cv::Mat cameraImageContourOverlay;
+    void drawContourAndBallTrailOnCameraView();
+
 };
 
 

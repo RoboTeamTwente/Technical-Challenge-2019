@@ -18,9 +18,9 @@ public:
     std::vector<std::vector<cv::Point>> contours; // Could be a field
     std::vector<std::vector<cv::Point>> contoursAsPolygonsVector; // Could be a field
     cv::Mat cameraImageThresholded; // Could be a field
-    cv::Point2f &cameraImageBallCenterPoint;
-    float &cameraImageBallRadius;
-
+    cv::Point2f cameraImageBallCenterPoint;
+    float cameraImageBallRadius;
+    std::vector<cv::Point2f> cameraImageBallCenterHistory;
 };
 
 

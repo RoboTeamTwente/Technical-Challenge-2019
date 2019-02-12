@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
         // TODO maybe return as a boolean, and if failed continue
         imageProcessorObject.findBallContour();
 
-        interfaceObj.drawContourAndBallTrail();
+        interfaceObject.drawContourAndBallTrailOnCameraView();
 
 
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
                  currentX, topDownBallMeanPoint, cameraImageThresholded, ballSpeed,
                  topDown);
 
-        interfaceObj.displayMatsAndDrawText(cameraImageBGR, imgLines, topDownBallMeanPoint, cameraImageThresholded,
+        interfaceObject.displayMatsAndDrawText(cameraImageBGR, imgLines, topDownBallMeanPoint, cameraImageThresholded,
                                                 contourImage, ballSpeed,
                                                 topDown);
 
