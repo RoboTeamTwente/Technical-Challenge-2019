@@ -4,7 +4,7 @@ project(Technical-Challenge-2019)
 set(CMAKE_CXX_STANDARD 14)
 
 
-add_executable(Technical-Challenge-2019 src/Main.cpp)
+add_executable(Technical-Challenge-2019 src/Main.cpp src/Settings.h)
 
 find_package(OpenCV REQUIRED )
 INCLUDE_DIRECTORIES( ${OpenCV_INCLUDE_DIRS} )

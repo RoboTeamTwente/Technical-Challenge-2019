@@ -7,6 +7,9 @@ int main(int argc, char **argv) {
     Camera cameraObject;
     BallFinder ballFinderObject;
 
+    if (!cameraObject.working) {
+        return -1;
+    }
 
     cv::Mat cameraImageThresholded;
 

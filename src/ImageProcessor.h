@@ -9,6 +9,7 @@
 #include <opencv2/core/mat.hpp>
 #include "Interface.h"
 #include "Camera.h"
+#include "Settings.h"
 
 class ImageProcessor {
 public:

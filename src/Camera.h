@@ -12,6 +12,7 @@ class Camera {
 public:
     explicit Camera(); // constructor
     bool captureImage();
+    bool working;
     cv::VideoCapture cap;
     int frameCounter;
     std::chrono::time_point startFrameTime;

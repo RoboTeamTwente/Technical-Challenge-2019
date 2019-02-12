@@ -28,16 +28,17 @@ bool Camera::captureImage(){
 Camera::Camera() {
     // INIT CAMERA
     Camera cameraObj = Camera(); // Starts camera
-    previousCameraBallX = -1;
-    previousCameraBallY = -1;
-    cameraObject.frameCounter = 0;
+    frameCounter = 0;
 
     std::cout << "init camera";
     cv::VideoCapture cap(0);
     if (!cap.isOpened()) {
         std::cout << "webcam failure; is another openCV program running?" << std::endl;
-        return -1;
+        working=false;
+    } else {
+        working=true;
     }
+
 }
 
 

@@ -31,13 +31,13 @@ float &ballSpeed, cv::Mat &topDown) {
     topDown = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);
 
     // START CARTESIAN X,Y CALCULATION //
-    float distance = (REAL_RADIUS * FOCAL_LENGTH) / oneradius;
+    float distance = (REAL_RADIUS * Constants::FOCAL_LENGTH) / oneradius;
 
 
     // trigonometry magic from https://math.stackexchange.com/questions/1320285/convert-a-pixel-displacement-to-angular-rotation
 
-    int pixelsFromCenter = currentX - (0.5 * IMAGE_WIDTH);
-    float angleRadians = atan((2 * pixelsFromCenter * tan(0.5 * HORIZONTAL_FOV_RADIANS)) / (IMAGE_WIDTH));
+    int pixelsFromCenter = currentX - (0.5 * Settings::IMAGE_WIDTH);
+    float angleRadians = atan((2 * pixelsFromCenter * tan(0.5 * Constants::HORIZONTAL_FOV_RADIANS)) / (Settings::IMAGE_WIDTH));
     float angleDegrees = angleRadians * (180.0 / 3.141592653589793238463);
 
     float prevX = x;
@@ -66,8 +66,8 @@ float &ballSpeed, cv::Mat &topDown) {
     cv::Point_<float> prevMean = topDownBallMeanPoint;
 
 
-    if (cameraObject.frameCounter < BUFFER_SIZE) {
-    pointVector.push_back(cartesianPoint);
+    if (cameraObject.frameCounter < Settings::BUFFER_SIZE) {
+    pointVector.push_back(cartesianPoint); // TODO fix null pointer exception here as pointVector is not initialized
     topDownBallMeanPoint = cartesianPoint;
 
     //            auto currentTime= std::chrono::high_resolution_clock::now() - startTime;
@@ -76,7 +76,7 @@ float &ballSpeed, cv::Mat &topDown) {
     //push back
 
 }
-    if (cameraObject.frameCounter >= BUFFER_SIZE) {
+    if (cameraObject.frameCounter >= Settings::BUFFER_SIZE) {
     // circular push
     circularPush(pointVector, cartesianPoint);
 
@@ -107,7 +107,7 @@ float &ballSpeed, cv::Mat &topDown) {
     // TODO actually implement time circular buffer
     // TODO store derivatives in vector
     // TODO calculate average derivative
-    if (COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= BUFFER_SIZE) {
+    if (Settings::COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= Settings::BUFFER_SIZE) {
 
 
     std::vector<cv::Point_ < float>>

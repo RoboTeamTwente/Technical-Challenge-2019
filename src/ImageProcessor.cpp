@@ -21,10 +21,10 @@ void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceO
     //morphological opening
     erode(cameraImageThresholded, cameraImageThresholded,
           getStructuringElement(cv::MORPH_ELLIPSE,
-                                cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
+                                cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
     dilate(cameraImageThresholded, cameraImageThresholded,
            getStructuringElement(cv::MORPH_ELLIPSE,
-                                 cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
+                                 cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
 
 
 }

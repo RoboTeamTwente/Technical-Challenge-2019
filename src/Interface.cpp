@@ -65,11 +65,11 @@ void Interface::drawTopDownView() {
 
 
 
-    float line1x = 540 * cos(-0.5 * HORIZONTAL_FOV_RADIANS);
-    float line1y = 540 * sin(-0.5 * HORIZONTAL_FOV_RADIANS);
+    float line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    float line1y = 540 * sin(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
 
-    float line2x = 540 * cos(0.5 * HORIZONTAL_FOV_RADIANS);
-    float line2y = 540 * sin(0.5 * HORIZONTAL_FOV_RADIANS);
+    float line2x = 540 * cos(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    float line2y = 540 * sin(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
 
     line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(cameraXandY.x, cameraXandY.y),
          cv::Scalar<double>(255, 255, 255), 1);
@@ -114,7 +114,7 @@ void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor image
             cv::LINE_AA);
 
     cv::String text3 = "speed=" + std::__cxx11::to_string(ballSpeed);
-    putText(topDown, text3, cv::Point(10, IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+    putText(topDown, text3, cv::Point(10, Settings::IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
             cv::LINE_AA);
 
 
