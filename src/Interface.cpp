@@ -19,19 +19,19 @@ Interface::Interface() {
     cv::moveWindow("Control", 500, 500);
 }
 
-void Interface::drawContourAndBallTrail() {
+void Interface::drawContourAndBallTrailOnCameraView() {
     cv::Scalar color;
-    int currentX;
-    int currentY;
+    int cameraImageCurrentBallX;
+    int cameraImageCurrentBallY;
 
     color = cv::Scalar(255, 255, 255);
 
     // TODO better name than "drawing"
     cv::Mat drawing = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);
 
-    // draw contours on image
-    for (int i = 0; i < contours.size(); i++) {
-        drawContours(drawing, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+    // draw imageProcessorObject.contours on image
+    for (int i = 0; i < imageProcessorObject.contours.size(); i++) {
+        drawimageProcessorObject.contours(drawing, imageProcessorObject.contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
     }
 
     // draw circle of ball on image
@@ -44,23 +44,57 @@ void Interface::drawContourAndBallTrail() {
 
     // refresh trail every 30 frames
     if (cameraObject.frameCounter % 30 == 1) {
-        imgLines = cv::Mat::zeros(cameraImageBGR.size(), CV_8UC3);
+        imgLines = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);
     }
 
-    currentX = cameraImageBallCenterPoint.x;
-    currentY = cameraImageBallCenterPoint.y;
+    cameraImageCurrentBallX = cameraImageBallCenterPoint.x;
+    cameraImageCurrentBallY = cameraImageBallCenterPoint.y;
 
-    if (previousX >= 0 && previousY >= 0 && currentX >= 0 && currentY >= 0) {
+    if (previousX >= 0 && previousY >= 0 && cameraImageCurrentBallX >= 0 && cameraImageCurrentBallY >= 0) {
 
-        line(imgLines, cv::Point(currentX, currentY), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
+        line(imgLines, cv::Point(cameraImageCurrentBallX, cameraImageCurrentBallY), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
              10);
         // drawing blue line on original image
     }
 
-    previousX = currentX;
-    previousY = currentY;
+    previousX = cameraImageCurrentBallX;
+    previousY = cameraImageCurrentBallY;
 
     // DRAWING BALL TRAIL END //
+}
+
+void Interface::drawTopDownView() {
+
+    // DRAWING TOP DOWN MAP STUFF //
+
+
+    cv::Point_<float> cameraXandY(100, 240);
+
+
+
+    float line1x = 540 * cos(-0.5 * HORIZONTAL_FOV_RADIANS);
+    float line1y = 540 * sin(-0.5 * HORIZONTAL_FOV_RADIANS);
+
+    float line2x = 540 * cos(0.5 * HORIZONTAL_FOV_RADIANS);
+    float line2y = 540 * sin(0.5 * HORIZONTAL_FOV_RADIANS);
+
+    line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(cameraXandY.x, cameraXandY.y),
+         cv::Scalar<double>(255, 255, 255), 1);
+    line(topDown, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(cameraXandY.x, cameraXandY.y),
+         cv::Scalar<double>(255, 255, 255), 1);
+
+    Scalar_<double> orange = Scalar_<double>(2, 106, 253);
+    Scalar_<double> bluegray = Scalar_<double>(255, 120, 120);
+
+    cv::Point_<float> topDownBallPos;
+    topDownBallPos.x = 100 + topDownBallMeanPoint.x * 5;
+    topDownBallPos.y = 240 + topDownBallMeanPoint.y * 5;
+
+    circle(topDown, topDownBallPos, (int) 5, orange, 2, 8, 0); // draw orange ball
+
+    line(topDown, topDownBallPos, (topDownBallPos + (speedPoint * 1)), orange, 2); //speed line
+
+    // END OF TOP DOWN INIT //
 }
 
 void Interface::displayMatsAndDrawText(cv::Mat &cameraImageBGR, const cv::Mat &imgLines, const cv::Point2f &meanPoint,

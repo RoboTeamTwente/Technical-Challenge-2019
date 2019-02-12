@@ -6,11 +6,11 @@
 #include "Camera.h"
 
 
-bool Camera::captureImage(cv::Mat& inputMat){
+bool Camera::captureImage(){
     startFrameTime = std::chrono::high_resolution_clock::now();
 
     // get image from camera and save to the Mat
-    bool captureSuccess = cap.read(inputMat);
+    bool captureSuccess = cap.read(cameraImageBGR);
 
     // check if this worked
     if (!captureSuccess) {

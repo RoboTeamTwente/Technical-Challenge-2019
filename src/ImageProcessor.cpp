@@ -5,14 +5,15 @@
 #include "ImageProcessor.h"
 #include "Interface.h"
 
-cv::Mat ImageProcessor::imageConversion(cv::Mat &cameraImageBGR, Interface &interfaceObj) {
+
+void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceObject) {
     cv::Mat imgHSV;
-    cv::Mat cameraImageThresholded; // Could be a field
 
-    cvtColor(cameraImageBGR, imgHSV, cv::COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
 
-    inRange(imgHSV, cv::Scalar(interfaceObj.LOW_HUE, interfaceObj.LOW_SATURATION, interfaceObj.LOW_VALUE),
-            cv::Scalar(interfaceObj.HIGH_VALUE, interfaceObj.HIGH_SATURATION, interfaceObj.HIGH_VALUE),
+    cvtColor(cameraObject.cameraImageBGR, imgHSV, cv::COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
+
+    inRange(imgHSV, cv::Scalar(interfaceObject.LOW_HUE, interfaceObject.LOW_SATURATION, interfaceObject.LOW_VALUE),
+            cv::Scalar(interfaceObject.HIGH_VALUE, interfaceObject.HIGH_SATURATION, interfaceObject.HIGH_VALUE),
             cameraImageThresholded);
 
     // some filtering
@@ -25,20 +26,17 @@ cv::Mat ImageProcessor::imageConversion(cv::Mat &cameraImageBGR, Interface &inte
            getStructuringElement(cv::MORPH_ELLIPSE,
                                  cv::Size(MORPHOLOGICAL_OPENING_SIZE, MORPHOLOGICAL_OPENING_SIZE)));
 
-    return cameraImageThresholded;
+
 }
 
-void ImageProcessor::findBallContour(const cv::Mat &cameraImageThresholded, cv::Point2f &cameraImageBallCenterPoint,
-                                     float &cameraImageBallRadius) {
+void ImageProcessor::findBallContour() {
     // init variables
     cv::Scalar colors[3];
     double largest_area = 0;
     colors[0] = cv::Scalar(255, 0, 0);
     colors[1] = cv::Scalar(0, 255, 0);
     colors[2] = cv::Scalar(0, 0, 255);
-    std::vector<std::vector<cv::Point>> contours; // Could be a field
-    std::vector<std::vector<cv::Point>> contoursAsPolygonsVector; // Could be a field
-    std::vector<cv::Point> largest_contour; // Could be a field
+    std::vector<cv::Point> largest_contour;
 
     // clone this image
     // TODO Find out if removing cloning is safe to speed up performance

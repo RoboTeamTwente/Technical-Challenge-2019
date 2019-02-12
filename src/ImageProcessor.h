@@ -8,13 +8,19 @@
 
 #include <opencv2/core/mat.hpp>
 #include "Interface.h"
+#include "Camera.h"
 
 class ImageProcessor {
 public:
-    cv::Mat imageConversion(cv::Mat &cameraImageBGR, Interface &interfaceObj);
+    void imageConversion(Camera &cameraObject, Interface &interfaceObject);
 
-    void findBallContour(const cv::Mat &cameraImageThresholded, cv::Point2f &cameraImageBallCenterPoint,
-                         float &cameraImageBallRadius);
+    void findBallContour();
+    std::vector<std::vector<cv::Point>> contours; // Could be a field
+    std::vector<std::vector<cv::Point>> contoursAsPolygonsVector; // Could be a field
+    cv::Mat cameraImageThresholded; // Could be a field
+    cv::Point2f &cameraImageBallCenterPoint;
+    float &cameraImageBallRadius;
+
 };
 
 

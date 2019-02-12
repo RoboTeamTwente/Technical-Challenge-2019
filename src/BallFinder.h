@@ -14,6 +14,7 @@
 
 class BallFinder {
 public:
+    explicit BallFinder(); // CONSTRUCTOR
     void findBall(int cameraObject.frameCounter, float x, float y, const std::chrono::time_point &cameraObject.startFrameTime, float oneradius,
                  const cv::Scalar_<double> &color, int currentX, :cv::Point_<float> &topDownBallMeanPoint, cv::Mat &cameraImageThresholded,
     float &ballSpeed, cv::Mat &topDown);

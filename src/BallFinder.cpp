@@ -1,8 +1,10 @@
 #include <vector>
 #include <algorithm>
+#include "BallFinder.h"
+
 
 // CONSTRUCTOR
-explicit BallFinder::Ballfinder(){
+BallFinder::BallFinder(){
     topDownBallX = -1;
     topDownBallY = -1;
     topDownBallMeanPoint = cv::Point2f(-1, -1);
@@ -26,7 +28,9 @@ float &ballSpeed, cv::Mat &topDown) {
     float ballSpeed;
     cv::Mat topDown;
     ballSpeed = sqrt(speedPoint.x * speedPoint.x + speedPoint.y * speedPoint.y);
-    topDown = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);// START CARTESIAN X,Y CALCULATION //
+    topDown = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);
+
+    // START CARTESIAN X,Y CALCULATION //
     float distance = (REAL_RADIUS * FOCAL_LENGTH) / oneradius;
 
 
@@ -70,7 +74,8 @@ float &ballSpeed, cv::Mat &topDown) {
     //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
     //            timeVector.push_back(currentTimeSeconds);
     //push back
-    }
+
+}
     if (cameraObject.frameCounter >= BUFFER_SIZE) {
     // circular push
     circularPush(pointVector, cartesianPoint);
@@ -138,36 +143,6 @@ float &ballSpeed, cv::Mat &topDown) {
 
     // END BALL SPEED CALC //
 
-    // DRAWING TOP DOWN MAP STUFF //
-
-
-    cv::Point_<float> cameraXandY(100, 240);
-
-
-
-    float line1x = 540 * cos(-0.5 * HORIZONTAL_FOV_RADIANS);
-    float line1y = 540 * sin(-0.5 * HORIZONTAL_FOV_RADIANS);
-
-    float line2x = 540 * cos(0.5 * HORIZONTAL_FOV_RADIANS);
-    float line2y = 540 * sin(0.5 * HORIZONTAL_FOV_RADIANS);
-
-    line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(cameraXandY.x, cameraXandY.y),
-        cv::Scalar<double>(255, 255, 255), 1);
-    line(topDown, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(cameraXandY.x, cameraXandY.y),
-        cv::Scalar<double>(255, 255, 255), 1);
-
-    Scalar_<double> orange = Scalar_<double>(2, 106, 253);
-    Scalar_<double> bluegray = Scalar_<double>(255, 120, 120);
-
-    cv::Point_<float> topDownBallPos;
-    topDownBallPos.x = 100 + topDownBallMeanPoint.x * 5;
-    topDownBallPos.y = 240 + topDownBallMeanPoint.y * 5;
-
-    circle(topDown, topDownBallPos, (int) 5, orange, 2, 8, 0); // draw orange ball
-
-    line(topDown, topDownBallPos, (topDownBallPos + (speedPoint * 1)), orange, 2); //speed line
-
-    // END OF TOP DOWN INIT //
 
     // START INTERCEPTION CALC //
     cv::Point_<float> interceptPos;

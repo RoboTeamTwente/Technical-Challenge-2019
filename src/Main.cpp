@@ -2,12 +2,12 @@
 
 int main(int argc, char **argv) {
     // Initializing objects
-    Interface interfaceObj;
+    Interface interfaceObject;
     ImageProcessor imageProcessorObject;
     Camera cameraObject;
     BallFinder ballFinderObject;
 
-    cv::Mat cameraImageBGR;
+
     cv::Mat cameraImageThresholded;
 
     cv::Point2f cameraImageBallCenterPoint;
@@ -17,18 +17,17 @@ int main(int argc, char **argv) {
 
     // START LOOP
     while (true) {
-        bool captureSuccess = cameraObject.captureImage(cameraImageBGR);
+        bool captureSuccess = cameraObject.captureImage();
         if (!captureSuccess) {
             continue;
         }
 
-        // TODO separate cameraImageBGR and stuff drawn on it (should be display mat)
-
         // Convert camera image to single channel image with only the ball remaining in it
-        cameraImageThresholded = imageProcessorObject.imageConversion(cameraImageBGR, interfaceObj);
+        imageProcessorObject.imageConversion(cameraObject, interfaceObject);
 
         // Find ball center and radius on camera image, and store it in the variables created for this
-        imageProcessorObject.findBallContour(cameraImageThresholded, cameraImageBallCenterPoint, cameraImageBallRadius);
+        // TODO maybe return as a boolean, and if failed continue
+        imageProcessorObject.findBallContour();
 
         interfaceObj.drawContourAndBallTrail();
 
