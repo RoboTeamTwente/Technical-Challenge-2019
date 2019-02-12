@@ -5,7 +5,7 @@
 #include "ImageProcessor.h"
 #include "Interface.h"
 
-cv::Mat ImageProcessor::imageConversion(cv::Mat cameraImageBGR, Interface interfaceObj) {
+cv::Mat ImageProcessor::imageConversion(cv::Mat &cameraImageBGR, Interface &interfaceObj) {
     cv::Mat imgHSV;
     cv::Mat cameraImageThresholded; // Could be a field
 

@@ -11,7 +11,7 @@
 
 class ImageProcessor {
 public:
-    cv::Mat imageConversion(cv::Mat cameraImageBGR, Interface interfaceObj);
+    cv::Mat imageConversion(cv::Mat &cameraImageBGR, Interface &interfaceObj);
 
     void findBallContour(const cv::Mat &cameraImageThresholded, cv::Point2f &cameraImageBallCenterPoint,
                          float &cameraImageBallRadius);
