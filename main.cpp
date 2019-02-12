@@ -258,6 +258,7 @@ int main(int argc, char **argv) {
 
 
         if (frameCounter < BUFFER_SIZE){
+            // TODO fix nullPointer exception here, pointVector is not defined
             pointVector.push_back(cartesianPoint);
             meanPoint = cartesianPoint;
 
