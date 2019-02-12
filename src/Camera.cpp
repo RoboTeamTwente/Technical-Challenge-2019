@@ -24,7 +24,7 @@ bool Camera::captureImage(){
     // END IMAGE CAPTURE //
 }
 
-// TODO ?? what to do here
+
 Camera::Camera() {
     // INIT CAMERA
     Camera cameraObj = Camera(); // Starts camera
@@ -43,4 +43,3 @@ Camera::Camera() {
 
 
 
-}

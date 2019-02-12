@@ -15,8 +15,12 @@ public:
     bool working;
     cv::VideoCapture cap;
     int frameCounter;
-    std::chrono::time_point startFrameTime;
+
+
     cv::Mat cameraImageBGR;
+
+    // TODO fix time_point error
+    std::chrono::time_point startFrameTime;
 };
 
 
