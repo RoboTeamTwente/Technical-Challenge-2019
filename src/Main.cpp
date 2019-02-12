@@ -11,13 +11,6 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    cv::Mat cameraImageThresholded;
-
-    cv::Point2f cameraImageBallCenterPoint;
-    float cameraImageBallRadius;
-
-
-
     // START LOOP
     while (true) {
         bool captureSuccess = cameraObject.captureImage();
@@ -32,22 +25,23 @@ int main(int argc, char **argv) {
         // TODO maybe return as a boolean, and if failed continue
         imageProcessorObject.findBallContour();
 
-        interfaceObject.drawContourAndBallTrailOnCameraView();
 
 
+        ballFinderObject.findBall();
 
-        ballFinderObject.findBall(cameraObject.frameCounter, topDownBallX, topDownBallY, cameraObject.startFrameTime, oneradius, color,
-                 currentX, topDownBallMeanPoint, cameraImageThresholded, ballSpeed,
-                 topDown);
+        if (Settings::ENABLE_DRAWING) {
+            interfaceObject.drawContourAndBallTrailOnCameraView();
 
-        interfaceObject.displayMatsAndDrawText(cameraImageBGR, imgLines, topDownBallMeanPoint, cameraImageThresholded,
-                                                contourImage, ballSpeed,
-                                                topDown);
+            interfaceObject.drawTopDownView();
+
+            interfaceObject.displayMatsAndDrawText();
+        }
 
 
 
         // END OF LOOP //
 
+        // TODO improve performance by changing waitkey
         if (cv::waitKey(30) == 27) {
             std::cout << "esc key pressed; ending program" << std::endl;
             break;

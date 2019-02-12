@@ -11,6 +11,7 @@
 #include "Constants.h"
 #include "Main.h"
 #include "ImageProcessor.h"
+#include "Settings.h"
 
 class BallFinder {
 public:
