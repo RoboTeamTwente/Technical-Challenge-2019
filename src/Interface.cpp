@@ -15,6 +15,16 @@ Interface::Interface() {
     cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
     cv::moveWindow("Control", 500, 500);
 
+    topDownCameraPositionPoint = cv::Point_<float>(100, 240);
+    line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+
+    line1y = 540 * sin(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+
+
+    line2x = 540 * cos(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    line2y = 540 * sin(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    orange = cv::Scalar_<double>(2, 106, 253);
+    bluegray = cv::Scalar_<double>(255, 120, 120);
 
 }
 
@@ -57,20 +67,20 @@ void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImagePr
 void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imageProcessorObject) {
 
     // DRAWING TOP DOWN MAP STUFF //
-    topDown = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
+    topDownDrawingMat = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
 
-    line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
+    line(topDownDrawingMat, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
          cv::Scalar(255, 255, 255), 1);
-    line(topDown, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
+    line(topDownDrawingMat, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
          cv::Scalar(255, 255, 255), 1);
 
-    topDownBallPos.x = 100 + ballFinderObject.topDownBallMeanPoint.x * 5;
-    topDownBallPos.y = 240 + ballFinderObject.topDownBallMeanPoint.y * 5;
+    topDownBallPositionForDrawing.x = 100 + ballFinderObject.topDownBallMeanPoint.x * 5;
+    topDownBallPositionForDrawing.y = 240 + ballFinderObject.topDownBallMeanPoint.y * 5;
 
-    circle(topDown, topDownBallPos, (int) 5, orange, 2, 8, 0); // draw orange ball
+    circle(topDownDrawingMat, topDownBallPositionForDrawing, (int) 5, orange, 2, 8, 0); // draw orange ball
 
-    line(topDown, topDownBallPos, (topDownBallPos + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
+    line(topDownDrawingMat, topDownBallPositionForDrawing, (topDownBallPositionForDrawing + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
 
     // END OF TOP DOWN INIT //
 }
@@ -84,7 +94,7 @@ void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor image
     cameraImageForDisplay = cameraObject.cameraImageBGR + cameraImageTrailOverlay + cameraImageContourOverlay;
     imshow("Original", cameraObject.cameraImageBGR);
     cv::moveWindow("Original", 0, 600);
-    imshow("Top down view", topDown);
+    imshow("Top down view", topDownDrawingMat);
     cv::moveWindow("Top down view", 800, 600);
 
     // END DISPLAY MATS //
@@ -92,14 +102,14 @@ void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor image
     // START TOPDOWN TEXT DRAWING
 
     cv::String text1 = "x=" + std::__cxx11::to_string(ballFinderObject.topDownBallMeanPoint.x);
-    putText(topDown, text1, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
+    putText(topDownDrawingMat, text1, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
 
     cv::String text2 = "y=" + std::__cxx11::to_string(ballFinderObject.topDownBallMeanPoint.y);
-    putText(topDown, text2, cv::Point(10, 40 * 2), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+    putText(topDownDrawingMat, text2, cv::Point(10, 40 * 2), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
             cv::LINE_AA);
 
     cv::String text3 = "speed=" + std::__cxx11::to_string(ballFinderObject.ballSpeed);
-    putText(topDown, text3, cv::Point(10, Settings::IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+    putText(topDownDrawingMat, text3, cv::Point(10, Settings::IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
             cv::LINE_AA);
 
 

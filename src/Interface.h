@@ -28,17 +28,17 @@ public:
     explicit Interface();
     cv::Mat cameraImageTrailOverlay;
     cv::Mat cameraImageContourOverlay;
-    cv::Mat topDown;
-    cv::Point_<float> topDownBallPos;
-    // TODO some stuff below to constructor
-    cv::Point_<float> topDownCameraPositionPoint = cv::Point_<float>(100, 240);
-    cv::Scalar_<double> orange = cv::Scalar_<double>(2, 106, 253);
-    cv::Scalar_<double> bluegray = cv::Scalar_<double>(255, 120, 120);
-    float line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
-    float line1y = 540 * sin(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    cv::Mat topDownDrawingMat;
+    cv::Point_<float> topDownBallPositionForDrawing;
 
-    float line2x = 540 * cos(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
-    float line2y = 540 * sin(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    cv::Point_<float> topDownCameraPositionPoint;
+    cv::Scalar_<double> orange;
+    cv::Scalar_<double> bluegray;
+    float line1y;
+    float line1x;
+
+    float line2y;
+    float line2x;
 
     // TODO why does this reference to ImageProcessor not work?
     void drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject);
