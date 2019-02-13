@@ -15,7 +15,7 @@ public:
     bool working;
     cv::VideoCapture cap;
     int frameCounter;
-
+    bool captureSuccess;
 
     cv::Mat cameraImageBGR;
 

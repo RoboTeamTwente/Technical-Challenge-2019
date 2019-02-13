@@ -1,3 +1,5 @@
+#include <cmath>
+
 //
 // Created by freek on 08/02/19.
 //
@@ -17,7 +19,7 @@ namespace Constants{
     // HFOV calculation from https://www.mvteamcctv.com/news/Do-you-know-what-s-the-mean-of-FOV-HFOV-VFOV-DFOV-for-security-cameras.html
     float HALF_MEASURING_WIDTH = 30 / 2;
     float MEASURING_DISTANCE = 30;
-    float HORIZONTAL_FOV_RADIANS = 2 * atan(HALF_MEASURING_WIDTH / MEASURING_DISTANCE); // 0.927295 = 53.13 degrees
+    float HORIZONTAL_FOV_RADIANS = 2 * std::atan(HALF_MEASURING_WIDTH / MEASURING_DISTANCE); // 0.927295 = 53.13 degrees
 
     float FOCAL_LENGTH = (BALL_RADIUS_PIXELS * REAL_DISTANCE) / REAL_RADIUS;
 };

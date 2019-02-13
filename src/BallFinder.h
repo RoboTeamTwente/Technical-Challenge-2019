@@ -23,6 +23,7 @@ public:
     float topDownBallX;
     float topDownBallY;
     cv::Point2f topDownBallMeanPoint;
+    cv::Point_<float> ballVelocityVectorAsPoint;
 };
 
 

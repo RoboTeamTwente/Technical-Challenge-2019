@@ -21,12 +21,12 @@ void BallFinder::findBall(int cameraObject.frameCounter, float x, float y, const
 float &ballSpeed, cv::Mat &topDown) {
 
     float ballSpeed;
-    cv::Mat topDown;
-    ballSpeed = sqrt(speedPoint.x * speedPoint.x + speedPoint.y * speedPoint.y);
-    topDown = cv::Mat::zeros(cameraImageThresholded.size(), CV_8UC3);
+
+
+
 
     // START CARTESIAN X,Y CALCULATION //
-    float distance = (REAL_RADIUS * Constants::FOCAL_LENGTH) / oneradius;
+    float distance = (Constants::REAL_RADIUS * Constants::FOCAL_LENGTH) / oneradius;
 
 
     // trigonometry magic from https://math.stackexchange.com/questions/1320285/convert-a-pixel-displacement-to-angular-rotation
@@ -97,7 +97,8 @@ float &ballSpeed, cv::Mat &topDown) {
 
     // START BALL SPEED CALC  //
 
-    cv::Point_<float> speedPoint;
+
+
 
     // TODO actually implement time circular buffer
     // TODO store derivatives in vector
@@ -130,10 +131,11 @@ float &ballSpeed, cv::Mat &topDown) {
 
     } else {
     cv::Point_<float> pointDifference = prevMean - topDownBallMeanPoint;
-    speedPoint = pointDifference / dTime;
+    ballVelocityVectorAsPoint = pointDifference / dTime;
     }
     std::cout << "distance=" << distance << ", angle=" << angleDegrees << std::endl;
     std::cout << "x=" << distance << ", y=" << angleDegrees << std::endl;
+ballSpeed = sqrt(ballVelocityVectorAsPoint.x * ballVelocityVectorAsPoint.x + ballVelocityVectorAsPoint.y * ballVelocityVectorAsPoint.y);
     std::cout << "ballspeed in cm/s:" << ballSpeed << std::endl;
 
     // END BALL SPEED CALC //
@@ -142,21 +144,21 @@ float &ballSpeed, cv::Mat &topDown) {
     // START INTERCEPTION CALC //
     cv::Point_<float> interceptPos;
 
-    if (speedPoint.x >= 0) {
+    if (ballVelocityVectorAsPoint.x >= 0) {
     interceptPos = topDownBallMeanPoint;
     } else {
-    float timeWhereBallXisZero = -topDownBallMeanPoint.x / speedPoint.x;
-    float ballYwhereBallXisZero = timeWhereBallXisZero * speedPoint.y + topDownBallMeanPoint.y;
+    float timeWhereBallXisZero = -topDownBallMeanPoint.x / ballVelocityVectorAsPoint.x;
+    float ballYwhereBallXisZero = timeWhereBallXisZero * ballVelocityVectorAsPoint.y + topDownBallMeanPoint.y;
 
     if (ballYwhereBallXisZero > 0) {
     // right hand
-    cv::Point_<float> interceptSpeed = cv::Point_<float>(-speedPoint.y, speedPoint.x);
-    float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - speedPoint.x);
+    cv::Point_<float> interceptSpeed = cv::Point_<float>(-ballVelocityVectorAsPoint.y, ballVelocityVectorAsPoint.x);
+    float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - ballVelocityVectorAsPoint.x);
     interceptPos = cv::Point_<float>(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
     } else if (ballYwhereBallXisZero < 0) {
     // left hand
-    cv::Point_<float> interceptSpeed = cv::Point_<float>(speedPoint.y, -speedPoint.x);
-    float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - speedPoint.x);
+    cv::Point_<float> interceptSpeed = cv::Point_<float>(ballVelocityVectorAsPoint.y, -ballVelocityVectorAsPoint.x);
+    float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - ballVelocityVectorAsPoint.x);
     interceptPos = cv::Point_<float>(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
     //determine interceptpos
     } else if (ballYwhereBallXisZero == 0) {

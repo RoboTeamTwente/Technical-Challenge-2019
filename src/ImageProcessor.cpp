@@ -8,7 +8,7 @@ ImageProcessor::ImageProcessor() {
 }
 
 void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceObject) {
-    cv::Mat imgHSV;
+
 
     cvtColor(cameraObject.cameraImageBGR, imgHSV, cv::COLOR_BGR2HSV);
     //Convert the captured frame from BGR to HSV
@@ -29,12 +29,8 @@ void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceO
 
 void ImageProcessor::findBallContour() {
     // init variables
-    cv::Scalar colors[3];
-    double largestContourArea = 0;
-    colors[0] = cv::Scalar(255, 0, 0);
-    colors[1] = cv::Scalar(0, 255, 0);
-    colors[2] = cv::Scalar(0, 0, 255);
-    std::vector<cv::Point> largestContour;
+
+    largestContourArea = 0;
 
     // clone this image
     // TODO Find out if removing cloning is safe to speed up performance
@@ -64,7 +60,7 @@ void ImageProcessor::findBallContour() {
         }
     }
 
-    std::vector<cv::Point> largestContourAsPolygon;
+
 
     // convert contour to a polygon and store it in contoursAsPolygonsVector
     approxPolyDP(cv::Mat(largestContour), largestContourAsPolygon, 3, true);

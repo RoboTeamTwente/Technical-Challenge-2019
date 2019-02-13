@@ -1,5 +1,6 @@
 #include "Interface.h"
 
+
 // CONSTRUCTOR
 Interface::Interface() {
     // Open control window
@@ -17,7 +18,7 @@ Interface::Interface() {
 }
 
 void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject) {
-    // TODO define previousX, previousY
+
 
     cameraImageContourOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
@@ -32,57 +33,44 @@ void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImagePr
     // DRAWING BALL TRAIL START START //
 
     // TODO replace by vector of size 30 or so, and circularPush it each time
-
-    // refresh trail every 30 frames
-    if (cameraObject.frameCounter % 30 == 1) {
-        cameraImageTrailOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
-    }
-
-
-
-    if (previousX >= 0 && previousY >= 0 && imageProcessorObject.cameraImageBallCenterPoint.x >= 0 && imageProcessorObject.cameraImageBallCenterPoint.y >= 0) {
-
-        line(cameraImageTrailOverlay, cv::Point(imageProcessorObject.cameraImageBallCenterPoint.x, imageProcessorObject.cameraImageBallCenterPoint.y), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
-             10);
-        // drawing blue line on original image
-    }
-
-    previousX = imageProcessorObject.cameraImageBallCenterPoint.x;
-    previousY = imageProcessorObject.cameraImageBallCenterPoint.y;
+//
+//    // refresh trail every 30 frames
+//    if (cameraObject.frameCounter % 30 == 1) {
+//        cameraImageTrailOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
+//    }
+//
+//
+//
+//    if (previousX >= 0 && previousY >= 0 && imageProcessorObject.cameraImageBallCenterPoint.x >= 0 && imageProcessorObject.cameraImageBallCenterPoint.y >= 0) {
+//
+//        line(cameraImageTrailOverlay, cv::Point(imageProcessorObject.cameraImageBallCenterPoint.x, imageProcessorObject.cameraImageBallCenterPoint.y), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
+//             10);
+//        // drawing blue line on original image
+//    }
+//
+//    previousX = imageProcessorObject.cameraImageBallCenterPoint.x;
+//    previousY = imageProcessorObject.cameraImageBallCenterPoint.y;
 
     // DRAWING BALL TRAIL END //
 }
 
-void Interface::drawTopDownView() {
+void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imageProcessorObject) {
 
     // DRAWING TOP DOWN MAP STUFF //
+    topDown = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
-
-    cv::Point_<float> cameraXandY(100, 240);
-
-
-
-    float line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
-    float line1y = 540 * sin(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
-
-    float line2x = 540 * cos(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
-    float line2y = 540 * sin(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
 
     line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(cameraXandY.x, cameraXandY.y),
-         cv::Scalar<double>(255, 255, 255), 1);
+         cv::Scalar(255, 255, 255), 1);
     line(topDown, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(cameraXandY.x, cameraXandY.y),
-         cv::Scalar<double>(255, 255, 255), 1);
+         cv::Scalar(255, 255, 255), 1);
 
-    cv::Scalar_<double> orange = cv::Scalar_<double>(2, 106, 253);
-    cv::Scalar_<double> bluegray = cv::Scalar_<double>(255, 120, 120);
-
-    cv::Point_<float> topDownBallPos;
-    topDownBallPos.x = 100 + topDownBallMeanPoint.x * 5;
-    topDownBallPos.y = 240 + topDownBallMeanPoint.y * 5;
+    topDownBallPos.x = 100 + ballFinderObject.topDownBallMeanPoint.x * 5;
+    topDownBallPos.y = 240 + ballFinderObject.topDownBallMeanPoint.y * 5;
 
     circle(topDown, topDownBallPos, (int) 5, orange, 2, 8, 0); // draw orange ball
 
-    line(topDown, topDownBallPos, (topDownBallPos + (speedPoint * 1)), orange, 2); //speed line
+    line(topDown, topDownBallPos, (topDownBallPos + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
 
     // END OF TOP DOWN INIT //
 }

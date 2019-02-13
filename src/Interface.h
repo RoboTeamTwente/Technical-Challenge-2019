@@ -9,6 +9,9 @@
 #include <cv.hpp>
 #include "Constants.h"
 #include "ImageProcessor.h"
+#include "BallFinder.h"
+#include "Camera.h"
+
 
 class Interface {
 public:
@@ -25,7 +28,19 @@ public:
     explicit Interface();
     cv::Mat cameraImageTrailOverlay;
     cv::Mat cameraImageContourOverlay;
-    void drawContourAndBallTrailOnCameraView();
+    cv::Mat topDown;
+    cv::Point_<float> topDownBallPos;
+    // TODO move all the stuff below to constructor
+    cv::Point_<float> cameraXandY(100, 240);
+    cv::Scalar_<double> orange = cv::Scalar_<double>(2, 106, 253);
+    cv::Scalar_<double> bluegray = cv::Scalar_<double>(255, 120, 120);
+    float line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    float line1y = 540 * sin(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+
+    float line2x = 540 * cos(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    float line2y = 540 * sin(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
+    // TODO why does this not work?
+    void drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject) ();
 
 };
 
