@@ -1,7 +1,3 @@
-//
-// Created by freek on 08/02/19.
-//
-
 #include "Interface.h"
 
 // CONSTRUCTOR
@@ -41,6 +37,7 @@ void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImagePr
     if (cameraObject.frameCounter % 30 == 1) {
         cameraImageTrailOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
     }
+
 
 
     if (previousX >= 0 && previousY >= 0 && imageProcessorObject.cameraImageBallCenterPoint.x >= 0 && imageProcessorObject.cameraImageBallCenterPoint.y >= 0) {

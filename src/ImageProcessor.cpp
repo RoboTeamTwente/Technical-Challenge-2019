@@ -1,10 +1,11 @@
-//
-// Created by freek on 08/02/19.
-//
-
 #include "ImageProcessor.h"
 #include "Interface.h"
+#include "CircularBuffer.h"
 
+ImageProcessor::ImageProcessor() {
+    cameraImageBallCenterHistory = new CircularBuffer(new std::vector<cv::Point2f>(30));
+
+}
 
 void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceObject) {
     cv::Mat imgHSV;
@@ -15,7 +16,7 @@ void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceO
             cv::Scalar(interfaceObject.HIGH_VALUE, interfaceObject.HIGH_SATURATION, interfaceObject.HIGH_VALUE),
             cameraImageThresholded);
 
-       //morphological opening
+    //morphological opening
     erode(cameraImageThresholded, cameraImageThresholded,
           getStructuringElement(cv::MORPH_ELLIPSE,
                                 cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
@@ -63,11 +64,22 @@ void ImageProcessor::findBallContour() {
         }
     }
 
+    std::vector<cv::Point> largestContourAsPolygon;
+
     // convert contour to a polygon and store it in contoursAsPolygonsVector
     approxPolyDP(cv::Mat(largestContour), largestContourAsPolygon, 3, true);
     // find minimum enclosing circle of contour polygon and store in cameraImageBallCenterPoint and cameraImageBallRadius
-    minEnclosingCircle((cv::Mat) largestContourAsPolygon, cameraImageBallCenterPoint,
-                       cameraImageBallRadius);
+    minEnclosingCircle(largestContourAsPolygon, cameraImageBallCenterPoint, cameraImageBallRadius);
+
+    // TODO Check if this is not a null pointer exception
+
+    if (cameraImageBallCenterHistory->internalVector.empty()){
+        // Set all values to initial value
+        cameraImageBallCenterHistory = std::vector<cv::Point2f>(30);
+        std::fill(cameraImageBallCenterHistory.begin(), cameraImageBallCenterHistory.end(), cameraImageBallCenterPoint);
+    }
+
+
 }
 
 

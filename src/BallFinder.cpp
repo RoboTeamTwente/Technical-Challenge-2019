@@ -12,12 +12,7 @@ BallFinder::BallFinder(){
     auto startTime = std::chrono::high_resolution_clock::now();
 }
 
-template<typename T, typename A>
-void circularPush(std::vector<T, A> vec, T element) {
-    std::rotate(vec.rbegin(), vec.rbegin() + 1, vec.rend());
-    // replace first element
-    vec[0] = element;
-}
+
 
 
 

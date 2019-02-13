@@ -1,7 +1,3 @@
-//
-// Created by freek on 08/02/19.
-//
-
 #ifndef TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H
 #define TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H
 
@@ -13,6 +9,7 @@
 
 class ImageProcessor {
 public:
+    ImageProcessor(); // constructor
     void imageConversion(Camera &cameraObject, Interface &interfaceObject);
 
     void findBallContour();
@@ -21,7 +18,7 @@ public:
     cv::Mat cameraImageThresholded; // Could be a field
     cv::Point2f cameraImageBallCenterPoint;
     float cameraImageBallRadius;
-    std::vector<cv::Point2f> cameraImageBallCenterHistory;
+    CircularBuffer* cameraImageBallCenterHistory;
 };
 
 
