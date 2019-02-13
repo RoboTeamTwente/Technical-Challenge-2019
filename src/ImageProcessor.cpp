@@ -51,7 +51,7 @@ void ImageProcessor::findBallContour() {
         drawContours(contourImage, contours, idx, colors[idx % 3]);
 
         // calculate area of contour
-        double contourArea = contourArea(contours[idx], false);
+        double contourArea = cv::contourArea(contours[idx], false);
 
         // if it's the largest area so far:
         if (contourArea > largestContourArea) {
