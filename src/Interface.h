@@ -30,8 +30,8 @@ public:
     cv::Mat cameraImageContourOverlay;
     cv::Mat topDown;
     cv::Point_<float> topDownBallPos;
-    // TODO move all the stuff below to constructor
-    cv::Point_<float> cameraXandY(100, 240);
+    // TODO some stuff below to constructor
+    cv::Point_<float> topDownCameraPositionPoint = cv::Point_<float>(100, 240);
     cv::Scalar_<double> orange = cv::Scalar_<double>(2, 106, 253);
     cv::Scalar_<double> bluegray = cv::Scalar_<double>(255, 120, 120);
     float line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);
@@ -39,8 +39,11 @@ public:
 
     float line2x = 540 * cos(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
     float line2y = 540 * sin(0.5 * Constants::HORIZONTAL_FOV_RADIANS);
-    // TODO why does this not work?
-    void drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject) ();
+
+    // TODO why does this reference to ImageProcessor not work?
+    void drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject);
+    void drawTopDownView(BallFinder ballFinderObject, ImageProcessor imageProcessorObject);
+    void displayMatsAndDrawText(Camera cameraObject, ImageProcessor imageProcessorObject, BallFinder ballFinderObject);
 
 };
 

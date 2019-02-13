@@ -15,10 +15,10 @@ Interface::Interface() {
     cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
     cv::moveWindow("Control", 500, 500);
 
+
 }
 
 void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject) {
-
 
     cameraImageContourOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
@@ -28,7 +28,7 @@ void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImagePr
     }
 
     // draw circle of ball on image
-    circle(cameraImageContourOverlay, imageProcessorObject.cameraImageBallCenterPoint, (int) imageProcessorObject.cameraImageBallRadius, color, 2, 8, 0);
+    circle(cameraImageContourOverlay, imageProcessorObject.cameraImageBallCenterPoint, (int) imageProcessorObject.cameraImageBallRadius, cv::Scalar(255,255,255), 2, 8, 0);
 
     // DRAWING BALL TRAIL START START //
 
@@ -60,9 +60,9 @@ void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imag
     topDown = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
 
-    line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(cameraXandY.x, cameraXandY.y),
+    line(topDown, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
          cv::Scalar(255, 255, 255), 1);
-    line(topDown, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(cameraXandY.x, cameraXandY.y),
+    line(topDown, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
          cv::Scalar(255, 255, 255), 1);
 
     topDownBallPos.x = 100 + ballFinderObject.topDownBallMeanPoint.x * 5;
@@ -75,7 +75,7 @@ void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imag
     // END OF TOP DOWN INIT //
 }
 
-void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor imageProcessorObject) {
+void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor imageProcessorObject, BallFinder ballFinderObject) {
     // START DISPLAY MATS //
     cv::Mat cameraImageForDisplay;
 
@@ -91,14 +91,14 @@ void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor image
 
     // START TOPDOWN TEXT DRAWING
 
-    cv::String text1 = "x=" + std::__cxx11::to_string(meanPoint.x);
+    cv::String text1 = "x=" + std::__cxx11::to_string(ballFinderObject.topDownBallMeanPoint.x);
     putText(topDown, text1, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv::LINE_AA);
 
-    cv::String text2 = "y=" + std::__cxx11::to_string(meanPoint.y);
+    cv::String text2 = "y=" + std::__cxx11::to_string(ballFinderObject.topDownBallMeanPoint.y);
     putText(topDown, text2, cv::Point(10, 40 * 2), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
             cv::LINE_AA);
 
-    cv::String text3 = "speed=" + std::__cxx11::to_string(ballSpeed);
+    cv::String text3 = "speed=" + std::__cxx11::to_string(ballFinderObject.ballSpeed);
     putText(topDown, text3, cv::Point(10, Settings::IMAGE_HEIGHT - 40), cv::FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
             cv::LINE_AA);
 

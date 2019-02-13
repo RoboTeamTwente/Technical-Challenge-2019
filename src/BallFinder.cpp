@@ -16,14 +16,7 @@ BallFinder::BallFinder(){
 
 
 
-void BallFinder::findBall(int cameraObject.frameCounter, float x, float y, const std::chrono::time_point &cameraObject.startFrameTime, float oneradius,
-              const cv::Scalar_<double> &color, int currentX, :cv::Point_<float> &topDownBallMeanPoint, cv::Mat &cameraImageThresholded,
-float &ballSpeed, cv::Mat &topDown) {
-
-    float ballSpeed;
-
-
-
+void BallFinder::findBall() {
 
     // START CARTESIAN X,Y CALCULATION //
     float distance = (Constants::REAL_RADIUS * Constants::FOCAL_LENGTH) / oneradius;
