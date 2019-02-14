@@ -2,7 +2,7 @@
 
 template<typename T>
 CircularBuffer<T>::CircularBuffer(std::vector<T> inputVector) {
-    internalVector = inputVector.copy();
+    internalVector = inputVector; // apparently copies the vector
     indexOffset = 0;
 }
 

@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <opencv2/core/types_c.h>
 #include <cxcore.hpp>
+#include "CircularBuffer.h"
 
 class Interface;
 class ImageProcessor;
