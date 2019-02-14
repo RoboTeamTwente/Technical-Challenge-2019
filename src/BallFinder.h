@@ -10,12 +10,16 @@
 #include <numeric>
 #include "Constants.h"
 #include "Main.h"
-#include "ImageProcessor.h"
+
 #include "Settings.h"
 #include <vector>
 #include <algorithm>
 #include <opencv2/core/types_c.h>
 #include <cxcore.hpp>
+
+class Interface;
+class ImageProcessor;
+class Camera;
 
 class BallFinder {
 public:
@@ -48,5 +52,5 @@ public:
     void findBallInterceptionVector();
 };
 
-
+#include "Interface.h"
 #endif //TECHNICAL_CHALLENGE_2019_BALLFINDER_H

@@ -5,15 +5,22 @@
 #ifndef TECHNICAL_CHALLENGE_2019_INTERFACE_H
 #define TECHNICAL_CHALLENGE_2019_INTERFACE_H
 
-
+#include "Camera.h"
 #include <cv.hpp>
 #include "Constants.h"
-#include "Camera.h"
+#include <iostream>
+#include "Settings.h"
 #include "ImageProcessor.h"
+
+class BallFinder;
+
 #include "BallFinder.h"
 
 
+
 class Interface {
+
+
 public:
     int LOW_HUE = 0;
     int HIGH_HUE = 5;

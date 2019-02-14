@@ -10,7 +10,7 @@ ImageProcessor::ImageProcessor(){
 
 }
 
-void ImageProcessor::imageConversion(Camera &cameraObject, Interface &interfaceObject) {
+void ImageProcessor::imageConversion(Camera cameraObject, Interface interfaceObject) {
 
 
     cvtColor(cameraObject.cameraImageBGR, imgHSV, cv::COLOR_BGR2HSV);

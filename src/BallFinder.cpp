@@ -88,7 +88,7 @@ void BallFinder::findBallSpeedVector(Camera cameraObject) {
 }
 
 void BallFinder::findBallInterceptionVector() {
-    // TODO refactor for efficiency?
+    // TODO refactor this (and other methods) for efficiency?
 
     if (ballVelocityVectorAsPoint.x >= 0) {
         interceptPos = topDownBallMeanPoint;

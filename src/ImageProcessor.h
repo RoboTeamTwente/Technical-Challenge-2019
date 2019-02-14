@@ -3,11 +3,14 @@
 
 
 #include <opencv2/core/mat.hpp>
-#include "Interface.h"
+
+#include <opencv2/imgproc.hpp>
 #include "Camera.h"
 #include "Settings.h"
-#include "Interface.h"
+
 #include "CircularBuffer.h"
+class Interface;
+
 
 class ImageProcessor {
 public:
@@ -23,11 +26,12 @@ public:
     std::vector<cv::Point> largestContourAsPolygon;
     std::vector<cv::Point> largestContour;
 
+
     ImageProcessor();
-    void imageConversion(Camera &cameraObject, Interface &interfaceObject);
+    void imageConversion(Camera cameraObject, Interface interfaceObject);
 
     void findBallContour();
 };
 
-
+#include "Interface.h"
 #endif //TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H

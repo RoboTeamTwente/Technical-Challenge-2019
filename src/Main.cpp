@@ -31,11 +31,9 @@ int main(int argc, char **argv) {
         ballFinderObject.findBallInterceptionVector();
 
         if (Settings::ENABLE_DRAWING) {
-            interfaceObject.drawContourAndBallTrailOnCameraView();
-
-            interfaceObject.drawTopDownView();
-
-            interfaceObject.displayMatsAndDrawText();
+            interfaceObject.drawContourAndBallTrailOnCameraView(cameraObject, imageProcessorObject);
+            interfaceObject.drawTopDownView(ballFinderObject, imageProcessorObject);
+            interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
         }
 
 

@@ -7,6 +7,7 @@
 
 
 #include <opencv2/videoio.hpp>
+#include <chrono>
 
 class Camera {
 public:
