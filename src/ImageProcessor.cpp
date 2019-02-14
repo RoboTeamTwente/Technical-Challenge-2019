@@ -1,8 +1,7 @@
 #include "ImageProcessor.h"
-#include "Interface.h"
-#include "CircularBuffer.h"
 
-ImageProcessor::ImageProcessor() : cameraImageBallCenterHistory(circularBufferInput){
+
+ImageProcessor::ImageProcessor(){
 
 
     colors[0] = cv::Scalar(255, 0, 0);
@@ -73,10 +72,17 @@ void ImageProcessor::findBallContour() {
 
     // TODO Check if this is not a null pointer exception
 
-    if (cameraImageBallCenterHistory->internalVector.empty()){
+    if (cameraImageBallCenterHistory == nullptr){
+
+        std::vector<cv::Point2f> inputVector(30);
         // Set all values to initial value
-        cameraImageBallCenterHistory = std::vector<cv::Point2f>(30);
-        std::fill(cameraImageBallCenterHistory.begin(), cameraImageBallCenterHistory.end(), cameraImageBallCenterPoint);
+        std::fill(inputVector.begin(), inputVector.end(), cameraImageBallCenterPoint);
+
+
+        cameraImageBallCenterHistory = new CircularBuffer<cv::Point2f>(inputVector);
+
+    } else {
+        cameraImageBallCenterHistory->circularPush(cameraImageBallCenterPoint);
     }
 
 

@@ -6,6 +6,8 @@
 #include "Interface.h"
 #include "Camera.h"
 #include "Settings.h"
+#include "Interface.h"
+#include "CircularBuffer.h"
 
 class ImageProcessor {
 public:
@@ -20,9 +22,8 @@ public:
     cv::Scalar colors[3];
     std::vector<cv::Point> largestContourAsPolygon;
     std::vector<cv::Point> largestContour;
-    std::vector<cv::Point2f>(30) circularBufferInput = {};
 
-    ImageProcessor() : cameraImageBallCenterHistory(std::vector<cv::Point2f>);
+    ImageProcessor();
     void imageConversion(Camera &cameraObject, Interface &interfaceObject);
 
     void findBallContour();
