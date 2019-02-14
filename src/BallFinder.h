@@ -20,7 +20,7 @@
 class BallFinder {
 public:
 
-    std::vector<double> timeVector;
+    float ballDistanceFromCamera;
     cv::Point2f topDownBallPoint;
 
     CircularBuffer<cv::Point2f>* topDownBallPointHistory;
@@ -28,7 +28,11 @@ public:
 
     cv::Point2f topDownBallMeanPoint;
 
+    std::chrono::steady_clock::time_point endFrameTime;
+
     cv::Point_<float> ballVelocityVectorAsPoint;
+
+    cv::Point_<float> interceptPos;
 
     float ballSpeed;
     int ballPixelsFromCenterX;
@@ -38,6 +42,7 @@ public:
     explicit BallFinder(); // CONSTRUCTOR
     void findTopDownBallPoint(ImageProcessor imageProcessorObject);
     void findMeanOfBallPoints();
+    void findBallInterceptionVector();
 };
 
 

@@ -71,6 +71,11 @@ void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imag
     line(topDownDrawingMat, topDownBallPositionForDrawing, (topDownBallPositionForDrawing + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
 
     // END OF TOP DOWN INIT //
+
+    // drawing intercept line
+
+    line(topDownDrawingMat, topDownCameraPositionPoint, topDownCameraPositionPoint + (ballFinderObject.interceptPos * 1), bluegray, 2); //speed line
+
 }
 
 void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor imageProcessorObject, BallFinder ballFinderObject) {
