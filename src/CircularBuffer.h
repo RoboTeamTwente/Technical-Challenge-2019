@@ -7,17 +7,17 @@
 
 #include <vector>
 #include <algorithm>
-
+template<typename T>
 class CircularBuffer {
 public:
 
 
     int currentElement;
-    template<typename T>
+
     explicit CircularBuffer();
 
 
-    template<typename T>
+
     std::vector<T> internalVector;
 };
 
