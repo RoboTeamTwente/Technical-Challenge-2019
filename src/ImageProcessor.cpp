@@ -2,8 +2,12 @@
 #include "Interface.h"
 #include "CircularBuffer.h"
 
-ImageProcessor::ImageProcessor() {
-    cameraImageBallCenterHistory = new CircularBuffer(new std::vector<cv::Point2f>(30));
+ImageProcessor::ImageProcessor() : cameraImageBallCenterHistory(circularBufferInput){
+
+
+    colors[0] = cv::Scalar(255, 0, 0);
+    colors[1] = cv::Scalar(0, 255, 0);
+    colors[2] = cv::Scalar(0, 0, 255);
 
 }
 

@@ -9,26 +9,23 @@
 
 class ImageProcessor {
 public:
-    ImageProcessor(); // constructor
-    void imageConversion(Camera &cameraObject, Interface &interfaceObject);
-
-    void findBallContour();
-    std::vector<std::vector<cv::Point>> contours; // Could be a field
-    std::vector<std::vector<cv::Point>> contoursAsPolygonsVector; // Could be a field
-    cv::Mat cameraImageThresholded; // Could be a field
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<std::vector<cv::Point>> contoursAsPolygonsVector;
+    cv::Mat cameraImageThresholded;
     cv::Point2f cameraImageBallCenterPoint;
     float cameraImageBallRadius;
-    CircularBuffer* cameraImageBallCenterHistory;
+    CircularBuffer<cv::Point2f>* cameraImageBallCenterHistory;
     cv::Mat imgHSV;
-    // TODO move some stuff below to constructor
     double largestContourArea;
     cv::Scalar colors[3];
     std::vector<cv::Point> largestContourAsPolygon;
-    colors[0] = cv::Scalar(255, 0, 0);
-    colors[1] = cv::Scalar(0, 255, 0);
-    colors[2] = cv::Scalar(0, 0, 255);
     std::vector<cv::Point> largestContour;
+    std::vector<cv::Point2f>(30) circularBufferInput = {};
 
+    ImageProcessor() : cameraImageBallCenterHistory(std::vector<cv::Point2f>);
+    void imageConversion(Camera &cameraObject, Interface &interfaceObject);
+
+    void findBallContour();
 };
 
 

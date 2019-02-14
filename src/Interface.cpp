@@ -1,6 +1,7 @@
 #include "Interface.h"
 
 
+
 // CONSTRUCTOR
 Interface::Interface() {
     // Open control window

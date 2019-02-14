@@ -8,9 +8,9 @@
 
 #include <cv.hpp>
 #include "Constants.h"
+#include "Camera.h"
 #include "ImageProcessor.h"
 #include "BallFinder.h"
-#include "Camera.h"
 
 
 class Interface {
@@ -25,7 +25,7 @@ public:
     int HIGH_VALUE = 255;
 
     // CONSTRUCTOR
-    explicit Interface();
+
     cv::Mat cameraImageTrailOverlay;
     cv::Mat cameraImageContourOverlay;
     cv::Mat topDownDrawingMat;
@@ -40,6 +40,7 @@ public:
     float line2y;
     float line2x;
 
+    explicit Interface();
     // TODO why does this reference to ImageProcessor not work?
     void drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject);
     void drawTopDownView(BallFinder ballFinderObject, ImageProcessor imageProcessorObject);

@@ -5,10 +5,12 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 add_executable(Technical-Challenge-2019
-        src/Main.cpp
-        src/Settings.h
-        src/CircularBuffer.cpp
-        src/CircularBuffer.h)
+#        src/BallFinder.h
+#        src/BallFinder.cpp
+#        src/Constants.h
+#        src/Settings.h
+#        src/CircularBuffer.h
+        src/Main.cpp)
 
 find_package(OpenCV REQUIRED )
 INCLUDE_DIRECTORIES( ${OpenCV_INCLUDE_DIRS} )
