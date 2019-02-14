@@ -32,6 +32,7 @@ Interface::Interface() {
 void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject) {
 
     cameraImageContourOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
+    cameraImageTrailOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
     // draw imageProcessorObject.contours on image
     for (int i = 0; i < imageProcessorObject.contours.size(); i++) {
@@ -43,24 +44,10 @@ void Interface::drawContourAndBallTrailOnCameraView(Camera cameraObject, ImagePr
 
     // DRAWING BALL TRAIL START START //
 
-    // TODO replace by vector of size 30 or so, and circularPush it each time
-//
-//    // refresh trail every 30 frames
-//    if (cameraObject.frameCounter % 30 == 1) {
-//        cameraImageTrailOverlay = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
-//    }
-//
-//
-//
-//    if (previousX >= 0 && previousY >= 0 && imageProcessorObject.cameraImageBallCenterPoint.x >= 0 && imageProcessorObject.cameraImageBallCenterPoint.y >= 0) {
-//
-//        line(cameraImageTrailOverlay, cv::Point(imageProcessorObject.cameraImageBallCenterPoint.x, imageProcessorObject.cameraImageBallCenterPoint.y), cv::Point(previousX, previousY), cv::Scalar(255, 0, 0),
-//             10);
-//        // drawing blue line on original image
-//    }
-//
-//    previousX = imageProcessorObject.cameraImageBallCenterPoint.x;
-//    previousY = imageProcessorObject.cameraImageBallCenterPoint.y;
+    for (int i=0; i<imageProcessorObject.cameraImageBallCenterHistory->getVector().size()-1; i++) {
+        cv::line(cameraImageTrailOverlay,imageProcessorObject.cameraImageBallCenterHistory->get(i),
+                imageProcessorObject.cameraImageBallCenterHistory->get(i+1),cv::Scalar(255, 0, 0),10);
+    }
 
     // DRAWING BALL TRAIL END //
 }

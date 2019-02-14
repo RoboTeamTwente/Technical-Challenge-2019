@@ -18,6 +18,7 @@ public:
     void set(T element, int relativeIndex);
     explicit CircularBuffer(std::vector<T> inputVector);
     void circularPush(T element);
+    std::vector<T> getVector();
 };
 
 
