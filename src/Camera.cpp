@@ -7,6 +7,7 @@
 
 bool Camera::captureImage(){
     startFrameTime = std::chrono::steady_clock::now();
+    // TODO implement a circular buffer for frame times to replace frameDurationInSeconds which is not that accurate
 
     // get image from camera and save to the Mat
 

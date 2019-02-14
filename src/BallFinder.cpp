@@ -29,7 +29,8 @@ void BallFinder::findMeanOfBallPoints() {
     // START POSITION MEAN CALCULATION //
 
     if (topDownBallPointHistory == nullptr) {
-
+        topDownBallMeanPoint=topDownBallPoint; // for initializing previousTopDownBallMeanPoint
+        
         std::vector<cv::Point2f> inputVector(Settings::DERIVATIVE_BUFFER_SIZE);
         // Set all values to initial value
         std::fill(inputVector.begin(), inputVector.end(), topDownBallPoint);
@@ -44,6 +45,10 @@ void BallFinder::findMeanOfBallPoints() {
 
     topDownBallPointHistorySum = accumulate(topDownBallPointHistory->getVector().begin(),
                                             topDownBallPointHistory->getVector().end(), cv::Point2f(0.0f, 0.0f));
+    
+
+    previousTopDownBallMeanPoint=topDownBallMeanPoint;
+    
     topDownBallMeanPoint = cv::Point_<float>(topDownBallPointHistorySum.x / topDownBallPointHistory->getVector().size(),
                                              topDownBallPointHistorySum.y /
                                              topDownBallPointHistory->getVector().size());
@@ -51,49 +56,33 @@ void BallFinder::findMeanOfBallPoints() {
 }
 
 void BallFinder::findBallSpeedVector(Camera cameraObject) {
-    // atan uses radians
-
     endFrameTime = std::chrono::steady_clock::now();
     auto frameDuration = (cameraObject.startFrameTime - endFrameTime);
     double frameDurationInSeconds = std::chrono::duration<double>(frameDuration).count(); //convert to seconds
 
     // START BALL SPEED CALC  //
-
+    // TODO how does rest of roboteam determine ball pos and speed? I feel like this method is not the best
 
     if (Settings::COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= Settings::DERIVATIVE_BUFFER_SIZE) {
-        // using technique in https://www.varsitytutors.com/hotmath/hotmath_help/topics/line-of-best-fit
 
-        // TODO how does rest of roboteam determine ball pos and speed? I feel like this method is not the best
+        ballVelocityVectorAsPoint=cv::Point2f(0,0);
 
-        for (int i = 0; i < topDownBallPointHistory->getVector().size(); i++) {
-            2;
+        for (int i = 1; i < topDownBallPointHistory->getVector().size(); i++) {
+            ballVelocityVectorAsPoint += cv::Point2f((topDownBallPointHistory->get(i).x - topDownBallPointHistory->get(0).x),(topDownBallPointHistory->get(i).y - topDownBallPointHistory->get(0).y));
         }
-//
-//        std::vector<cv::Point_<float>>  derivatives;
-//        for (int firstIndex = 0; firstIndex < pointVector.size() - 1; ++firstIndex) {
-//            for (int secondIndex = firstIndex + 1; secondIndex < pointVector.size(); ++secondIndex) {
-//
-//                cv::Point_<float> firstPoint = pointVector[firstIndex];
-//                cv::Point_<float> secondPoint = pointVector[secondIndex];
-//                double firstTime = timeVector[firstIndex];
-//                double secondTime = timeVector[secondIndex];
-//
-//                cv::Point_<float> derivative = (secondPoint - firstPoint) / (secondTime - firstTime);
-//
-//            }
-//        }
-
-
+        ballVelocityVectorAsPoint.x /= topDownBallPointHistory->getVector().size()-1;
+        ballVelocityVectorAsPoint.y /= topDownBallPointHistory->getVector().size()-1;
+        
+        ballVelocityVectorAsPoint /= frameDurationInSeconds;
+        
+        
     } else {
-        cv::Point_<float> pointDifference = prevMean - topDownBallMeanPoint;
+        cv::Point_<float> pointDifference = previousTopDownBallMeanPoint - topDownBallMeanPoint;
         ballVelocityVectorAsPoint = pointDifference / frameDurationInSeconds;
     }
-    std::cout << "distance=" << distance << ", angle=" << angleDegrees << std::endl;
-    std::cout << "x=" << distance << ", y=" << angleDegrees << std::endl;
+
     ballSpeed = sqrt(ballVelocityVectorAsPoint.x * ballVelocityVectorAsPoint.x +
                      ballVelocityVectorAsPoint.y * ballVelocityVectorAsPoint.y);
-    std::cout << "ballspeed in cm/s:" << ballSpeed << std::endl;
-
     // END BALL SPEED CALC //
 
 }

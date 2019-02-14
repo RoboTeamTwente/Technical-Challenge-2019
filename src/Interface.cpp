@@ -106,7 +106,13 @@ void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor image
             cv::LINE_AA);
 
 
+
     // END TOPDOWN TEXT DRAWING //
 
+    // write text in terminal
+    std::cout << "distance=" << ballFinderObject.ballDistanceFromCamera << ", angle=" << ballFinderObject.ballAngleInCameraPlaneDegrees << std::endl;
+    std::cout << "x=" << ballFinderObject.topDownBallMeanPoint.x << ", y=" << ballFinderObject.topDownBallMeanPoint.y << std::endl;
+
+    std::cout << "ballspeed in cm/s:" << ballFinderObject.ballSpeed << std::endl;
 
 }

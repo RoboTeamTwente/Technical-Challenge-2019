@@ -30,7 +30,7 @@ public:
 
     std::chrono::steady_clock::time_point endFrameTime;
 
-    cv::Point_<float> ballVelocityVectorAsPoint;
+    static cv::Point_<float> ballVelocityVectorAsPoint;
 
     cv::Point_<float> interceptPos;
 
@@ -39,9 +39,12 @@ public:
     float ballAngleInCameraPlane;
     float ballAngleInCameraPlaneDegrees;
 
+    cv::Point2f previousTopDownBallMeanPoint;
+
     explicit BallFinder(); // CONSTRUCTOR
     void findTopDownBallPoint(ImageProcessor imageProcessorObject);
     void findMeanOfBallPoints();
+    void findBallSpeedVector(Camera cameraObject);
     void findBallInterceptionVector();
 };
 

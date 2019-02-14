@@ -25,9 +25,10 @@ int main(int argc, char **argv) {
         // TODO maybe return as a boolean, and if failed continue
         imageProcessorObject.findBallContour();
 
-
-
-        ballFinderObject.findBall();
+        ballFinderObject.findTopDownBallPoint(imageProcessorObject);
+        ballFinderObject.findMeanOfBallPoints();
+        ballFinderObject.findBallSpeedVector(cameraObject);
+        ballFinderObject.findBallInterceptionVector();
 
         if (Settings::ENABLE_DRAWING) {
             interfaceObject.drawContourAndBallTrailOnCameraView();
