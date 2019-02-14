@@ -1,87 +1,52 @@
-#include <vector>
-#include <algorithm>
-#include <opencv2/core/types_c.h>
-#include <cxcore.hpp>
 #include "BallFinder.h"
 
 
 // CONSTRUCTOR
 BallFinder::BallFinder(){
-    topDownBallX = -1;
-    topDownBallY = -1;
-    topDownBallMeanPoint = cv::Point2f(-1, -1);
-
-
 }
 
+void BallFinder::findTopDownBallPoint(ImageProcessor imageProcessorObject) {
 
-
-void BallFinder::findBall() {
-
-    // START CARTESIAN X,Y CALCULATION //
-    float distance = (Constants::REAL_RADIUS * Constants::FOCAL_LENGTH) / oneradius;
-
+    float ballDistanceFromCamera = (Constants::REAL_RADIUS * Constants::FOCAL_LENGTH) / imageProcessorObject.cameraImageBallRadius;
 
     // trigonometry magic from https://math.stackexchange.com/questions/1320285/convert-a-pixel-displacement-to-angular-rotation
 
-    int pixelsFromCenter = currentX - (0.5 * Settings::IMAGE_WIDTH);
-    float angleRadians = atan((2 * pixelsFromCenter * tan(0.5 * Constants::HORIZONTAL_FOV_RADIANS)) / (Settings::IMAGE_WIDTH));
-    float angleDegrees = angleRadians * (180.0 / 3.141592653589793238463);
+    ballPixelsFromCenterX = imageProcessorObject.cameraImageBallCenterPoint.x - (0.5 * Settings::IMAGE_WIDTH);
 
-    float prevX = x;
-    float prevY = y;
-    x = distance * cos(angleRadians);
-    y = distance * sin(angleRadians);
+    ballAngleInCameraPlane = atan( (2 * ballPixelsFromCenterX * tan(0.5 * Constants::HORIZONTAL_FOV_RADIANS))
+            / (Settings::IMAGE_WIDTH));
 
-    // END X,Y CALCULATION //
+    ballAngleInCameraPlaneDegrees = ballAngleInCameraPlane * (180.0 / M_PIl);
+
+    topDownBallPoint.x = ballDistanceFromCamera * cos(ballAngleInCameraPlane);
+    topDownBallPoint.y = ballDistanceFromCamera * sin(ballAngleInCameraPlane);
+}
 
 
-    // TODO find out difference prevX, previousCameraBallX, x, currentX
-
+void BallFinder::findMeanOfBallPoints() {
 
     // START POSITION MEAN CALCULATION //
 
-    cv::Point_<float> prevPoint;
+    if (topDownBallPointHistory == nullptr){
 
-    prevPoint.x = prevX;
-    prevPoint.y = prevY;
-
-    cv::Point_<float> cartesianPoint;
-
-    cartesianPoint.x = x;
-    cartesianPoint.y = y;
-
-    cv::Point_<float> prevMean = topDownBallMeanPoint;
+        std::vector<cv::Point2f> inputVector(Settings::DERIVATIVE_BUFFER_SIZE);
+        // Set all values to initial value
+        std::fill(inputVector.begin(), inputVector.end(), topDownBallPoint);
 
 
-    if (cameraObject.frameCounter < Settings::DERIVATIVE_BUFFER_SIZE) {
-    pointVector.push_back(cartesianPoint); // TODO fix null pointer exception here as pointVector is not initialized
-    topDownBallMeanPoint = cartesianPoint;
+        topDownBallPointHistory = new CircularBuffer<cv::Point2f>(inputVector);
 
-    //            auto currentTime= std::chrono::high_resolution_clock::now() - startTime;
-    //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
-    //            timeVector.push_back(currentTimeSeconds);
-    //push back
-
-}
-    if (cameraObject.frameCounter >= Settings::DERIVATIVE_BUFFER_SIZE) {
-    // circular push
-    circularPush(pointVector, cartesianPoint);
-
-    // calculate mean of points
-
-    cv::Point_<float> zero(0.0f, 0.0f);
-    cv::Point_<float> sum = accumulate(pointVector.begin(), pointVector.end(), zero);
-
-    topDownBallMeanPoint = cv::Point_<float>(sum.x / pointVector.size(), sum.y / pointVector.size());
-
-    //            auto currentTime= std::chrono::high_resolution_clock::now() - startTime;
-    //            double currentTimeSeconds = std::chrono::duration<double>(currentTime).count();
-    //            circularPush(timeVector, currentTimeSeconds);
+    } else {
+        topDownBallPointHistory->circularPush(topDownBallPoint);
     }
 
-    // END POSITION MEAN CALCULATION //
 
+    topDownBallPointHistorySum = accumulate(topDownBallPointHistory->getVector().begin(), topDownBallPointHistory->getVector().end(), zero);
+    topDownBallMeanPoint = cv::Point_<float>(topDownBallPointHistorySum.x / topDownBallPointHistory->getVector().size(), topDownBallPointHistorySum.y / topDownBallPointHistory->getVector().size());
+
+}
+
+void BallFinder::findBallSpeedVector() {
     // atan uses radians
 
     auto endFrameTime = std::chrono::_V2::system_clock::now();
@@ -99,40 +64,44 @@ void BallFinder::findBall() {
     if (Settings::COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= Settings::DERIVATIVE_BUFFER_SIZE) {
 
 
-    std::vector<cv::Point_ < float>>
-        derivatives;
-    for (int firstIndex = 0; firstIndex < pointVector.size() - 1; ++firstIndex) {
-    for (int secondIndex = firstIndex + 1; secondIndex < pointVector.size(); ++secondIndex) {
+        std::vector<cv::Point_<float>>
+                derivatives;
+        for (int firstIndex = 0; firstIndex < pointVector.size() - 1; ++firstIndex) {
+            for (int secondIndex = firstIndex + 1; secondIndex < pointVector.size(); ++secondIndex) {
 
-    cv::Point_<float> firstPoint = pointVector[firstIndex];
-    cv::Point_<float> secondPoint = pointVector[secondIndex];
-    double firstTime = timeVector[firstIndex];
-    double secondTime = timeVector[secondIndex];
+                cv::Point_<float> firstPoint = pointVector[firstIndex];
+                cv::Point_<float> secondPoint = pointVector[secondIndex];
+                double firstTime = timeVector[firstIndex];
+                double secondTime = timeVector[secondIndex];
 
-    cv::Point_<float> derivative = (secondPoint - firstPoint) / (secondTime - firstTime);
+                cv::Point_<float> derivative = (secondPoint - firstPoint) / (secondTime - firstTime);
 
-    }
-    }
-
-
-    // calculate derivative
-    // store in vector
+            }
+        }
 
 
-    //calculate mean of vector
+        // calculate derivative
+        // store in vector
+
+
+        //calculate mean of vector
 
 
     } else {
-    cv::Point_<float> pointDifference = prevMean - topDownBallMeanPoint;
-    ballVelocityVectorAsPoint = pointDifference / dTime;
+        cv::Point_<float> pointDifference = prevMean - topDownBallMeanPoint;
+        ballVelocityVectorAsPoint = pointDifference / dTime;
     }
     std::cout << "distance=" << distance << ", angle=" << angleDegrees << std::endl;
     std::cout << "x=" << distance << ", y=" << angleDegrees << std::endl;
-ballSpeed = sqrt(ballVelocityVectorAsPoint.x * ballVelocityVectorAsPoint.x + ballVelocityVectorAsPoint.y * ballVelocityVectorAsPoint.y);
+    ballSpeed = sqrt(ballVelocityVectorAsPoint.x * ballVelocityVectorAsPoint.x +
+                     ballVelocityVectorAsPoint.y * ballVelocityVectorAsPoint.y);
     std::cout << "ballspeed in cm/s:" << ballSpeed << std::endl;
 
     // END BALL SPEED CALC //
 
+}
+
+void BallFinder::findBallInterceptionVector() {
 
     // START INTERCEPTION CALC //
     cv::Point_<float> interceptPos;

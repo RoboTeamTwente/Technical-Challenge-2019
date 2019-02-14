@@ -12,17 +12,32 @@
 #include "Main.h"
 #include "ImageProcessor.h"
 #include "Settings.h"
+#include <vector>
+#include <algorithm>
+#include <opencv2/core/types_c.h>
+#include <cxcore.hpp>
 
 class BallFinder {
 public:
-    explicit BallFinder(); // CONSTRUCTOR
-    void findBall();
+
     std::vector<double> timeVector;
-    float topDownBallX;
-    float topDownBallY;
+    cv::Point2f topDownBallPoint;
+
+    CircularBuffer<cv::Point2f>* topDownBallPointHistory;
+    cv::Point_<float> topDownBallPointHistorySum;
+
     cv::Point2f topDownBallMeanPoint;
+
     cv::Point_<float> ballVelocityVectorAsPoint;
+
     float ballSpeed;
+    int ballPixelsFromCenterX;
+    float ballAngleInCameraPlane;
+    float ballAngleInCameraPlaneDegrees;
+
+    explicit BallFinder(); // CONSTRUCTOR
+    void findTopDownBallPoint(ImageProcessor imageProcessorObject);
+    void findMeanOfBallPoints();
 };
 
 
