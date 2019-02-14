@@ -5,9 +5,9 @@
 #ifndef TECHNICAL_CHALLENGE_2019_CAMERA_H
 #define TECHNICAL_CHALLENGE_2019_CAMERA_H
 
-
 #include <opencv2/videoio.hpp>
 #include <chrono>
+#include <iostream>
 
 class Camera {
 public:

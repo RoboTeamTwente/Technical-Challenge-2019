@@ -3,13 +3,15 @@
 
 
 #include <opencv2/core/mat.hpp>
-
 #include <opencv2/imgproc.hpp>
-#include "Camera.h"
-#include "Settings.h"
 
-#include "CircularBuffer.h"
+
+
 class Interface;
+class Camera;
+
+template<typename T>
+class CircularBuffer;
 
 
 class ImageProcessor {
@@ -33,5 +35,5 @@ public:
     void findBallContour();
 };
 
-#include "Interface.h"
+
 #endif //TECHNICAL_CHALLENGE_2019_IMAGEPROCESSOR_H

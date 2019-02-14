@@ -5,18 +5,13 @@
 #ifndef TECHNICAL_CHALLENGE_2019_INTERFACE_H
 #define TECHNICAL_CHALLENGE_2019_INTERFACE_H
 
-#include "Camera.h"
+
 #include <cv.hpp>
-#include "Constants.h"
 #include <iostream>
-#include "Settings.h"
-#include "ImageProcessor.h"
 
+class Camera;
 class BallFinder;
-
-#include "BallFinder.h"
-
-
+class ImageProcessor;
 
 class Interface {
 

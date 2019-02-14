@@ -8,19 +8,15 @@
 #include <chrono>
 #include <opencv2/core/mat.hpp>
 #include <numeric>
-#include "Constants.h"
-#include "Main.h"
-
-#include "Settings.h"
 #include <vector>
 #include <algorithm>
-#include <opencv2/core/types_c.h>
 #include <cxcore.hpp>
-#include "CircularBuffer.h"
 
-class Interface;
+template<typename T>
+class CircularBuffer;
 class ImageProcessor;
 class Camera;
+
 
 class BallFinder {
 public:
@@ -53,5 +49,5 @@ public:
     void findBallInterceptionVector();
 };
 
-#include "Interface.h"
+
 #endif //TECHNICAL_CHALLENGE_2019_BALLFINDER_H

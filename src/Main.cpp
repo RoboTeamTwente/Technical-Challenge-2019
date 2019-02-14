@@ -1,4 +1,9 @@
 #include "Main.h"
+#include "Interface.h"
+#include "Camera.h"
+#include "ImageProcessor.h"
+#include "BallFinder.h"
+#include "Settings.h"
 
 int main(int argc, char **argv) {
     // Initializing objects
