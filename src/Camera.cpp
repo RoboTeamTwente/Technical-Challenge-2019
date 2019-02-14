@@ -5,9 +5,8 @@
 #include "Main.h"
 #include "Camera.h"
 
-
 bool Camera::captureImage(){
-    startFrameTime = std::chrono::high_resolution_clock::now();
+    startFrameTime = std::chrono::steady_clock::now();
 
     // get image from camera and save to the Mat
 

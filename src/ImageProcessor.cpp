@@ -35,17 +35,11 @@ void ImageProcessor::findBallContour() {
 
     largestContourArea = 0;
 
-    // clone this image
-    // TODO Find out if removing cloning is safe to speed up performance
-    cv::Mat cameraImageThresholdedClone = cameraImageThresholded.clone();
-
     // find contours, store in contours vector
-    cv::findContours(cameraImageThresholdedClone, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(cameraImageThresholded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
     // make an image for displaying the contours
-    cv::Mat contourImage(cameraImageThresholdedClone.size(), CV_8UC3, cv::Scalar(0, 0, 0));
-
-
+    cv::Mat contourImage(cameraImageThresholded.size(), CV_8UC3, cv::Scalar(0, 0, 0));
 
     // loop through all contours
     for (size_t idx = 0; idx < contours.size(); idx++) {
@@ -69,8 +63,6 @@ void ImageProcessor::findBallContour() {
     approxPolyDP(cv::Mat(largestContour), largestContourAsPolygon, 3, true);
     // find minimum enclosing circle of contour polygon and store in cameraImageBallCenterPoint and cameraImageBallRadius
     minEnclosingCircle(largestContourAsPolygon, cameraImageBallCenterPoint, cameraImageBallRadius);
-
-    // TODO Check if this is not a null pointer exception
 
     if (cameraImageBallCenterHistory == nullptr){
 

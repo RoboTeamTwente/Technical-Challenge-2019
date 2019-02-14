@@ -19,8 +19,7 @@ public:
 
     cv::Mat cameraImageBGR;
 
-    // TODO fix time_point error
-    std::chrono::time_point startFrameTime;
+    std::chrono::steady_clock::time_point startFrameTime;
 };
 
 

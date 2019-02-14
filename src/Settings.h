@@ -7,9 +7,7 @@
 
 namespace Settings {
     int MORPHOLOGICAL_OPENING_SIZE = 10;
-
-    // TODO find better name than BUFFER_SIZE
-    int BUFFER_SIZE = 4;
+    int DERIVATIVE_BUFFER_SIZE = 4;
     int IMAGE_WIDTH = 640;
     int IMAGE_HEIGHT = 480;
     bool COMPLICATED_DIFFERENCE_CALCULATION = false;

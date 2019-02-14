@@ -1,5 +1,7 @@
 #include <vector>
 #include <algorithm>
+#include <opencv2/core/types_c.h>
+#include <cxcore.hpp>
 #include "BallFinder.h"
 
 
@@ -8,11 +10,9 @@ BallFinder::BallFinder(){
     topDownBallX = -1;
     topDownBallY = -1;
     topDownBallMeanPoint = cv::Point2f(-1, -1);
-    // TODO make not auto
-    auto startTime = std::chrono::high_resolution_clock::now();
+
+
 }
-
-
 
 
 
@@ -54,7 +54,7 @@ void BallFinder::findBall() {
     cv::Point_<float> prevMean = topDownBallMeanPoint;
 
 
-    if (cameraObject.frameCounter < Settings::BUFFER_SIZE) {
+    if (cameraObject.frameCounter < Settings::DERIVATIVE_BUFFER_SIZE) {
     pointVector.push_back(cartesianPoint); // TODO fix null pointer exception here as pointVector is not initialized
     topDownBallMeanPoint = cartesianPoint;
 
@@ -64,7 +64,7 @@ void BallFinder::findBall() {
     //push back
 
 }
-    if (cameraObject.frameCounter >= Settings::BUFFER_SIZE) {
+    if (cameraObject.frameCounter >= Settings::DERIVATIVE_BUFFER_SIZE) {
     // circular push
     circularPush(pointVector, cartesianPoint);
 
@@ -96,7 +96,7 @@ void BallFinder::findBall() {
     // TODO actually implement time circular buffer
     // TODO store derivatives in vector
     // TODO calculate average derivative
-    if (Settings::COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= Settings::BUFFER_SIZE) {
+    if (Settings::COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= Settings::DERIVATIVE_BUFFER_SIZE) {
 
 
     std::vector<cv::Point_ < float>>
