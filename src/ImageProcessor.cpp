@@ -21,7 +21,7 @@ void ImageProcessor::imageConversion(Camera cameraObject, Interface interfaceObj
     cvtColor(cameraObject.cameraImageBGR, imgHSV, cv::COLOR_BGR2HSV);
     //Convert the captured frame from BGR to HSV
     inRange(imgHSV, cv::Scalar(interfaceObject.LOW_HUE, interfaceObject.LOW_SATURATION, interfaceObject.LOW_VALUE),
-            cv::Scalar(interfaceObject.HIGH_VALUE, interfaceObject.HIGH_SATURATION, interfaceObject.HIGH_VALUE),
+            cv::Scalar(interfaceObject.HIGH_HUE, interfaceObject.HIGH_SATURATION, interfaceObject.HIGH_VALUE),
             cameraImageThresholded);
 
     //morphological opening
