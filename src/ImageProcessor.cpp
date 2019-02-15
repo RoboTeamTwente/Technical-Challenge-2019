@@ -12,7 +12,7 @@ ImageProcessor::ImageProcessor(){
     colors[0] = cv::Scalar(255, 0, 0);
     colors[1] = cv::Scalar(0, 255, 0);
     colors[2] = cv::Scalar(0, 0, 255);
-
+    cameraImageBallCenterHistory = nullptr;
 }
 
 void ImageProcessor::imageConversion(Camera cameraObject, Interface interfaceObject) {
@@ -69,6 +69,7 @@ void ImageProcessor::findBallContour() {
     // find minimum enclosing circle of contour polygon and store in cameraImageBallCenterPoint and cameraImageBallRadius
     minEnclosingCircle(largestContourAsPolygon, cameraImageBallCenterPoint, cameraImageBallRadius);
 
+    // TODO segfault happens here because this is always false?
     if (cameraImageBallCenterHistory == nullptr){
 
         std::vector<cv::Point2f> inputVector(30);

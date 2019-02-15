@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
         imageProcessorObject.findBallContour();
 
         ballFinderObject.findTopDownBallPoint(imageProcessorObject);
+
         ballFinderObject.findMeanOfBallPoints();
         ballFinderObject.findBallSpeedVector(cameraObject);
         ballFinderObject.findBallInterceptionVector();

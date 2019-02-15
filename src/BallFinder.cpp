@@ -8,6 +8,7 @@
 
 // CONSTRUCTOR
 BallFinder::BallFinder() {
+    topDownBallPointHistory=nullptr;
 }
 
 void BallFinder::findTopDownBallPoint(ImageProcessor imageProcessorObject) {
@@ -47,9 +48,13 @@ void BallFinder::findMeanOfBallPoints() {
         topDownBallPointHistory->circularPush(topDownBallPoint);
     }
 
+    topDownBallPointHistorySum=cv::Point2f(0,0);
 
-    topDownBallPointHistorySum = accumulate(topDownBallPointHistory->getVector().begin(),
-                                            topDownBallPointHistory->getVector().end(), cv::Point2f(0.0f, 0.0f));
+    for (int i=0;i < topDownBallPointHistory->getVector().size(); i++) {
+        topDownBallPointHistorySum+=topDownBallPointHistory->get(i);
+    }
+//    topDownBallPointHistorySum = accumulate(topDownBallPointHistory->getVector().begin(),
+//                                            topDownBallPointHistory->getVector().end(), cv::Point2f(0.0f, 0.0f));
     
 
     previousTopDownBallMeanPoint=topDownBallMeanPoint;
