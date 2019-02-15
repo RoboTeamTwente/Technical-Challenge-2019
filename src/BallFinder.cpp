@@ -1,9 +1,11 @@
 #include "BallFinder.h"
-#include "Constants.h"
-#include "Settings.h"
+
+
 #include "ImageProcessor.h"
 #include "CircularBuffer.h"
 #include "Camera.h"
+#include "Constants.h"
+#include "Settings.h"
 
 
 // CONSTRUCTOR

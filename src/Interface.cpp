@@ -1,11 +1,12 @@
 #include "Interface.h"
 #include "BallFinder.h"
 #include "ImageProcessor.h"
-#include "Constants.h"
-#include "Camera.h"
-#include "Settings.h"
-#include "CircularBuffer.h"
 
+#include "Camera.h"
+
+#include "CircularBuffer.h"
+#include "Constants.h"
+#include "Settings.h"
 
 // CONSTRUCTOR
 Interface::Interface() {

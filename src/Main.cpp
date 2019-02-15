@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "ImageProcessor.h"
 #include "BallFinder.h"
+#include "Constants.h"
 #include "Settings.h"
 
 int main(int argc, char **argv) {

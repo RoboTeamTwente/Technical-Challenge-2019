@@ -1,8 +1,10 @@
 #include "ImageProcessor.h"
 #include "Interface.h"
 #include "Camera.h"
-#include "Settings.h"
+
 #include "CircularBuffer.h"
+#include "Constants.h"
+#include "Settings.h"
 
 ImageProcessor::ImageProcessor(){
 
