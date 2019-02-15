@@ -5,9 +5,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 add_executable(Technical-Challenge-2019
+        src/CircularBuffer.cpp
         src/Constants.cpp
         src/Settings.cpp
-        src/CircularBuffer.cpp
+
         src/BallFinder.cpp
 
         src/Camera.cpp
