@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <cxcore.hpp>
 
-template<typename T>
+template <typename T>
 class CircularBuffer;
 class ImageProcessor;
 class Camera;
@@ -31,7 +31,7 @@ public:
 
     std::chrono::steady_clock::time_point endFrameTime;
 
-    static cv::Point_<float> ballVelocityVectorAsPoint;
+    cv::Point_<float> ballVelocityVectorAsPoint;
 
     cv::Point_<float> interceptPos;
 

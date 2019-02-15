@@ -1,3 +1,4 @@
+#include <opencv2/core/types.hpp>
 #include "CircularBuffer.h"
 
 template<typename T>
@@ -40,6 +41,6 @@ std::vector<T> CircularBuffer<T>::getVector() {
     return internalVector;
 }
 
-
+template class CircularBuffer<cv::Point2f>;
 
 
