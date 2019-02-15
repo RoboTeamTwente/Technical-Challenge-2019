@@ -11,7 +11,7 @@ bool Camera::captureImage(){
 
     // get image from camera and save to the Mat
 
-    captureSuccess = cap.read(cameraImageBGR);
+    captureSuccess = cap->read(cameraImageBGR);
 
     // check if this worked
     if (!captureSuccess) {
@@ -31,8 +31,8 @@ Camera::Camera() {
     frameCounter = 0;
 
     std::cout << "init camera";
-    cv::VideoCapture cap(0);
-    if (!cap.isOpened()) {
+    cap = new cv::VideoCapture(0);
+    if (!cap->isOpened()) {
         std::cout << "webcam failure; is another openCV program running?" << std::endl;
         working=false;
     } else {

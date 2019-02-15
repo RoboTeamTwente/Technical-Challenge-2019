@@ -14,7 +14,7 @@ public:
     explicit Camera(); // constructor
     bool captureImage();
     bool working;
-    cv::VideoCapture cap;
+    cv::VideoCapture* cap;
     int frameCounter;
     bool captureSuccess;
 
