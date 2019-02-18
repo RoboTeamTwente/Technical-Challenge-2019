@@ -7,21 +7,21 @@ extern "C" {
 
 #include <iostream>
 
-using namespace std;
+
 
 #include "Connection.h"
 
-Connection::Connection(string deviceName, int baud) {
+Connection::Connection(std::string deviceName, int baud) {
     handle = -1;
     open(deviceName, baud);
 }
 
 Connection::~Connection() {
     if (handle >= 0)
-        close();
+        closeConnection();
 }
 
-void Connection::close(void) {
+void Connection::closeConnection(void) {
     if (handle >= 0) {
         close(handle);
     }
@@ -29,7 +29,7 @@ void Connection::close(void) {
 }
 
 
-bool Connection::open(string deviceName, int baud) {
+bool Connection::open(std::string deviceName, int baud) {
     struct termios tio;
     struct termios2 tio2;
     this->deviceName = deviceName;

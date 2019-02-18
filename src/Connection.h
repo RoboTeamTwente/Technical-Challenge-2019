@@ -25,7 +25,7 @@ public:
     bool send( std::string value);
     int receive( unsigned char  * data, int len);
     bool isOpen(void);
-    void close(void);
+    void closeConnection(void);
     bool open(std::string deviceName, int baud);
     bool numberByteRcv(int &bytelen);
     void sendCommand();
