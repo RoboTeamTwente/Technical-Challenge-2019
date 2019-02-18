@@ -24,11 +24,17 @@ public:
     bool send(unsigned char value);
     bool send( std::string value);
     int receive( unsigned char  * data, int len);
-    bool isOpen(void);
-    void closeConnection(void);
+    bool isOpen();
+    void closeConnection();
     bool open(std::string deviceName, int baud);
     bool numberByteRcv(int &bytelen);
-    void sendCommand();
+    void sendMoveCommand(uint16_t vel, int16_t angle);
+    void sendStopCommand();
+    void sendTestCommand();
+    void sendKickCommand();
+    void sendChipCommand();
+    void sendDribbleCommand(uint8_t dribbleSpeed);
+
 };
 
 

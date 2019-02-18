@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
         }
 
         if (Settings::ENABLE_CONNECTION){
-            connectionObject.sendCommand();
+            connectionObject.sendTestCommand();
         }
         // END OF LOOP //
 

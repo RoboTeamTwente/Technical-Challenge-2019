@@ -21,7 +21,7 @@ Connection::~Connection() {
         closeConnection();
 }
 
-void Connection::closeConnection(void) {
+void Connection::closeConnection() {
     if (handle >= 0) {
         close(handle);
     }
@@ -58,7 +58,7 @@ bool Connection::open(std::string deviceName, int baud) {
     return true;
 }
 
-bool Connection::isOpen(void) {
+bool Connection::isOpen() {
     return (handle >= 0);
 }
 
@@ -99,27 +99,42 @@ bool Connection::numberByteRcv(int &bytelen) {
     return true;
 }
 
-void Connection::sendCommand() {
-
-
-
-    // One Byte At the time
-
-
-    // An array of byte
-
-    uint16_t vel = 8;
-    int16_t angle = 10;
+void Connection::sendMoveCommand(uint16_t vel, int16_t angle){
 
     // TODO parse 2 ints to one 32 bit int
     uint32_t parsed_int = (vel << 16) | (angle);
 
 
+    // todo fix warning here
+    send("vel_command " + std::to_string(parsed_int));
+}
 
-    send("vel_command" + parsed_int);
+void Connection::sendStopCommand() {
+    sendMoveCommand(0,0);
+}
+
+void Connection::sendTestCommand() {
+
+    uint16_t vel = 8;
+    int16_t angle = 10;
+
+    sendMoveCommand(vel, angle);
 
     sleep(200);
 
-    send("vel_command 0");
+    sendStopCommand();
 
+
+}
+
+void Connection::sendKickCommand() {
+    send("kick");
+}
+
+void Connection::sendChipCommand() {
+    send("chip");
+}
+
+void Connection::sendDribbleCommand(uint8_t dribbleSpeed) {
+    send("dribble " + std::to_string(dribbleSpeed));
 }
