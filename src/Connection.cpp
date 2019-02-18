@@ -13,22 +13,23 @@ using namespace std;
 
 Connection::Connection(string deviceName, int baud) {
     handle = -1;
-    Open(deviceName, baud);
+    open(deviceName, baud);
 }
 
 Connection::~Connection() {
     if (handle >= 0)
-        Close();
+        close();
 }
 
-void Connection::Close(void) {
-    if (handle >= 0)
+void Connection::close(void) {
+    if (handle >= 0) {
         close(handle);
+    }
     handle = -1;
 }
 
 
-bool Connection::Open(string deviceName, int baud) {
+bool Connection::open(string deviceName, int baud) {
     struct termios tio;
     struct termios2 tio2;
     this->deviceName = deviceName;
@@ -57,31 +58,31 @@ bool Connection::Open(string deviceName, int baud) {
     return true;
 }
 
-bool Connection::IsOpen(void) {
+bool Connection::isOpen(void) {
     return (handle >= 0);
 }
 
-bool Connection::Send(unsigned char *data, int len) {
-    if (!IsOpen()) return false;
+bool Connection::send(unsigned char *data, int len) {
+    if (!isOpen()) return false;
     int rlen = write(handle, data, len);
     return (rlen == len);
 }
 
-bool Connection::Send(unsigned char value) {
-    if (!IsOpen()) return false;
+bool Connection::send(unsigned char value) {
+    if (!isOpen()) return false;
     int rlen = write(handle, &value, 1);
     return (rlen == 1);
 }
 
-bool Connection::Send(std::string value) {
-    if (!IsOpen()) return false;
+bool Connection::send(std::string value) {
+    if (!isOpen()) return false;
     int rlen = write(handle, value.c_str(), value.size());
     return (rlen == value.size());
 }
 
 
-int Connection::Receive(unsigned char *data, int len) {
-    if (!IsOpen()) return -1;
+int Connection::receive(unsigned char *data, int len) {
+    if (!isOpen()) return -1;
 
     // this is a blocking receives
     int lenRCV = 0;
@@ -92,8 +93,33 @@ int Connection::Receive(unsigned char *data, int len) {
     return lenRCV;
 }
 
-bool Connection::NumberByteRcv(int &bytelen) {
-    if (!IsOpen()) return false;
+bool Connection::numberByteRcv(int &bytelen) {
+    if (!isOpen()) return false;
     ioctl(handle, FIONREAD, &bytelen);
     return true;
+}
+
+void Connection::sendCommand() {
+
+
+
+    // One Byte At the time
+
+
+    // An array of byte
+
+    uint16_t vel = 8;
+    int16_t angle = 10;
+
+    // TODO parse 2 ints to one 32 bit int
+    uint32_t parsed_int = (vel << 16) | (angle);
+
+
+
+    send("vel_command" + parsed_int);
+
+    sleep(200);
+
+    send("vel_command 0");
+
 }

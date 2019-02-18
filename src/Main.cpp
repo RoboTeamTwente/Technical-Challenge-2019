@@ -5,6 +5,7 @@
 #include "BallFinder.h"
 #include "Constants.h"
 #include "Settings.h"
+#include "Connection.h"
 
 int main(int argc, char **argv) {
     // Initializing objects
@@ -12,6 +13,7 @@ int main(int argc, char **argv) {
     ImageProcessor imageProcessorObject;
     Camera cameraObject;
     BallFinder ballFinderObject;
+    Connection connectionObject("/dev/ttyAMA0", 115200);
 
     if (!cameraObject.working) {
         return -1;
@@ -46,7 +48,7 @@ int main(int argc, char **argv) {
             interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
         }
 
-
+        connectionObject.sendCommand();
 
         // END OF LOOP //
 

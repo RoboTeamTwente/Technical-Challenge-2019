@@ -20,14 +20,15 @@ public:
     Connection(std::string deviceName, int baud);
     ~Connection();
 
-    bool Send( unsigned char  * data,int len);
-    bool Send(unsigned char value);
-    bool Send( std::string value);
-    int Receive( unsigned char  * data, int len);
-    bool IsOpen(void);
-    void Close(void);
-    bool Open(std::string deviceName, int baud);
-    bool NumberByteRcv(int &bytelen);
+    bool send( unsigned char  * data,int len);
+    bool send(unsigned char value);
+    bool send( std::string value);
+    int receive( unsigned char  * data, int len);
+    bool isOpen(void);
+    void close(void);
+    bool open(std::string deviceName, int baud);
+    bool numberByteRcv(int &bytelen);
+    void sendCommand();
 };
 
 

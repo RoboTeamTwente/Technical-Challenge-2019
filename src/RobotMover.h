@@ -1,0 +1,14 @@
+//
+// Created by freek on 18/02/19.
+//
+
+#ifndef TECHNICAL_CHALLENGE_2019_ROBOTMOVER_H
+#define TECHNICAL_CHALLENGE_2019_ROBOTMOVER_H
+
+
+class RobotMover {
+
+};
+
+
+#endif //TECHNICAL_CHALLENGE_2019_ROBOTMOVER_H
