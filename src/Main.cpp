@@ -13,10 +13,11 @@ int main(int argc, char **argv) {
     ImageProcessor imageProcessorObject;
     Camera cameraObject;
     BallFinder ballFinderObject;
-    Connection connectionObject("/dev/ttyAMA0", 115200);
+    Connection connectionObject("/dev/ttyACM0", 115200);
 
     if (!cameraObject.working) {
         return -1;
+
     }
 
     // START LOOP
@@ -33,6 +34,10 @@ int main(int argc, char **argv) {
         // Find ball center and radius on camera image, and store it in the variables created for this
         bool ballFindSuccess = imageProcessorObject.findBallContour();
         if (!ballFindSuccess) {
+
+//            if (cameraObject.frameCounter % 2 == 0 ) {
+                connectionObject.sendStopCommand();
+//            }
             continue;
         }
 
@@ -49,12 +54,19 @@ int main(int argc, char **argv) {
         }
 
         if (Settings::ENABLE_CONNECTION){
-            connectionObject.sendTestCommand();
+            int velocity= static_cast<int>(ballFinderObject.ballDistanceFromCamera*50);
+            std::cout << velocity << std::endl;
+            int angle = 0;
+
+//            if (connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) {
+                connectionObject.sendMoveCommand(velocity, angle);
+//            }
         }
         // END OF LOOP //
 
         // TODO improve performance by removing waitkey
         // TODO Move entire interface to another thread
+        // TODO also move USB Connection to other thread and use a queue
 
         if (cv::waitKey(30) == 27) {
             std::cout << "esc key pressed; ending program" << std::endl;

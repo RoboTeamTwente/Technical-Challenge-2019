@@ -19,21 +19,25 @@ public:
 
     Connection(std::string deviceName, int baud);
     ~Connection();
+    int16_t lastAngle;
+    uint16_t lastVelocity;
 
-    bool send( unsigned char  * data,int len);
-    bool send(unsigned char value);
-    bool send( std::string value);
-    int receive( unsigned char  * data, int len);
+    bool sendOverConnection( unsigned char  * data,int len);
+    bool sendOverConnection(unsigned char value);
+    bool sendOverConnection( std::string value);
+    int receiveOverConnection( unsigned char  * data, int len);
     bool isOpen();
     void closeConnection();
-    bool open(std::string deviceName, int baud);
+    bool openConnection(std::string deviceName, int baud);
     bool numberByteRcv(int &bytelen);
     void sendMoveCommand(uint16_t vel, int16_t angle);
+
     void sendStopCommand();
     void sendTestCommand();
     void sendKickCommand();
     void sendChipCommand();
     void sendDribbleCommand(uint8_t dribbleSpeed);
+
 
 };
 

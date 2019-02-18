@@ -13,7 +13,10 @@ extern "C" {
 
 Connection::Connection(std::string deviceName, int baud) {
     handle = -1;
-    open(deviceName, baud);
+    openConnection(deviceName, baud);
+    lastVelocity=0;
+    lastAngle=0;
+
 }
 
 Connection::~Connection() {
@@ -29,7 +32,7 @@ void Connection::closeConnection() {
 }
 
 
-bool Connection::open(std::string deviceName, int baud) {
+bool Connection::openConnection(std::string deviceName, int baud) {
     struct termios tio;
     struct termios2 tio2;
     this->deviceName = deviceName;
@@ -48,8 +51,8 @@ bool Connection::open(std::string deviceName, int baud) {
     ioctl(handle, TCGETS2, &tio2);
     tio2.c_cflag &= ~CBAUD;
     tio2.c_cflag |= BOTHER;
-    tio2.c_ispeed = baud;
-    tio2.c_ospeed = baud;
+    tio2.c_ispeed = static_cast<speed_t>(baud);
+    tio2.c_ospeed = static_cast<speed_t>(baud);
     ioctl(handle, TCSETS2, &tio2);
 
 //   flush buffer
@@ -62,26 +65,26 @@ bool Connection::isOpen() {
     return (handle >= 0);
 }
 
-bool Connection::send(unsigned char *data, int len) {
+bool Connection::sendOverConnection(unsigned char *data, int len) {
     if (!isOpen()) return false;
     int rlen = write(handle, data, len);
     return (rlen == len);
 }
 
-bool Connection::send(unsigned char value) {
+bool Connection::sendOverConnection(unsigned char value) {
     if (!isOpen()) return false;
     int rlen = write(handle, &value, 1);
     return (rlen == 1);
 }
 
-bool Connection::send(std::string value) {
+bool Connection::sendOverConnection(std::string value) {
     if (!isOpen()) return false;
     int rlen = write(handle, value.c_str(), value.size());
     return (rlen == value.size());
 }
 
 
-int Connection::receive(unsigned char *data, int len) {
+int Connection::receiveOverConnection(unsigned char *data, int len) {
     if (!isOpen()) return -1;
 
     // this is a blocking receives
@@ -101,12 +104,19 @@ bool Connection::numberByteRcv(int &bytelen) {
 
 void Connection::sendMoveCommand(uint16_t vel, int16_t angle){
 
-    // TODO parse 2 ints to one 32 bit int
-    uint32_t parsed_int = (vel << 16) | (angle);
+    lastVelocity=vel;
+    lastAngle=angle;
+
+    // TODO parse 2 ints to one 32 bit int, check if this is correct
+    uint32_t parsed_int = (angle << 16) | (vel);
 
 
-    // todo fix warning here
-    send("vel_command " + std::to_string(parsed_int));
+    std::string to_send = std::to_string(parsed_int);
+//    usleep(1000);
+
+    usleep(1000);
+    sendOverConnection("vel_command " + to_send + "\r");
+//    sendOverConnection("vel_command " + to_send + "\r");
 }
 
 void Connection::sendStopCommand() {
@@ -115,12 +125,12 @@ void Connection::sendStopCommand() {
 
 void Connection::sendTestCommand() {
 
-    uint16_t vel = 8;
-    int16_t angle = 10;
+    uint16_t vel = 1000;
+    int16_t angle = 0;
 
     sendMoveCommand(vel, angle);
 
-    sleep(200);
+    usleep(100000);
 
     sendStopCommand();
 
@@ -128,13 +138,13 @@ void Connection::sendTestCommand() {
 }
 
 void Connection::sendKickCommand() {
-    send("kick");
+    sendOverConnection("kick 99\r");
 }
 
 void Connection::sendChipCommand() {
-    send("chip");
+    sendOverConnection("chip\r");
 }
 
 void Connection::sendDribbleCommand(uint8_t dribbleSpeed) {
-    send("dribble " + std::to_string(dribbleSpeed));
+    sendOverConnection("dribble " + std::to_string(dribbleSpeed) + "\r");
 }

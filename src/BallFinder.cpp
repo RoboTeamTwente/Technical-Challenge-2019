@@ -72,7 +72,7 @@ void BallFinder::findBallSpeedVector(Camera cameraObject) {
     auto frameDuration = (endFrameTime - cameraObject.startFrameTime);
 
     double frameDurationInSeconds = std::chrono::duration<double>(frameDuration).count(); //convert to seconds
-    std::cout << frameDurationInSeconds*1000 << std::endl;
+//    std::cout << frameDurationInSeconds*1000 << std::endl;
 
     // START BALL SPEED CALC  //
     // TODO how does rest of roboteam determine ball pos and speed? I feel like this method is not the best
