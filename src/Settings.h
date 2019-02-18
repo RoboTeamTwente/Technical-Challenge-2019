@@ -20,6 +20,8 @@ namespace Settings {
 
 
     const bool ENABLE_DRAWING = true;
+
+    const bool ENABLE_CONNECTION = true;
 }
 
 #endif

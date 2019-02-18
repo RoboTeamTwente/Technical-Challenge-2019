@@ -48,8 +48,9 @@ int main(int argc, char **argv) {
             interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
         }
 
-        connectionObject.sendCommand();
-
+        if (Settings::ENABLE_CONNECTION){
+            connectionObject.sendCommand();
+        }
         // END OF LOOP //
 
         // TODO improve performance by removing waitkey
