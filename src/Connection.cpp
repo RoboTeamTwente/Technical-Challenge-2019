@@ -6,7 +6,7 @@ extern "C" {
 }
 
 #include <iostream>
-
+#include <fstream>
 
 
 #include "Connection.h"
@@ -14,8 +14,9 @@ extern "C" {
 Connection::Connection(std::string deviceName, int baud) {
     handle = -1;
     openConnection(deviceName, baud);
-    lastVelocity=0;
-    lastAngle=0;
+    lastVelocity = 0;
+    lastAngle = 0;
+
 
 }
 
@@ -37,6 +38,9 @@ bool Connection::openConnection(std::string deviceName, int baud) {
     struct termios2 tio2;
     this->deviceName = deviceName;
     this->baud = baud;
+//    this->fileIO = new ofstream(deviceName)
+
+
     handle = open(this->deviceName.c_str(), O_RDWR | O_NOCTTY /* | O_NONBLOCK */);
 
     if (handle < 0)
@@ -77,10 +81,13 @@ bool Connection::sendOverConnection(unsigned char value) {
     return (rlen == 1);
 }
 
+
 bool Connection::sendOverConnection(std::string value) {
     if (!isOpen()) return false;
-    int rlen = write(handle, value.c_str(), value.size());
+    int rlen = static_cast<int>(write(handle, value.c_str(), value.size()));
     return (rlen == value.size());
+
+//    (*outFile) << value;
 }
 
 
@@ -102,10 +109,10 @@ bool Connection::numberByteRcv(int &bytelen) {
     return true;
 }
 
-void Connection::sendMoveCommand(uint16_t vel, int16_t angle){
+void Connection::sendMoveCommand(uint16_t vel, int16_t angle) {
 
-    lastVelocity=vel;
-    lastAngle=angle;
+    lastVelocity = vel;
+    lastAngle = angle;
 
     // TODO parse 2 ints to one 32 bit int, check if this is correct
     uint32_t parsed_int = (angle << 16) | (vel);
@@ -114,13 +121,16 @@ void Connection::sendMoveCommand(uint16_t vel, int16_t angle){
     std::string to_send = std::to_string(parsed_int);
 //    usleep(1000);
 
-    usleep(1000);
+
     sendOverConnection("vel_command " + to_send + "\r");
-//    sendOverConnection("vel_command " + to_send + "\r");
+    usleep(1000);
+//    sendOverConnection("\r\n");
+//    sendOverConnection("\r\n");
+
 }
 
 void Connection::sendStopCommand() {
-    sendMoveCommand(0,0);
+    sendMoveCommand(0, 0);
 }
 
 void Connection::sendTestCommand() {

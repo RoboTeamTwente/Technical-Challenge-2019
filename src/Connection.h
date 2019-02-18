@@ -39,6 +39,7 @@ public:
     void sendDribbleCommand(uint8_t dribbleSpeed);
 
 
+    std::ofstream* outFile;
 };
 
 

@@ -35,9 +35,9 @@ int main(int argc, char **argv) {
         bool ballFindSuccess = imageProcessorObject.findBallContour();
         if (!ballFindSuccess) {
 
-//            if (cameraObject.frameCounter % 2 == 0 ) {
+            if (cameraObject.frameCounter % 10 == 0 ) {
                 connectionObject.sendStopCommand();
-//            }
+            }
             continue;
         }
 
@@ -54,13 +54,13 @@ int main(int argc, char **argv) {
         }
 
         if (Settings::ENABLE_CONNECTION){
-            int velocity= static_cast<int>(ballFinderObject.ballDistanceFromCamera*50);
+            int velocity= ballFinderObject.topDownBallMeanPoint.x*10;
             std::cout << velocity << std::endl;
-            int angle = 0;
+            int angle = std::acos(ballFinderObject.topDownBallMeanPoint.y);
 
-//            if (connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) {
+            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) && (cameraObject.frameCounter % 10 == 0 )) {
                 connectionObject.sendMoveCommand(velocity, angle);
-//            }
+            }
         }
         // END OF LOOP //
 
