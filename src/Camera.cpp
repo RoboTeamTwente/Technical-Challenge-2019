@@ -31,7 +31,7 @@ Camera::Camera() {
     frameCounter = 0;
 
     std::cout << "init camera";
-    cap = new cv::VideoCapture(0);
+    cap = new cv::VideoCapture(1);
     if (!cap->isOpened()) {
         std::cout << "webcam failure; is another openCV program running?" << std::endl;
         working=false;

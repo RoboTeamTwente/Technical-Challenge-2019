@@ -1,4 +1,3 @@
-#include <opencv2/core/types.hpp>
 #include "CircularBuffer.h"
 
 template<typename T>

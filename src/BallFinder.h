@@ -43,7 +43,7 @@ public:
     cv::Point2f previousTopDownBallMeanPoint;
 
     explicit BallFinder(); // CONSTRUCTOR
-    void findTopDownBallPoint(ImageProcessor imageProcessorObject);
+    void findTopDownBallPoint(const ImageProcessor &imageProcessorObject);
     void findMeanOfBallPoints();
     void findBallSpeedVector(Camera cameraObject);
     void findBallInterceptionVector();

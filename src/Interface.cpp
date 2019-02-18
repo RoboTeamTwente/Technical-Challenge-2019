@@ -64,9 +64,11 @@ void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imag
     topDownDrawingMat = cv::Mat::zeros(imageProcessorObject.cameraImageThresholded.size(), CV_8UC3);
 
 
-    line(topDownDrawingMat, cv::Point2i(100 + line1x, 240 + line1y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
+    line(topDownDrawingMat, cv::Point2i(100 + line1x, 240 + line1y),
+         cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
          cv::Scalar(255, 255, 255), 1);
-    line(topDownDrawingMat, cv::Point2i(100 + line2x, 240 + line2y), cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
+    line(topDownDrawingMat, cv::Point2i(100 + line2x, 240 + line2y),
+         cv::Point2i(topDownCameraPositionPoint.x, topDownCameraPositionPoint.y),
          cv::Scalar(255, 255, 255), 1);
 
     topDownBallPositionForDrawing.x = 100 + ballFinderObject.topDownBallMeanPoint.x * 5;
@@ -74,13 +76,16 @@ void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imag
 
     circle(topDownDrawingMat, topDownBallPositionForDrawing, (int) 5, orange, 2, 8, 0); // draw orange ball
 
-    line(topDownDrawingMat, topDownBallPositionForDrawing, (topDownBallPositionForDrawing + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
+    if (ballFinderObject.ballSpeed > 0) {
+    line(topDownDrawingMat, topDownBallPositionForDrawing,
+         (topDownBallPositionForDrawing + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
+        line(topDownDrawingMat, topDownCameraPositionPoint, topDownCameraPositionPoint + (ballFinderObject.interceptPos * 1), bluegray, 2); //speed line
 
+    }
     // END OF TOP DOWN INIT //
 
     // drawing intercept line
 
-    line(topDownDrawingMat, topDownCameraPositionPoint, topDownCameraPositionPoint + (ballFinderObject.interceptPos * 1), bluegray, 2); //speed line
 
 }
 
@@ -91,7 +96,7 @@ void Interface::displayMatsAndDrawText(Camera cameraObject, ImageProcessor image
     imshow("Thresholded Image", imageProcessorObject.cameraImageThresholded);
     cv::moveWindow("Thresholded Image", 0, 0);
     cameraImageForDisplay = cameraObject.cameraImageBGR + cameraImageTrailOverlay + cameraImageContourOverlay;
-    imshow("Original", cameraObject.cameraImageBGR);
+    imshow("Original", cameraImageForDisplay);
     cv::moveWindow("Original", 0, 600);
     imshow("Top down view", topDownDrawingMat);
     cv::moveWindow("Top down view", 800, 600);

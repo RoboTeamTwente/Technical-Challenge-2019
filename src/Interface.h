@@ -43,7 +43,7 @@ public:
     float line2x;
 
     explicit Interface();
-    // TODO why does this reference to ImageProcessor and BallFinder not work?
+
     void drawContourAndBallTrailOnCameraView(Camera cameraObject, ImageProcessor imageProcessorObject);
     void drawTopDownView(BallFinder ballFinderObject, ImageProcessor imageProcessorObject);
     void displayMatsAndDrawText(Camera cameraObject, ImageProcessor imageProcessorObject, BallFinder ballFinderObject);

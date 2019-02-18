@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <opencv2/core/types.hpp>
 template<typename T>
 class CircularBuffer {
 private:

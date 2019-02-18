@@ -70,6 +70,7 @@ bool ImageProcessor::findBallContour() {
     // convert contour to a polygon and store it in contoursAsPolygonsVector
     approxPolyDP(cv::Mat(largestContour), largestContourAsPolygon, 3, true);
     // find minimum enclosing circle of contour polygon and store in cameraImageBallCenterPoint and cameraImageBallRadius
+    // TODO don't do this when drawing is disabled
     minEnclosingCircle(largestContourAsPolygon, cameraImageBallCenterPoint, cameraImageBallRadius);
 
 
@@ -86,7 +87,6 @@ bool ImageProcessor::findBallContour() {
         cameraImageBallCenterHistory->circularPush(cameraImageBallCenterPoint);
     }
 
-    // TODO make this return an actual bool
     return true;
 }
 

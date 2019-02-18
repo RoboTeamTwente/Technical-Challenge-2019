@@ -10,8 +10,7 @@ int  main(void)
     Connection serial("/dev/ttyAMA0",115200);
 
     // One Byte At the time
-    serial.Send(128);
-    serial.Send(132);
+
 
     // An array of byte
     unsigned char  dataArray[] = { 142,0};

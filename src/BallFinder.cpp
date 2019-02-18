@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "BallFinder.h"
 #include "ImageProcessor.h"
 
@@ -11,22 +13,22 @@ BallFinder::BallFinder() {
     topDownBallPointHistory=nullptr;
 }
 
-void BallFinder::findTopDownBallPoint(ImageProcessor imageProcessorObject) {
+void BallFinder::findTopDownBallPoint(const ImageProcessor &imageProcessorObject) {
 
     ballDistanceFromCamera =
             (Constants::REAL_RADIUS * Constants::FOCAL_LENGTH) / imageProcessorObject.cameraImageBallRadius;
 
     // trigonometry magic from https://math.stackexchange.com/questions/1320285/convert-a-pixel-displacement-to-angular-rotation
 
-    ballPixelsFromCenterX = imageProcessorObject.cameraImageBallCenterPoint.x - (0.5 * Settings::IMAGE_WIDTH);
+    ballPixelsFromCenterX = static_cast<int>(imageProcessorObject.cameraImageBallCenterPoint.x - (0.5 * Settings::IMAGE_WIDTH));
 
-    ballAngleInCameraPlane = atan((2 * ballPixelsFromCenterX * tan(0.5 * Constants::HORIZONTAL_FOV_RADIANS))
-                                  / (Settings::IMAGE_WIDTH));
+    ballAngleInCameraPlane = static_cast<float>(atan((2 * ballPixelsFromCenterX * tan(0.5 * Constants::HORIZONTAL_FOV_RADIANS))
+                                                     / (Settings::IMAGE_WIDTH)));
 
-    ballAngleInCameraPlaneDegrees = ballAngleInCameraPlane * (180.0 / M_PIl);
+    ballAngleInCameraPlaneDegrees = static_cast<float>(ballAngleInCameraPlane * (180.0 / M_PIl));
 
-    topDownBallPoint.x = ballDistanceFromCamera * cos(ballAngleInCameraPlane);
-    topDownBallPoint.y = ballDistanceFromCamera * sin(ballAngleInCameraPlane);
+    topDownBallPoint.x = (ballDistanceFromCamera * std::cos(ballAngleInCameraPlane));
+    topDownBallPoint.y = (ballDistanceFromCamera * std::sin(ballAngleInCameraPlane));
 }
 
 
@@ -67,11 +69,14 @@ void BallFinder::findMeanOfBallPoints() {
 
 void BallFinder::findBallSpeedVector(Camera cameraObject) {
     endFrameTime = std::chrono::steady_clock::now();
-    auto frameDuration = (cameraObject.startFrameTime - endFrameTime);
+    auto frameDuration = (endFrameTime - cameraObject.startFrameTime);
+
     double frameDurationInSeconds = std::chrono::duration<double>(frameDuration).count(); //convert to seconds
+    std::cout << frameDurationInSeconds*1000 << std::endl;
 
     // START BALL SPEED CALC  //
     // TODO how does rest of roboteam determine ball pos and speed? I feel like this method is not the best
+    // moving average calculation seems like a good idea
 
     if (Settings::COMPLICATED_DIFFERENCE_CALCULATION && cameraObject.frameCounter >= Settings::DERIVATIVE_BUFFER_SIZE) {
 
@@ -91,14 +96,18 @@ void BallFinder::findBallSpeedVector(Camera cameraObject) {
         ballVelocityVectorAsPoint = pointDifference / frameDurationInSeconds;
     }
 
-    ballSpeed = sqrt(ballVelocityVectorAsPoint.x * ballVelocityVectorAsPoint.x +
-                     ballVelocityVectorAsPoint.y * ballVelocityVectorAsPoint.y);
+    ballSpeed = (std::sqrt(ballVelocityVectorAsPoint.x * ballVelocityVectorAsPoint.x +
+                         ballVelocityVectorAsPoint.y * ballVelocityVectorAsPoint.y));
+    if (ballSpeed < 20){
+        ballSpeed = 0;
+    }
     // END BALL SPEED CALC //
 
 }
 
 void BallFinder::findBallInterceptionVector() {
     // TODO refactor this (and other methods) for efficiency?
+    // TODO fix this (angle is wrong)
 
     if (ballVelocityVectorAsPoint.x >= 0) {
         interceptPos = topDownBallMeanPoint;

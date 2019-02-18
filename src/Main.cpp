@@ -21,14 +21,14 @@ int main(int argc, char **argv) {
     while (true) {
         bool captureSuccess = cameraObject.captureImage();
         if (!captureSuccess) {
-            continue;
+            std::cout << "Camera not available" << std::endl;
+            break;
         }
 
         // Convert camera image to single channel image with only the ball remaining in it
         imageProcessorObject.imageConversion(cameraObject, interfaceObject);
 
         // Find ball center and radius on camera image, and store it in the variables created for this
-        // TODO maybe return as a boolean, and if failed continue
         bool ballFindSuccess = imageProcessorObject.findBallContour();
         if (!ballFindSuccess) {
             continue;
@@ -50,12 +50,14 @@ int main(int argc, char **argv) {
 
         // END OF LOOP //
 
-        // TODO improve performance by changing waitkey
-        if (cv::waitKey(30) == 27) {
-            std::cout << "esc key pressed; ending program" << std::endl;
-            break;
+        // TODO improve performance by making waitkey run on another thread?
+        // TODO Move entire interface to another thread
+        if(cameraObject.frameCounter % 10 == 0) {
+            if (cv::waitKey(1) == 27) {
+                std::cout << "esc key pressed; ending program" << std::endl;
+                break;
+            }
         }
-
     }
 
 
