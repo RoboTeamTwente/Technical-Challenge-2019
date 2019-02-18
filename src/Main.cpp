@@ -29,7 +29,10 @@ int main(int argc, char **argv) {
 
         // Find ball center and radius on camera image, and store it in the variables created for this
         // TODO maybe return as a boolean, and if failed continue
-        imageProcessorObject.findBallContour();
+        bool ballFindSuccess = imageProcessorObject.findBallContour();
+        if (!ballFindSuccess) {
+            continue;
+        }
 
         ballFinderObject.findTopDownBallPoint(imageProcessorObject);
 

@@ -32,7 +32,7 @@ public:
     ImageProcessor();
     void imageConversion(Camera cameraObject, Interface interfaceObject);
 
-    void findBallContour();
+    bool findBallContour();
 };
 
 

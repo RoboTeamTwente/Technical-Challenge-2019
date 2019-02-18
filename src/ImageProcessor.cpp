@@ -35,8 +35,9 @@ void ImageProcessor::imageConversion(Camera cameraObject, Interface interfaceObj
 
 }
 
-void ImageProcessor::findBallContour() {
+bool ImageProcessor::findBallContour() {
     // init variables
+
 
     largestContourArea = 0;
 
@@ -62,14 +63,16 @@ void ImageProcessor::findBallContour() {
         }
     }
 
-
+    if (largestContourArea == 0) {
+        return false;
+    }
 
     // convert contour to a polygon and store it in contoursAsPolygonsVector
     approxPolyDP(cv::Mat(largestContour), largestContourAsPolygon, 3, true);
     // find minimum enclosing circle of contour polygon and store in cameraImageBallCenterPoint and cameraImageBallRadius
     minEnclosingCircle(largestContourAsPolygon, cameraImageBallCenterPoint, cameraImageBallRadius);
 
-    // TODO segfault happens here because this is always false?
+
     if (cameraImageBallCenterHistory == nullptr){
 
         std::vector<cv::Point2f> inputVector(30);
@@ -83,7 +86,8 @@ void ImageProcessor::findBallContour() {
         cameraImageBallCenterHistory->circularPush(cameraImageBallCenterPoint);
     }
 
-
+    // TODO make this return an actual bool
+    return true;
 }
 
 
