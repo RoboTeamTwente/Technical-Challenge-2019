@@ -1,27 +1,25 @@
-// Settings.h
-//
-
 #ifndef TECHNICAL_CHALLENGE_2019_SETTINGS_H
 #define TECHNICAL_CHALLENGE_2019_SETTINGS_H
 
 
 namespace Settings {
-    extern int MORPHOLOGICAL_OPENING_SIZE;
+
+    const int MORPHOLOGICAL_OPENING_SIZE = 10;
 
 
-    extern int DERIVATIVE_BUFFER_SIZE;
+    const int DERIVATIVE_BUFFER_SIZE = 4;
 
 
-    extern int IMAGE_WIDTH;
+    const int IMAGE_WIDTH = 640;
 
 
-    extern int IMAGE_HEIGHT;
+    const int IMAGE_HEIGHT = 480;
 
 
-    extern bool COMPLICATED_DIFFERENCE_CALCULATION;
+    const bool COMPLICATED_DIFFERENCE_CALCULATION = false;
 
 
-    extern bool ENABLE_DRAWING;
+    const bool ENABLE_DRAWING = true;
 }
 
 #endif

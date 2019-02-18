@@ -1,32 +1,27 @@
-// Constants.h
-//
-
 #ifndef TECHNICAL_CHALLENGE_2019_CONSTANTS_H
 #define TECHNICAL_CHALLENGE_2019_CONSTANTS_H
 
-#include <cmath>
-
 namespace Constants {
 
-    extern float BALL_RADIUS_PIXELS;
+    const float BALL_RADIUS_PIXELS = 41.6;
 
 
-    extern float REAL_DISTANCE;
+    const float REAL_DISTANCE = 30.0;
 
 
-    extern float REAL_RADIUS;
+    const float REAL_RADIUS = 4.2;
 
 
-    extern float HALF_MEASURING_WIDTH;
+    const float HALF_MEASURING_WIDTH = 30 / 2;
 
 
-    extern float MEASURING_DISTANCE;
+    const float MEASURING_DISTANCE = 30;
 
 
-    extern float HORIZONTAL_FOV_RADIANS;
+    const float HORIZONTAL_FOV_RADIANS = 2 * std::atan(HALF_MEASURING_WIDTH / MEASURING_DISTANCE);
 
 
-    extern float FOCAL_LENGTH;
+    const float FOCAL_LENGTH = (BALL_RADIUS_PIXELS * REAL_DISTANCE) / REAL_RADIUS;
 }
 
 #endif
