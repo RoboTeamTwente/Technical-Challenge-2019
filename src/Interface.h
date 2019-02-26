@@ -17,7 +17,7 @@ class Interface {
 
 
 public:
-    int LOW_HUE = 0;
+    int LOW_HUE = 3;
     int HIGH_HUE = 5;
 
     int LOW_SATURATION = 126;

@@ -17,7 +17,7 @@ public:
     std::string  deviceName;
     int baud;
 
-    Connection(std::string deviceName, int baud);
+    Connection(std::string deviceName);
     ~Connection();
     int16_t lastAngle;
     uint16_t lastVelocity;
@@ -28,7 +28,7 @@ public:
     int receiveOverConnection( unsigned char  * data, int len);
     bool isOpen();
     void closeConnection();
-    bool openConnection(std::string deviceName, int baud);
+    bool openConnection(std::string deviceName);
     bool numberByteRcv(int &bytelen);
     void sendMoveCommand(uint16_t vel, int16_t angle);
 

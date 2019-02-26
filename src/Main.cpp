@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     ImageProcessor imageProcessorObject;
     Camera cameraObject;
     BallFinder ballFinderObject;
-    Connection connectionObject("/dev/ttyACM0", 115200);
+    Connection connectionObject("/dev/ttyACM0");
 
     if (!cameraObject.working) {
         return -1;
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
             std::cout << velocity << std::endl;
             int angle = std::acos(ballFinderObject.topDownBallMeanPoint.y);
 
-            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) && (cameraObject.frameCounter % 10 == 0 )) {
+            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) || (cameraObject.frameCounter % 10 == 0 )) {
                 connectionObject.sendMoveCommand(velocity, angle);
             }
         }

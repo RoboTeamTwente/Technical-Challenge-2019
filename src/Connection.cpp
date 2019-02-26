@@ -11,9 +11,9 @@ extern "C" {
 
 #include "Connection.h"
 
-Connection::Connection(std::string deviceName, int baud) {
+Connection::Connection(std::string deviceName) {
     handle = -1;
-    openConnection(deviceName, baud);
+    openConnection(deviceName);
     lastVelocity = 0;
     lastAngle = 0;
 
@@ -33,15 +33,15 @@ void Connection::closeConnection() {
 }
 
 
-bool Connection::openConnection(std::string deviceName, int baud) {
+bool Connection::openConnection(std::string deviceName) {
     struct termios tio;
     struct termios2 tio2;
     this->deviceName = deviceName;
-    this->baud = baud;
+    this->baud = 115200;
 //    this->fileIO = new ofstream(deviceName)
 
 
-    handle = open(this->deviceName.c_str(), O_RDWR | O_NOCTTY /* | O_NONBLOCK */);
+    handle = open(this->deviceName.c_str(), O_RDWR | O_NOCTTY  | O_NONBLOCK );
 
     if (handle < 0)
         return false;
@@ -158,3 +158,13 @@ void Connection::sendChipCommand() {
 void Connection::sendDribbleCommand(uint8_t dribbleSpeed) {
     sendOverConnection("dribble " + std::to_string(dribbleSpeed) + "\r");
 }
+
+
+//huart3.Instance = USART3;
+//huart3.Init.BaudRate = 115200;
+//huart3.Init.WordLength = UART_WORDLENGTH_8B;
+//huart3.Init.StopBits = UART_STOPBITS_1;
+//huart3.Init.Parity = UART_PARITY_NONE;
+//huart3.Init.Mode = UART_MODE_TX_RX;
+//huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+//huart3.Init.OverSampling = UART_OVERSAMPLING_16;
