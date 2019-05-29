@@ -2,6 +2,7 @@
 // Created by freek on 21/05/19.
 //
 
+#include "Camera.h"
 #include "Publisher.h"
 #include <string>
 #include <signal.h>
@@ -20,113 +21,105 @@
 
 #include "roboteam_utils/normalize.h"
 #include "roboteam_utils/constants.h"
+#include "ImageProcessor.h"
+#include "BallFinder.h"
 //#include "roboteam_utils/Vector2.h
 
 
-namespace rtt {
 
-    /**
-     * Converts a protoBuf DetectionFrame to the ROS version.
-     */
-    roboteam_msgs::DetectionFrame generate_detection_frame() {
-        roboteam_msgs::DetectionFrame rosFrame;
+const int DEFAULT_VISION_PORT = 10006;
+const int DEFAULT_REFEREE_PORT = 10003;
 
+const std::string SSL_VISION_SOURCE_IP = "224.5.23.2";
+const std::string SSL_REFEREE_SOURCE_IP = "224.5.23.1";
 
-        rosFrame.frame_number = protoFrame.frame_number();
-        rosFrame.t_capture = protoFrame.t_capture();
-        rosFrame.t_sent = protoFrame.t_sent();
-        rosFrame.camera_id = protoFrame.camera_id();
+const std::string LOCAL_SOURCE_IP = "127.0.0.1";
 
-        // std::cout << "Vision balls: " << protoFrame.balls().size() << "\n";
-        // std::cout << "Vision camera id: " << protoFrame.camera_id() << "\n";
+std::string VISION_SOURCE_IP = LOCAL_SOURCE_IP;
+std::string REFEREE_SOURCE_IP = LOCAL_SOURCE_IP;
 
-        for (int i = 0; i < protoFrame.balls().size(); ++i) {
-            SSL_DetectionBall protoBall = protoFrame.balls().Get(i);
-            roboteam_msgs::DetectionBall rosBall = convert_detection_ball(protoBall);
-            rosFrame.balls.push_back(rosBall);
-        }
+//namespace rtt {
 
-        for (int i = 0; i < protoFrame.robots_yellow().size(); ++i) {
-            SSL_DetectionRobot protoBot = protoFrame.robots_yellow().Get(i);
-            roboteam_msgs::DetectionRobot rosBot = convert_detection_robot(protoBot);
-
-            if (us_is_yellow) {
-                rosFrame.us.push_back(rosBot);
-            } else {
-                rosFrame.them.push_back(rosBot);
-            }
-        }
-
-        for (int i = 0; i < protoFrame.robots_blue().size(); ++i) {
-            SSL_DetectionRobot protoBot = protoFrame.robots_blue().Get(i);
-            roboteam_msgs::DetectionRobot rosBot = convert_detection_robot(protoBot);
-
-            if (us_is_yellow) {
-                rosFrame.them.push_back(rosBot);
-            } else {
-                rosFrame.us.push_back(rosBot);
-            }
-        }
-
-        return rosFrame;
-    }
+/**
+ * Converts a protoBuf DetectionFrame to the ROS version.
+ */
 
 
-    /**
-     * Converts a protoBuf DetectionBall to the ROS version.
-     */
-    roboteam_msgs::DetectionBall generate_detection_ball (SSL_DetectionBall protoBall) {
-        roboteam_msgs::DetectionBall rosBall;
 
-        rosBall.confidence = protoBall.confidence();
-        rosBall.existence = protoBall.area();
-        rosBall.pos.x = mm_to_m(protoBall.x());
-        rosBall.pos.y = mm_to_m(protoBall.y());
-        rosBall.z = mm_to_m(protoBall.z());
-        rosBall.pixel_pos.x = protoBall.pixel_x();
-        rosBall.pixel_pos.x = protoBall.pixel_y();
+/**
+ * Converts a protoBuf DetectionRobot to the ROS version.
+ */
+roboteam_msgs::DetectionRobot generate_detection_robot() {
+    roboteam_msgs::DetectionRobot rosBot;
 
-        return rosBall;
-    }
+    rosBot.confidence = 1;
+    rosBot.robot_id = 1;
+    rosBot.pos.x = 0; // TODO maybe make position 0,0 - ballPos
+    rosBot.pos.y = 0;
+    rosBot.orientation = 0;
+    rosBot.pixel_pos.x = 0;
+    rosBot.pixel_pos.y = 0;
+    rosBot.height = 0;
 
-
-    /**
-     * Converts a protoBuf DetectionRobot to the ROS version.
-     */
-    roboteam_msgs::DetectionRobot generate_robot(SSL_DetectionRobot protoBot) {
-        roboteam_msgs::DetectionRobot rosBot;
-
-        rosBot.confidence = protoBot.confidence();
-        rosBot.robot_id = protoBot.robot_id();
-        rosBot.pos.x = mm_to_m(protoBot.x());
-        rosBot.pos.y = mm_to_m(protoBot.y());
-        rosBot.orientation = protoBot.orientation();
-        rosBot.pixel_pos.x = protoBot.pixel_x();
-        rosBot.pixel_pos.y = protoBot.pixel_y();
-        rosBot.height = mm_to_m(protoBot.height());
-
-        return rosBot;
-    }
-
+    return rosBot;
 }
+
+/**
+ * Converts a protoBuf DetectionBall to the ROS version.
+ */
+roboteam_msgs::DetectionBall generate_detection_ball(BallFinder ballFinder) {
+    roboteam_msgs::DetectionBall rosBall;
+
+    rosBall.confidence = 1;
+    rosBall.existence = 1; // TODO fix this
+    rosBall.pos.x = ballFinder.topDownBallMeanPoint.x;
+    rosBall.pos.y = ballFinder.topDownBallMeanPoint.y;
+    rosBall.z = 0;
+    rosBall.pixel_pos.x = ballFinder.topDownBallMeanPoint.x; // TODO Find out what to do with this
+    rosBall.pixel_pos.x = ballFinder.topDownBallMeanPoint.y;
+
+    return rosBall;
+}
+
+roboteam_msgs::DetectionFrame publish_frame(Camera camera, BallFinder ballFinder, ros::Publisher publisher) {
+    roboteam_msgs::DetectionFrame rosFrame;
+
+    long startFrameTimeValue = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::time_point_cast<std::chrono::milliseconds>(camera.startFrameTime).time_since_epoch()).count();
+    rosFrame.frame_number = camera.frameCounter;
+    rosFrame.t_capture = startFrameTimeValue;
+    rosFrame.t_sent = startFrameTimeValue;
+    rosFrame.camera_id = 0;
+
+    // std::cout << "Vision balls: " << protoFrame.balls().size() << "\n";
+    // std::cout << "Vision camera id: " << protoFrame.camera_id() << "\n";
+
+    roboteam_msgs::DetectionBall rosBall = generate_detection_ball(ballFinder);
+    rosFrame.balls.push_back(rosBall);
+
+
+    roboteam_msgs::DetectionRobot rosBot = generate_detection_robot();
+
+
+    rosFrame.us.push_back(rosBot);
+
+
+    publisher.publish(rosFrame);
+}
+
+
+
+
+
+//}
 
 class Publisher {
 
 
-////    constexpr int DEFAULT_VISION_PORT = 10006;
-////    constexpr int DEFAULT_REFEREE_PORT = 10003;
-////
-////    const std::string SSL_VISION_SOURCE_IP = "224.5.23.2";
-////    const std::string SSL_REFEREE_SOURCE_IP = "224.5.23.1";
-////
-////    const std::string LOCAL_SOURCE_IP = "127.0.0.1";
-////
-////    std::string VISION_SOURCE_IP = LOCAL_SOURCE_IP;
-////    std::string REFEREE_SOURCE_IP = LOCAL_SOURCE_IP;
 //
-//// const std::string VISION_SOURCE_IP = SSL_VISION_SOURCE_IP;
-//// const std::string REFEREE_SOURCE_IP = SSL_REFEREE_SOURCE_IP;
-//
+// const std::string VISION_SOURCE_IP = SSL_VISION_SOURCE_IP;
+// const std::string REFEREE_SOURCE_IP = SSL_REFEREE_SOURCE_IP;
+
 //// Our name as specified by ssl-refbox : https://github.com/RoboCup-SSL/ssl-refbox/blob/master/referee.conf
 //    const std::string ROBOTEAM_TWENTE = "RoboTeam Twente";
 //
@@ -160,57 +153,33 @@ class Publisher {
 //
 //    boost::optional<int> lastKnownVisionPort, lastKnownRefereePort;
 //
-//namespace {
-//
-//    bool shuttingDown = false;
-//
-//    void sigIntHandler(int) {
-//        shuttingDown = true;
-//    }
-//
-//} // anonymous namespace
 
-}
+
+
 // Sends a SSL_DetectionFrame out through the supplied publisher.
-void send_detection_frame(SSL_DetectionFrame detectionFrame, ros::Publisher publisher, bool normalize_field) {
-    uint cam_id = detectionFrame.camera_id();
 
-    // TODO: See if it is necessary to remove duplicate frames.
-    // Are they even duplicate?
+};
 
-    // Convert the detection frame.
-    roboteam_msgs::DetectionFrame frame = rtt::convert_detection_frame(detectionFrame, us_is_yellow);
+    //
+    bool shuttingDown = false;
 
-    if (transform_field) {
-        rtt::dropObjectsOutsideTransform(
-                frame,
-                field_size,
-                transform_top,
-                transform_right,
-                transform_bottom,
-                transform_left
-        );
-
-        rtt::transformDetectionFrame(frame, transform_move, transform_rotate_right_angle);
+    //
+    void sigIntHandler(int) {
+        shuttingDown = true;
     }
 
-    if (normalize_field && !our_side_is_left) {
-        frame = rtt::normalizeDetectionFrame(frame);
-    }
+ // anonymous namespace
 
-    // Publish the frame.
-    publisher.publish(frame);
-}
-
-int main(int argc, char **argv) {
+int publishMain(int argc, char **argv) {
 
     std::vector<std::string> args(argv, argv + argc);
 
     // Init ros
     ros::init(argc, argv, "roboteam_msgs",
               ros::init_options::NoSigintHandler); // NoSigintHandler gives the ability to override ROS sigint handler
-    // Flower power!
-    signal(SIGINT, sigIntHandler);
+    // TODO fix this sigIntHandler later
+//    signal(SIGINT, sigIntHandler(SIGINT));
+//    signal(SIGINT, sigIntHandler);
     ros::NodeHandle n;
 
     // Run at 80 hz.
@@ -430,4 +399,3 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-};

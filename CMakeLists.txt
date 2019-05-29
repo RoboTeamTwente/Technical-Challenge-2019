@@ -75,7 +75,7 @@ add_executable(Technical-Challenge-2019
         src/Main.cpp
 
 
-        src/Publisher.cpp src/Publisher.h)
+        src/Publisher.cpp)
 
 find_package(OpenCV REQUIRED)
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})

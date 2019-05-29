@@ -67,6 +67,7 @@ int main(int argc, char **argv) {
         // TODO improve performance by removing waitkey
         // TODO Move entire interface to another thread
         // TODO also move USB Connection to other thread and use a queue
+        // TODO software should listen to robot STOP commands etc
 
         if (cv::waitKey(30) == 27) {
             std::cout << "esc key pressed; ending program" << std::endl;
