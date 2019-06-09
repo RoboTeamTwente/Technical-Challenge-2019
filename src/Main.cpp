@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include "Settings.h"
 #include "Connection.h"
+#include "Publisher.h"
 
 int main(int argc, char **argv) {
     // Initializing objects
@@ -14,6 +15,8 @@ int main(int argc, char **argv) {
     Camera cameraObject;
     BallFinder ballFinderObject;
     Connection connectionObject("/dev/ttyACM0");
+    Control control;
+    Publisher publisher(control);
 
     if (!cameraObject.working) {
         return -1;
@@ -35,10 +38,11 @@ int main(int argc, char **argv) {
         bool ballFindSuccess = imageProcessorObject.findBallContour();
         if (!ballFindSuccess) {
 
-            if (cameraObject.frameCounter % 10 == 0 ) {
-                connectionObject.sendStopCommand();
-            }
-            continue;
+            // TODO if ball was very close recently
+            //      turn dribbler on. Go forwards 0.3m, go back 0.7m
+            //  else
+            //      send stop command
+
         }
 
         ballFinderObject.findTopDownBallPoint(imageProcessorObject);
@@ -54,19 +58,24 @@ int main(int argc, char **argv) {
         }
 
         if (Settings::ENABLE_CONNECTION){
-            int velocity= ballFinderObject.topDownBallMeanPoint.x*10;
-            std::cout << velocity << std::endl;
-            int angle = std::acos(ballFinderObject.topDownBallMeanPoint.y);
+            // TODO update robot object! Get newest values
 
-            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) || (cameraObject.frameCounter % 10 == 0 )) {
-                connectionObject.sendMoveCommand(velocity, angle);
-            }
+            float velocity= ballFinderObject.topDownBallMeanPoint.x;
+            std::cout << velocity << std::endl;
+            float angle = std::atan2(ballFinderObject.topDownBallMeanPoint.y,ballFinderObject.topDownBallMeanPoint.x);
+            publisher.command = control.makeCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, angle);
+            publisher.skillpublishRobotCommand();
+
+
+//            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) || (cameraObject.frameCounter % 10 == 0 )) {
+//                connectionObject.sendMoveCommand(velocity, angle);
+//            }
         }
         // END OF LOOP //
 
-        // TODO improve performance by removing waitkey
-        // TODO Move entire interface to another thread
-        // TODO also move USB Connection to other thread and use a queue
+
+\
+
         // TODO software should listen to robot STOP commands etc
 
         if (cv::waitKey(30) == 27) {

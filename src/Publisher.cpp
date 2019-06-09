@@ -8,9 +8,12 @@
 #include <roboteam_msgs/RobotCommand.h>
 #include <rosconsole/macros_generated.h>
 #include <ros/node_handle.h>
-#include "lib/Robot.h"
+#include "src/lib/Robot.h"
+#include "Control.h"
 
-
+Publisher::Publisher(Control inputControl){
+    control = &inputControl;
+};
 
 
 
@@ -24,24 +27,13 @@ void Publisher::refreshRobotCommand() {
     command = emptyCmd;
 }
 
-
-const std::shared_ptr<rtt::ai::control::Robot> getRobotForId(int id, bool ourTeam) {
-    const std::vector<RobotPtr> robots = ourTeam ? getUs() : getThem();
-    for (const auto &robot : robots) {
-        if (robot->id == id) {
-            return robot;
-        }
-    }
-    return nullptr;
-}
-
 void Publisher::ioManagerPublishRobotCommand() {
 
-    if (! pause->getPause()) {
-        if (true) { // TODO remove if
+    if (! control->paused) {
+        if (true) { // TODO remove if?
 
             // the geneva cannot be received from world, so we set it when it gets sent.
-            auto robot = getRobotForId(command.id, true);
+
             if (robot) {
                 robot->setGenevaState(command.geneva_state);
                 robot->setDribblerState(command.dribbler);
@@ -59,9 +51,10 @@ void Publisher::ioManagerPublishRobotCommand() {
     else {
         ROS_ERROR("HALT!");
     }
+    refreshRobotCommand();
 }
 
-void Publisher::SkillpublishRobotCommand() { // this one calls the iomanager one
+void Publisher::skillpublishRobotCommand() { // this one calls the iomanager one
 
     ros::NodeHandle nh;
     std::string ourSideParam;
@@ -81,5 +74,5 @@ void Publisher::SkillpublishRobotCommand() { // this one calls the iomanager one
         ioManagerPublishRobotCommand(); // We default to our robots being on the left if parameter is not set
     }
     // refresh the robotcommand after it has been sent
-    refreshRobotCommand();
+
 }

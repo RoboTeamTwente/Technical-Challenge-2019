@@ -6,6 +6,7 @@
  */
 
 #include <roboteam_msgs/DemoRobot.h>
+#include <roboteam_msgs/RobotFeedback.h>
 #include <roboteam_ai/src/demo/JoystickDemo.h>
 #include <roboteam_ai/src/utilities/Pause.h>
 #include <roboteam_ai/src/world/Field.h>
@@ -59,7 +60,7 @@ void IOManager::subscribeToRoleFeedback() {
     roleFeedbackSubscriber = nodeHandle.subscribe<roboteam_msgs::RoleFeedback>(
             rtt::TOPIC_ROLE_FEEDBACK,
             100,
-            &IOManager::handleRobotFeedback,
+            &IOManager::handleRoleFeedback,
             this,
             ros::TransportHints().reliable().tcpNoDelay()
     );
@@ -86,6 +87,16 @@ void IOManager::subscribeToDemoInfo() {
     );
 }
 
+void IOManager::subscribeToRobotFeedback() {
+    robotFeedbackSubscriber = nodeHandle.subscribe<roboteam_msgs::RobotFeedback>(
+            "robot_feedback", // TODO TOPIC ROBOT FEEDBACK
+            100,
+            &IOManager::handleRobotFeedback,
+            this,
+            ros::TransportHints().reliable().tcpNoDelay()
+    );
+}
+
 void IOManager::handleWorldState(const roboteam_msgs::WorldConstPtr &w) {
     std::lock_guard<std::mutex> lock(mutex);
     this->worldMsg = *w;
@@ -98,7 +109,7 @@ void IOManager::handleGeometryData(const roboteam_msgs::GeometryDataConstPtr &ge
     world::field->set_field(this->geometryMsg.field);
 }
 
-void IOManager::handleRobotFeedback(const roboteam_msgs::RoleFeedbackConstPtr &rolefeedback) {
+void IOManager::handleRoleFeedback(const roboteam_msgs::RoleFeedbackConstPtr &rolefeedback) {
     std::lock_guard<std::mutex> lock(mutex);
     this->roleFeedbackMsg = *rolefeedback;
 }

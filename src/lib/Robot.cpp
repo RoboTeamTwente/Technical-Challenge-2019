@@ -42,7 +42,7 @@ Robot::Robot(const roboteam_msgs::WorldRobot &copy, Team team,
 Robot::Robot()
         :distanceToBall(- 1.0), iHaveBall(false), lastUpdatedWorldNumber(0), genevaState(0), workingGeneva(false),
         dribblerState(0), workingDribbler(false),
-        id(- 1), angle(- 1.0), angularVelocity(- 1.0), team(invalid) {
+        id(1), angle(- 1.0), angularVelocity(- 1.0), team(invalid) { // TODO Robot ID here
 
     shotController = nullptr;
     numTreePosControl = nullptr;
@@ -172,7 +172,7 @@ const std::shared_ptr<control::NumTreePosControl> &Robot::getNumtreePosControl()
     return numTreePosControl;
 }
 
-const std::shared_ptr<control::BasicPosControl> &Robot::getBasicPosControl() const {
+const std::shared_ptr<control::BasicPosChttps://www.nnv.nl/en/accounts/register/ontrol> &Robot::getBasicPosControl() const {
     return basicPosControl;
 }
 

@@ -3,6 +3,7 @@
 
 namespace Constants {
 
+    const int ROBOT_ID = 1;
     const float BALL_RADIUS_PIXELS = 41.6;
 
 

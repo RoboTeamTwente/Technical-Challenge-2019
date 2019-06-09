@@ -31,13 +31,14 @@ private:
         ros::Subscriber worldSubscriber;
         ros::Subscriber geometrySubscriber;
         ros::Subscriber roleFeedbackSubscriber;
+        ros::Subscriber robotFeedbackSubscriber;
         ros::Subscriber refereeSubscriber;
         ros::Subscriber demoInfoSubscriber;
 
         ros::Publisher robotCommandPublisher;
         void handleWorldState(const roboteam_msgs::WorldConstPtr &world);
         void handleGeometryData(const roboteam_msgs::GeometryDataConstPtr &geometry);
-        void handleRobotFeedback(const roboteam_msgs::RoleFeedbackConstPtr &rolefeedback);
+        void handleRoleFeedback(const roboteam_msgs::RoleFeedbackConstPtr &rolefeedback);
         void handleRefereeData(const roboteam_msgs::RefereeDataConstPtr &refData);
         void handleDemoInfo(const roboteam_msgs::DemoRobotConstPtr &demoInfo);
         rtt::ai::Pause* pause;
