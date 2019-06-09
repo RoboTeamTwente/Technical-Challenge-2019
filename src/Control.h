@@ -34,6 +34,8 @@ public:
     float robotAngle;
 
     roboteam_msgs::RobotCommand limitRobotCommand(roboteam_msgs::RobotCommand command);
+
+    bool sentZero;
 };
 
 
