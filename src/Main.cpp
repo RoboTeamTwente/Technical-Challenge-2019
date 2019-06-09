@@ -57,13 +57,15 @@ int main(int argc, char **argv) {
             interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
         }
 
+
+
         if (Settings::ENABLE_CONNECTION){
             // TODO update robot object! Get newest values
 
-            float velocity= ballFinderObject.topDownBallMeanPoint.x;
-            std::cout << velocity << std::endl;
-            float angle = ballFinderObject.ballAngleInCameraPlane;
-            publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, angle);
+//            float velocity= ballFinderObject.topDownBallMeanPoint.x;
+//            std::cout << velocity << std::endl;
+            float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
+            publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
             publisher.skillpublishRobotCommand();
 
 
