@@ -11,16 +11,20 @@
 // CONSTRUCTOR
 Interface::Interface() {
     // Open control window
-    cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
-    cvCreateTrackbar("LowH", "Control", &LOW_HUE, 179); //Hue
-    cvCreateTrackbar("HighH", "Control", &HIGH_HUE, 179);
+    if (Settings::ENABLE_DRAWING){
+        cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create control window
+        cvCreateTrackbar("LowH", "Control", &LOW_HUE, 179); //Hue
+        cvCreateTrackbar("HighH", "Control", &HIGH_HUE, 179);
 
-    cvCreateTrackbar("LowS", "Control", &LOW_SATURATION, 255); //Saturation
-    cvCreateTrackbar("HighS", "Control", &HIGH_SATURATION, 255);
+        cvCreateTrackbar("LowS", "Control", &LOW_SATURATION, 255); //Saturation
+        cvCreateTrackbar("HighS", "Control", &HIGH_SATURATION, 255);
 
-    cvCreateTrackbar("LowV", "Control", &LOW_VALUE, 255); //Value
-    cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
-    cv::moveWindow("Control", 500, 500);
+        cvCreateTrackbar("LowV", "Control", &LOW_VALUE, 255); //Value
+        cvCreateTrackbar("HighV", "Control", &HIGH_VALUE, 255);
+        cv::moveWindow("Control", 500, 500);
+    }
+
+
 
     topDownCameraPositionPoint = cv::Point_<float>(100, 240);
     line1x = 540 * cos(-0.5 * Constants::HORIZONTAL_FOV_RADIANS);

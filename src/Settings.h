@@ -19,7 +19,7 @@ namespace Settings {
     const bool COMPLICATED_DIFFERENCE_CALCULATION = false;
 
 
-    const bool ENABLE_DRAWING = true;
+    const bool ENABLE_DRAWING = false;
 
     const bool ENABLE_CONNECTION = true;
 }
