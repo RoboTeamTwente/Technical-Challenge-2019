@@ -22,6 +22,7 @@ namespace Settings {
     const bool ENABLE_DRAWING = false;
 
     const bool ENABLE_CONNECTION = true;
+    const double TICK_RATE = 60;
 }
 
 #endif

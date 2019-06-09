@@ -65,6 +65,9 @@ int main(int argc, char **argv) {
                 //      turn dribbler on. Go forwards 0.3m, go back 0.7m
                 //  else
                 //      send stop command
+                publisher.command = control.makeSimpleCommand(0,0,0);
+                publisher.skillpublishRobotCommand(control);
+
 
             } else {
                 float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);

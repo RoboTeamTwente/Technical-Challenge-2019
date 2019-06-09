@@ -8,14 +8,16 @@
 
 #include <src/lib/Robot.h>
 #include <chrono>
+#include <src/lib/pid.h>
 
 class Control {
 public:
+    explicit Control();
     bool paused;
     float MAX_SPEED = 3;
     float previousAngle = 0;
 
-
+    PID* forwardPID;
 
 
 

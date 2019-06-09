@@ -11,6 +11,11 @@
 #include <chrono>
 #include "lib/Robot.h"
 #include "Constants.h"
+#include "lib/pid.h"
+
+Control::Control() {
+    forwardPID = new PID(1,0,0,0);
+}
 
 
 roboteam_msgs::RobotCommand Control::limitRobotCommand(roboteam_msgs::RobotCommand command) {
@@ -29,7 +34,9 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
     robotAngle = -angle;
 
 
+
     roboteam_msgs::RobotCommand command;
+
     command.id = Constants::ROBOT_ID;
     if (angle > 0.13 || angle < -0.13) {
         // We must rotate
@@ -41,7 +48,7 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
 
 
     } else {
-        command.x_vel = robotXdist;
+        command.x_vel = forwardPID->getOutput(robotXdist);
         command.y_vel = 0;
         command.w = 0;
 
@@ -51,4 +58,5 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
     command = limitRobotCommand(command);
     return command;
 }
+
 

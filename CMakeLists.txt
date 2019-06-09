@@ -79,6 +79,7 @@ add_executable(technical-challenge-2019
 #        src/WorldState.cpp
         src/Publisher.cpp
         src/Control.cpp
+        src/lib/pid.cpp
 #        src/lib/Robot.cpp
 #        src/lib/Robot.h
 #        src/lib/IOManager.cpp
