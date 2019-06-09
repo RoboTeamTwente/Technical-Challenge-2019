@@ -18,6 +18,8 @@ public:
     float previousAngle = 0;
 
     PID* forwardPID;
+    PID* sidewaysPID;
+    PID* rotationPID;
 
 
 

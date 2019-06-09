@@ -10,6 +10,7 @@
 #include "Control.h"
 #include "Publisher.h"
 #include "Settings.h"
+#include "Constants.h"
 
 
 Publisher::Publisher(Control inputControl){
@@ -25,9 +26,9 @@ Publisher::Publisher(Control inputControl){
 
 void Publisher::refreshRobotCommand() {
     roboteam_msgs::RobotCommand emptyCmd;
-    emptyCmd.use_angle = 1;
-    emptyCmd.id = robot ? robot->id : -1;
-    emptyCmd.geneva_state = 3;
+    emptyCmd.use_angle = 1; // TODO 0 or 1?
+    emptyCmd.id = Constants::ROBOT_ID;
+    emptyCmd.geneva_state = 3; // TODO what is this
     command = emptyCmd;
 }
 
@@ -55,11 +56,11 @@ void Publisher::ioManagerPublishRobotCommand() {
     else {
         ROS_ERROR("HALT!");
     }
-    refreshRobotCommand();
+//    refreshRobotCommand(); // TODO fix this later
 }
 
 void Publisher::skillpublishRobotCommand(Control control) { // this one calls the iomanager one
-
+    std::cout << command.x_vel << std::endl;
     ros::NodeHandle nh;
     std::string ourSideParam;
     nh.getParam("our_side", ourSideParam);

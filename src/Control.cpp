@@ -12,19 +12,38 @@
 #include "lib/Robot.h"
 #include "Constants.h"
 #include "lib/pid.h"
+#include "Settings.h"
 
 Control::Control() {
     forwardPID = new PID(1,0,0,0);
+    sidewaysPID = new PID(0.1,0,0,0);
+    rotationPID = new PID(1,0,0,0);
 }
 
 
 roboteam_msgs::RobotCommand Control::limitRobotCommand(roboteam_msgs::RobotCommand command) {
-    if (command.x_vel > 0.5) {
-        command.x_vel = 0.5;
+    if (command.x_vel > Settings::MAX_VEL) {
+        command.x_vel = Settings::MAX_VEL;
     }
-    if (command.y_vel > 0.5) {
-        command.y_vel = 0.5;
+    if (command.x_vel < -Settings::MAX_VEL) {
+        command.x_vel = -Settings::MAX_VEL;
     }
+
+    if (command.y_vel > Settings::MAX_VEL) {
+        command.y_vel = Settings::MAX_VEL;
+    }
+
+    if (command.y_vel < -Settings::MAX_VEL) {
+        command.y_vel = -Settings::MAX_VEL;
+    }
+
+    if (command.w > Settings::MAX_VEL) {
+        command.w = Settings::MAX_VEL;
+    }
+    if (command.w < -Settings::MAX_VEL) {
+        command.w = -Settings::MAX_VEL;
+    }
+
     return command;
 }
 
@@ -36,6 +55,7 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
 
 
     roboteam_msgs::RobotCommand command;
+    command.use_angle = 0;
 
     command.id = Constants::ROBOT_ID;
     if (angle > 0.13 || angle < -0.13) {
@@ -56,6 +76,7 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
         // TODO check if command.y_vel=y is nice
     }
     command = limitRobotCommand(command);
+
     return command;
 }
 
