@@ -34,10 +34,10 @@ void Publisher::ioManagerPublishRobotCommand() {
 
             // the geneva cannot be received from world, so we set it when it gets sent.
 
-            if (robot) {
-                robot->setGenevaState(command.geneva_state);
-                robot->setDribblerState(command.dribbler);
-            }
+//            if (robot) {
+//                robot->setGenevaState(command.geneva_state);
+//                robot->setDribblerState(command.dribbler);
+//            }
             // sometimes trees are terminated without having a role assigned.
             // It is then possible that a skill gets terminated with an empty robot: and then the id can be for example -1.
             if (command.id >= 0 && command.id < 16) {
@@ -54,13 +54,13 @@ void Publisher::ioManagerPublishRobotCommand() {
     refreshRobotCommand();
 }
 
-void Publisher::skillpublishRobotCommand() { // this one calls the iomanager one
+void Publisher::skillpublishRobotCommand(Control control) { // this one calls the iomanager one
 
     ros::NodeHandle nh;
     std::string ourSideParam;
     nh.getParam("our_side", ourSideParam);
 
-    limitRobotCommand();
+//    control.limitRobotCommand();
 
     if (std::isnan(command.x_vel) || std::isnan(command.y_vel)) {
         std::cout << "ERROR: x or y vel in command is NAN in Skill " << "technical challenge" << "!" << std::endl;

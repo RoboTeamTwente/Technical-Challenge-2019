@@ -76,7 +76,13 @@ add_executable(Technical-Challenge-2019
         src/Main.cpp
 
 
-        src/WorldState.cpp src/Publisher.cpp src/Publisher.h src/Control.cpp src/Control.h src/lib/Robot.cpp src/lib/Robot.h src/lib/IOManager.cpp)
+#        src/WorldState.cpp
+        src/Publisher.cpp
+        src/Control.cpp
+#        src/lib/Robot.cpp
+#        src/lib/Robot.h
+#        src/lib/IOManager.cpp
+        )
 
 find_package(OpenCV REQUIRED)
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})

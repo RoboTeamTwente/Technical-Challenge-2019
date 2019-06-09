@@ -44,6 +44,7 @@ public:
 //            , chipper_vel(0.0)
 //            , geneva_state(0)  {
 //    }
+    void skillpublishRobotCommand(Control control);
 };
 
 #endif //TECHNICAL_CHALLENGE_2019_PUBLISHER_H

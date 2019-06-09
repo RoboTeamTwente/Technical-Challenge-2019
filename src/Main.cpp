@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
         ballFinderObject.findBallSpeedVector(cameraObject);
         ballFinderObject.findBallInterceptionVector();
 
-        if (Settings::ENABLE_DRAWING) {
+        if (Settings::ENABLE_DRAWING && ballFindSuccess) {
             interfaceObject.drawContourAndBallTrailOnCameraView(cameraObject, imageProcessorObject);
             interfaceObject.drawTopDownView(ballFinderObject, imageProcessorObject);
             interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
@@ -62,8 +62,8 @@ int main(int argc, char **argv) {
 
             float velocity= ballFinderObject.topDownBallMeanPoint.x;
             std::cout << velocity << std::endl;
-            float angle = std::atan2(ballFinderObject.topDownBallMeanPoint.y,ballFinderObject.topDownBallMeanPoint.x);
-            publisher.command = control.makeCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, angle);
+            float angle = ballFinderObject.ballAngleInCameraPlane;
+            publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, angle);
             publisher.skillpublishRobotCommand();
 
 
