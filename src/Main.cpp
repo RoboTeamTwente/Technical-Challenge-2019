@@ -38,14 +38,7 @@ int main(int argc, char **argv) {
 
         // Find ball center and radius on camera image, and store it in the variables created for this
         bool ballFindSuccess = imageProcessorObject.findBallContour();
-        if (!ballFindSuccess) {
 
-            // TODO if ball was very close recently
-            //      turn dribbler on. Go forwards 0.3m, go back 0.7m
-            //  else
-            //      send stop command
-
-        }
 
         ballFinderObject.findTopDownBallPoint(imageProcessorObject);
 
@@ -66,9 +59,19 @@ int main(int argc, char **argv) {
 
 //            float velocity= ballFinderObject.topDownBallMeanPoint.x;
 //            std::cout << velocity << std::endl;
-            float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
-            publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
-            publisher.skillpublishRobotCommand(control);
+            if (!ballFindSuccess) {
+
+                // TODO if ball was very close recently
+                //      turn dribbler on. Go forwards 0.3m, go back 0.7m
+                //  else
+                //      send stop command
+
+            } else {
+                float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
+                publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
+                publisher.skillpublishRobotCommand(control);
+            }
+
 
 
 //            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) || (cameraObject.frameCounter % 10 == 0 )) {

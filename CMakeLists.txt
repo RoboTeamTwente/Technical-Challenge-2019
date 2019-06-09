@@ -58,7 +58,7 @@ include_directories(
 
 
 
-add_executable(Technical-Challenge-2019
+add_executable(technical-challenge-2019
         src/CircularBuffer.cpp
 
 
@@ -86,7 +86,7 @@ add_executable(Technical-Challenge-2019
 
 find_package(OpenCV REQUIRED)
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(Technical-Challenge-2019 ${OpenCV_LIBS}
+TARGET_LINK_LIBRARIES(technical-challenge-2019 ${OpenCV_LIBS}
         ${catkin_LIBRARIES}
         ${QT_LIBRARIES}
         ${PROTOBUF_LIBRARIES})

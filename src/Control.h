@@ -12,13 +12,11 @@
 class Control {
 public:
     bool paused;
-    void limitRobotCommand();
     float MAX_SPEED = 3;
     float previousAngle = 0;
 
 
 
-    roboteam_msgs::RobotCommand limitRobotCommand(roboteam_msgs::RobotCommand command, rtt::ai::world::Robot *robot);
 
 
 
@@ -30,6 +28,8 @@ public:
     float robotYdist;
     float robotXdist;
     float robotAngle;
+
+    roboteam_msgs::RobotCommand limitRobotCommand(roboteam_msgs::RobotCommand command);
 };
 
 

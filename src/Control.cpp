@@ -13,7 +13,15 @@
 #include "Constants.h"
 
 
-
+roboteam_msgs::RobotCommand Control::limitRobotCommand(roboteam_msgs::RobotCommand command) {
+    if (command.x_vel > 0.5) {
+        command.x_vel = 0.5;
+    }
+    if (command.y_vel > 0.5) {
+        command.y_vel = 0.5;
+    }
+    return command;
+}
 
 roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float angle) {
     robotYdist= -x;
@@ -23,7 +31,7 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
 
     roboteam_msgs::RobotCommand command;
     command.id = Constants::ROBOT_ID;
-    if (angle > 2 || angle < -2) {
+    if (angle > 0.13 || angle < -0.13) {
         // We must rotate
         command.x_vel = 0;
         command.y_vel = 0;
@@ -40,6 +48,7 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
 
         // TODO check if command.y_vel=y is nice
     }
+    command = limitRobotCommand(command);
     return command;
 }
 
