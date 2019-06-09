@@ -1,8 +1,6 @@
 //
 // Created by freek on 05/06/19.
 //
-
-#include "Publisher.h"
 #include <cmath>
 #include <iostream>
 #include <roboteam_msgs/RobotCommand.h>
@@ -10,9 +8,15 @@
 #include <ros/node_handle.h>
 #include "src/lib/Robot.h"
 #include "Control.h"
+#include "Publisher.h"
+#include "Settings.h"
+
 
 Publisher::Publisher(Control inputControl){
-    control = &inputControl;
+    control = inputControl;
+    if (Settings::ENABLE_CONNECTION){
+        robotCommandPublisher = nodeHandle.advertise<roboteam_msgs::RobotCommand>("robotcommands", 100);
+    }
 };
 
 
@@ -29,7 +33,7 @@ void Publisher::refreshRobotCommand() {
 
 void Publisher::ioManagerPublishRobotCommand() {
 
-    if (! control->paused) {
+    if (! control.paused) {
         if (true) { // TODO remove if?
 
             // the geneva cannot be received from world, so we set it when it gets sent.

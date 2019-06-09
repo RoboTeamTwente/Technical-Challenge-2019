@@ -7,8 +7,10 @@
 #include "Settings.h"
 #include "Connection.h"
 #include "Publisher.h"
+#include <ros/ros.h>
 
 int main(int argc, char **argv) {
+    ros::init(argc, argv, "technical_challenge_2019");
     // Initializing objects
     Interface interfaceObject;
     ImageProcessor imageProcessorObject;
@@ -66,7 +68,7 @@ int main(int argc, char **argv) {
 //            std::cout << velocity << std::endl;
             float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
             publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
-            publisher.skillpublishRobotCommand();
+            publisher.skillpublishRobotCommand(control);
 
 
 //            if ((connectionObject.lastVelocity!=velocity || connectionObject.lastAngle!=angle) || (cameraObject.frameCounter % 10 == 0 )) {
@@ -80,7 +82,7 @@ int main(int argc, char **argv) {
 
         // TODO software should listen to robot STOP commands etc
 
-        if (cv::waitKey(30) == 27) {
+        if (cv::waitKey(30) == 27) { // TODO improve performance here
             std::cout << "esc key pressed; ending program" << std::endl;
             break;
         }

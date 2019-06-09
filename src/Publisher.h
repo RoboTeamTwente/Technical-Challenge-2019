@@ -9,18 +9,19 @@
 #include <roboteam_msgs/RobotCommand.h>
 #include <src/lib/Robot.h>
 #include "Control.h"
+#include <ros/node_handle.h>
 
 class Publisher{
 public:
-    Publisher(Control inputControl);
-
-    Control* control;
+    explicit Publisher(Control inputControl);
+    ros::NodeHandle nodeHandle;
+    Control control;
     ros::Publisher robotCommandPublisher;
     roboteam_msgs::RobotCommand command;
 
     rtt::ai::world::Robot* robot;
 
-    void skillpublishRobotCommand();
+    void skillpublishRobotCommand(Control control);
 
     void ioManagerPublishRobotCommand();
 
@@ -43,8 +44,7 @@ public:
 //            , chipper_forced(false)
 //            , chipper_vel(0.0)
 //            , geneva_state(0)  {
-//    }
-    void skillpublishRobotCommand(Control control);
+
 };
 
 #endif //TECHNICAL_CHALLENGE_2019_PUBLISHER_H
