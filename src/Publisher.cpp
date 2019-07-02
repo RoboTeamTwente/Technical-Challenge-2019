@@ -14,7 +14,7 @@
 
 
 Publisher::Publisher(Control inputControl){
-    control = inputControl;
+    control = &inputControl;
     if (Settings::ENABLE_CONNECTION){
         robotCommandPublisher = nodeHandle.advertise<roboteam_msgs::RobotCommand>("robotcommands", 100);
     }
@@ -34,7 +34,7 @@ void Publisher::refreshRobotCommand() {
 
 void Publisher::ioManagerPublishRobotCommand() {
 
-    if (! control.paused) {
+    if (! control->paused) {
         if (true) { // TODO remove if?
 
             // the geneva cannot be received from world, so we set it when it gets sent.

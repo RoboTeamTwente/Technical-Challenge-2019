@@ -10,10 +10,15 @@
 #include <chrono>
 #include <src/lib/pid.h>
 
+class Publisher;
+
+#include "Publisher.h"
+
 class Control {
 public:
     explicit Control();
     bool paused;
+    bool ballIsClose = false;
     float MAX_SPEED = 3;
     float previousAngle = 0;
 
@@ -36,6 +41,8 @@ public:
     roboteam_msgs::RobotCommand limitRobotCommand(roboteam_msgs::RobotCommand command);
 
     bool sentZero;
+
+    roboteam_msgs::RobotCommand takeBallGoBackwards(Publisher publisher);
 };
 
 

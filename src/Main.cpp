@@ -62,18 +62,24 @@ int main(int argc, char **argv) {
             if (!ballFindSuccess) {
 
                 // TODO if ball was very close recently
-                //      turn dribbler on. Go forwards 0.3m, go back 0.7m
+                //
                 //  else
                 //      send stop command
-
-                if (!control.sentZero) {
-                    publisher.command = control.makeSimpleCommand(0, 0, 0);
-                    control.sentZero = true;
-                    publisher.skillpublishRobotCommand(control);
+                if (control.ballIsClose) {
+                    control.sentZero = false;
+                    control.takeBallGoBackwards(publisher);
+                } else {
+                    if (!control.sentZero) {
+                        publisher.command = control.makeSimpleCommand(0, 0, 0);
+                        control.sentZero = true;
+                        publisher.skillpublishRobotCommand(control);
+                    }
                 }
 
 
+
             } else {
+
                 control.sentZero = false;
                 float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
                 publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);

@@ -5,17 +5,24 @@
 #ifndef TECHNICAL_CHALLENGE_2019_PUBLISHER_H
 #define TECHNICAL_CHALLENGE_2019_PUBLISHER_H
 
+class Control;
+
+
 #include <ros/publisher.h>
 #include <roboteam_msgs/RobotCommand.h>
 #include <src/lib/Robot.h>
-#include "Control.h"
 #include <ros/node_handle.h>
+#include "Control.h"
+
+
 
 class Publisher{
 public:
-    explicit Publisher(Control inputControl);
+    explicit Publisher(Control inputControl);// inputControl);
+    Control* control;
+
+
     ros::NodeHandle nodeHandle;
-    Control control;
     ros::Publisher robotCommandPublisher;
     roboteam_msgs::RobotCommand command;
 
