@@ -19,9 +19,9 @@ namespace Settings {
     const bool COMPLICATED_DIFFERENCE_CALCULATION = false;
 
 
-    const bool ENABLE_DRAWING = true;
+    const bool ENABLE_DRAWING = false;
 
-    const bool ENABLE_CONNECTION = false;
+    const bool ENABLE_CONNECTION = true;
     const double TICK_RATE = 60;
     const float MAX_VEL = 0.3;
 }

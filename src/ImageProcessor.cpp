@@ -25,12 +25,12 @@ void ImageProcessor::imageConversion(Camera cameraObject, Interface interfaceObj
             cameraImageThresholded);
 
     //morphological opening
-    erode(cameraImageThresholded, cameraImageThresholded,
-          getStructuringElement(cv::MORPH_ELLIPSE,
-                                cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
-    dilate(cameraImageThresholded, cameraImageThresholded,
-           getStructuringElement(cv::MORPH_ELLIPSE,
-                                 cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
+//    erode(cameraImageThresholded, cameraImageThresholded,
+//          getStructuringElement(cv::MORPH_ELLIPSE,
+//                                cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
+//    dilate(cameraImageThresholded, cameraImageThresholded,
+//           getStructuringElement(cv::MORPH_ELLIPSE,
+//                                 cv::Size(Settings::MORPHOLOGICAL_OPENING_SIZE, Settings::MORPHOLOGICAL_OPENING_SIZE)));
 
 
 }
@@ -51,7 +51,9 @@ bool ImageProcessor::findBallContour() {
     for (size_t idx = 0; idx < contours.size(); idx++) {
 
         // draw contour on contourImage
-        drawContours(contourImage, contours, idx, colors[idx % 3]);
+        if (Settings::ENABLE_DRAWING) {
+            drawContours(contourImage, contours, idx, colors[idx % 3]);
+        }
 
         // calculate area of contour
         double contourArea = cv::contourArea(contours[idx], false);
