@@ -43,6 +43,8 @@ public:
     bool sentZero;
     std::chrono::steady_clock::time_point lastBallSeenTime;
     roboteam_msgs::RobotCommand takeBallGoBackwards(Publisher publisher);
+
+    bool sentRotation;
 };
 
 

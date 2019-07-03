@@ -86,19 +86,30 @@ int main(int argc, char **argv) {
                     //  else
                     //      send stop command
                     if (ballFinderObject.topDownBallMeanPoint.x < 20 && control.sentZero == false) { // If ball within 30 cm
+                        // TAKE BALL GO BACKWARDS
                         control.takeBallGoBackwards(publisher);
+                        publisher.command = control.makeSimpleCommand(0, 0, 0);
+                        publisher.skillpublishRobotCommand(control);
                         control.sentZero = true;
+                        control.sentRotation=false;
 
                     } else {
-                        if (timeSinceBallSeenInSeconds > 1.5) {
+                        if (timeSinceBallSeenInSeconds > 1.5 && !control.sentRotation) {
+                            // rotate
+                            control.sentRotation=true;
                             control.lastBallSeenTime = cameraObject.startFrameTime;
                             publisher.command = control.makeSimpleCommand(0, 0, 1);
                             publisher.skillpublishRobotCommand(control);
+                            control.sentZero=true;
                         } else {
-                            control.lastBallSeenTime = cameraObject.startFrameTime;
-                            publisher.command = control.makeSimpleCommand(0, 0, 0);
-                            publisher.skillpublishRobotCommand(control);
-                            control.sentZero = true;
+                            if (!control.sentZero) {
+                                // zero
+                                control.lastBallSeenTime = cameraObject.startFrameTime;
+                                publisher.command = control.makeSimpleCommand(0, 0, 0);
+                                publisher.skillpublishRobotCommand(control);
+                                control.sentZero = true;
+                                control.sentRotation = false;
+                            }
                         }
 
 
@@ -107,17 +118,21 @@ int main(int argc, char **argv) {
 
 
                 } else {
-
+                    // move
                     control.sentZero = false;
+                    control.sentRotation=false;
                     float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
                     publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
                     publisher.skillpublishRobotCommand(control);
                 }
             } else {
-                publisher.command = control.makeSimpleCommand(0, 0, 0);
-
-                control.sentZero = true;
-                publisher.skillpublishRobotCommand(control);
+                // zero
+                if (!control.sentZero) {
+                        publisher.command = control.makeSimpleCommand(0, 0, 0);
+                        control.sentRotation=false;
+                        control.sentZero = true;
+                        publisher.skillpublishRobotCommand(control);
+                }
             }
 
 
