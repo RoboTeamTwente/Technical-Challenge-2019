@@ -23,7 +23,7 @@ namespace Settings {
 
     const bool ENABLE_CONNECTION = true;
     const double TICK_RATE = 60;
-    const float MAX_VEL = 1;
+    const float MAX_VEL = 0.5;
 }
 
 #endif
