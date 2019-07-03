@@ -105,10 +105,11 @@ int main(int argc, char **argv) {
                         } else {
                             if (true) {
                                 // zero because no ball seen in past 1.5s                    control.lastBallX=9999;
-                                publisher.lastCommandTime = cameraObject.startFrameTime;
-                                publisher.command = control.makeSimpleCommand(0, 0, 0);
-                                publisher.skillpublishRobotCommand(control);
                                 control.lastBallX=9999;
+
+                                publisher.lastCommandTime = cameraObject.startFrameTime;
+                                publisher.command = control.makeSimpleCommand(0, 0, 1);
+                                publisher.skillpublishRobotCommand(control);
 
                             }
                         }
