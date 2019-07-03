@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
     //            float velocity= ballFinderObject.topDownBallMeanPoint.x;
     //            std::cout << velocity << std::endl;
-                if (!ballFindSuccess || imageProcessorObject.cameraImageBallRadius < 5) {
+                if (!ballFindSuccess || imageProcessorObject.cameraImageBallRadius < 10) {
 
                     // TODO if ball was very close recently
                     if (control.lastBallX < 9998) { // If ball within 30 cm
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
                             control.lastBallX=9999;
 
                             publisher.lastCommandTime = cameraObject.startFrameTime;
-                            publisher.command = control.makeSimpleCommand(0, 0, 0.1);
+                            publisher.command = control.makeSimpleCommand(0, 0, 0.5);
                             publisher.skillpublishRobotCommand(control);
                         } else {
                             if (true) {
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
                                 control.lastBallX=9999;
 
                                 publisher.lastCommandTime = cameraObject.startFrameTime;
-                                publisher.command = control.makeSimpleCommand(0, 0, 0.1);
+                                publisher.command = control.makeSimpleCommand(0, 0, 0.5);
                                 publisher.skillpublishRobotCommand(control);
 
                             }
