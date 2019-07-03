@@ -86,26 +86,30 @@ int main(int argc, char **argv) {
                 if (!ballFindSuccess || imageProcessorObject.cameraImageBallRadius < 5) {
 
                     // TODO if ball was very close recently
-                    if (ballFinderObject.topDownBallMeanPoint.x < 40) { // If ball within 30 cm
+                    if (control.lastBallX < 40) { // If ball within 30 cm
                         // ball disappeared; TAKE BALL GO BACKWARDS
                         publisher.lastCommandTime = cameraObject.startFrameTime;
                         control.takeBallGoBackwards(publisher);
                         publisher.command = control.makeSimpleCommand(0, 0, 0);
                         publisher.skillpublishRobotCommand(control);
+                        control.lastBallX=9999;
 
                     } else {
                         if (timeSinceBallSeenInSeconds > 1.5 ) {
                             // rotate because no ball seen in more than 1.5s
+                            control.lastBallX=9999;
 
                             publisher.lastCommandTime = cameraObject.startFrameTime;
                             publisher.command = control.makeSimpleCommand(0, 0, 1);
                             publisher.skillpublishRobotCommand(control);
                         } else {
                             if (true) {
-                                // zero because no ball seen in past 1.5s
+                                // zero because no ball seen in past 1.5s                    control.lastBallX=9999;
                                 publisher.lastCommandTime = cameraObject.startFrameTime;
                                 publisher.command = control.makeSimpleCommand(0, 0, 0);
                                 publisher.skillpublishRobotCommand(control);
+                                control.lastBallX=9999;
+
                             }
                         }
 
@@ -116,6 +120,7 @@ int main(int argc, char **argv) {
 
                 } else {
                     // move
+                    control.lastBallX = ballFinderObject.topDownBallMeanPoint.x;
                     control.lastBallSeenTime = cameraObject.startFrameTime;
                     float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
                     publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, 0);
@@ -124,6 +129,7 @@ int main(int argc, char **argv) {
             } else {
                 // zero, because ref has paused
                 if (true) {
+                    control.lastBallX=9999;
                     publisher.lastCommandTime = cameraObject.startFrameTime;
                         publisher.command = control.makeSimpleCommand(0, 0, 0);
                         publisher.skillpublishRobotCommand(control);
