@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
             double timeSinceLastZeroCommandInSeconds = std::chrono::duration<double>(timeSinceLastZeroCommand).count(); //convert to seconds
 
 
-            if  (publisher.refereeCommand==roboteam_msgs::RefereeCommand::NORMAL_START || publisher.refereeCommand==roboteam_msgs::RefereeCommand::FORCE_START){
+            if  (true){
                 auto timeSinceBallSeen = (control.lastBallSeenTime - cameraObject.startFrameTime);
 
                 double timeSinceBallSeenInSeconds = std::chrono::duration<double>(timeSinceBallSeen).count(); //convert to seconds
