@@ -3,7 +3,7 @@
 
 namespace Constants {
 
-    const int ROBOT_ID = 2;
+    const int ROBOT_ID = 3;
 
     const float BALL_RADIUS_PIXELS = 60;// 41.6;
     const float REAL_DISTANCE = 30.0;
@@ -18,8 +18,7 @@ namespace Constants {
     const float MEASURING_DISTANCE = 23; //30; // For camera FOV width
 
 
-    const float HORIZONTAL_FOV_RADIANS = 2 * std::atan(HALF_MEASURING_WIDTH / MEASURING_DISTANCE);
-
+    const float HORIZONTAL_FOV_RADIANS = 2 * std::atan(HALF_MEASURING_ro
 
 }
 
