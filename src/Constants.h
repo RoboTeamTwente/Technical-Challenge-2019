@@ -18,7 +18,7 @@ namespace Constants {
     const float MEASURING_DISTANCE = 23; //30; // For camera FOV width
 
 
-    const float HORIZONTAL_FOV_RADIANS = 2 * std::atan(HALF_MEASURING_ro
+    const float HORIZONTAL_FOV_RADIANS = 2 * std::atan(HALF_MEASURING_WIDTH / MEASURING_DISTANCE);
 
 }
 
