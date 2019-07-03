@@ -71,44 +71,41 @@ int main(int argc, char **argv) {
         if (Settings::ENABLE_CONNECTION ){
 
             // TODO update robot object! Get newest values
+            auto timeSinceLastZeroCommand = (publisher.lastCommandTime - cameraObject.startFrameTime);
+            double timeSinceLastZeroCommandInSeconds = std::chrono::duration<double>(timeSinceLastZeroCommand).count(); //convert to seconds
+
 
             if  (publisher.refereeCommand==roboteam_msgs::RefereeCommand::NORMAL_START || publisher.refereeCommand==roboteam_msgs::RefereeCommand::FORCE_START){
                 auto timeSinceBallSeen = (control.lastBallSeenTime - cameraObject.startFrameTime);
 
                 double timeSinceBallSeenInSeconds = std::chrono::duration<double>(timeSinceBallSeen).count(); //convert to seconds
 
+
     //            float velocity= ballFinderObject.topDownBallMeanPoint.x;
     //            std::cout << velocity << std::endl;
                 if (!ballFindSuccess || imageProcessorObject.cameraImageBallRadius < 5) {
 
                     // TODO if ball was very close recently
-                    //
-                    //  else
-                    //      send stop command
-                    if (ballFinderObject.topDownBallMeanPoint.x < 20 && control.sentZero == false) { // If ball within 30 cm
-                        // TAKE BALL GO BACKWARDS
+                    if (ballFinderObject.topDownBallMeanPoint.x < 20 && (timeSinceLastZeroCommandInSeconds>1)) { // If ball within 30 cm
+                        // ball disappeared; TAKE BALL GO BACKWARDS
+                        publisher.lastCommandTime = cameraObject.startFrameTime;
                         control.takeBallGoBackwards(publisher);
                         publisher.command = control.makeSimpleCommand(0, 0, 0);
                         publisher.skillpublishRobotCommand(control);
-                        control.sentZero = true;
-                        control.sentRotation=false;
 
                     } else {
-                        if (timeSinceBallSeenInSeconds > 1.5 && !control.sentRotation) {
-                            // rotate
-                            control.sentRotation=true;
-                            control.lastBallSeenTime = cameraObject.startFrameTime;
+                        if (timeSinceBallSeenInSeconds > 1.5 && timeSinceLastZeroCommandInSeconds>1) {
+                            // rotate because no ball seen in more than 1.5s
+
+                            publisher.lastCommandTime = cameraObject.startFrameTime;
                             publisher.command = control.makeSimpleCommand(0, 0, 1);
                             publisher.skillpublishRobotCommand(control);
-                            control.sentZero=true;
                         } else {
-                            if (!control.sentZero) {
-                                // zero
-                                control.lastBallSeenTime = cameraObject.startFrameTime;
+                            if (timeSinceLastZeroCommandInSeconds>1) {
+                                // zero because no ball seen in past 1.5s
+                                publisher.lastCommandTime = cameraObject.startFrameTime;
                                 publisher.command = control.makeSimpleCommand(0, 0, 0);
                                 publisher.skillpublishRobotCommand(control);
-                                control.sentZero = true;
-                                control.sentRotation = false;
                             }
                         }
 
@@ -119,18 +116,16 @@ int main(int argc, char **argv) {
 
                 } else {
                     // move
-                    control.sentZero = false;
-                    control.sentRotation=false;
+                    control.lastBallSeenTime = cameraObject.startFrameTime;
                     float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
                     publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
                     publisher.skillpublishRobotCommand(control);
                 }
             } else {
-                // zero
-                if (!control.sentZero) {
+                // zero, because ref has paused
+                if (timeSinceLastZeroCommandInSeconds>1) {
+                    publisher.lastCommandTime = cameraObject.startFrameTime;
                         publisher.command = control.makeSimpleCommand(0, 0, 0);
-                        control.sentRotation=false;
-                        control.sentZero = true;
                         publisher.skillpublishRobotCommand(control);
                 }
             }

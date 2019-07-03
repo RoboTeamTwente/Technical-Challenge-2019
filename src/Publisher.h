@@ -59,6 +59,8 @@ public:
     void subscribeToRefereeData();
 
     void handleRefereeData(const roboteam_msgs::RefereeDataConstPtr &refData);
+    std::chrono::steady_clock::time_point lastCommandTime;
+
 };
 
 #endif //TECHNICAL_CHALLENGE_2019_PUBLISHER_H

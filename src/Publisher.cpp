@@ -70,6 +70,7 @@ void Publisher::ioManagerPublishRobotCommand() {
 }
 
 void Publisher::skillpublishRobotCommand(Control control) { // this one calls the iomanager one
+
     std::cout << " sending x vel: " << command.x_vel << std::endl;
     ros::NodeHandle nh;
     std::string ourSideParam;
