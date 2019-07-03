@@ -6,6 +6,8 @@
 #include <roboteam_msgs/RobotCommand.h>
 #include <rosconsole/macros_generated.h>
 #include <ros/node_handle.h>
+#include <roboteam_msgs/RefereeData.h>
+#include <mutex>
 #include "src/lib/Robot.h"
 #include "Control.h"
 #include "Publisher.h"
@@ -13,44 +15,52 @@
 #include "Constants.h"
 
 
+
 Publisher::Publisher(Control inputControl){
     control = &inputControl;
     if (Settings::ENABLE_CONNECTION){
         robotCommandPublisher = nodeHandle.advertise<roboteam_msgs::RobotCommand>("robotcommands", 100);
+        this->subscribeToRefereeData();
+
+        this->refereeCommand=roboteam_msgs::RefereeCommand::STOP;
     }
 };
 
+void Publisher::subscribeToRefereeData() {
+    this->refereeSubscriber = nodeHandle.subscribe<roboteam_msgs::RefereeData>(
+            "vision_refbox", //vision_referee or vision_refbox
+            100,
+            &Publisher::handleRefereeData,
+            this,
+            ros::TransportHints().reliable().tcpNoDelay()
+    );
+}
 
 
+void Publisher::handleRefereeData(const roboteam_msgs::RefereeDataConstPtr &refData) {
+//    std::cout << "HANDLING REF DATA" << std::endl;
+    this->refDataMsg = *refData;
+    if (refDataMsg.command.command==roboteam_msgs::RefereeCommand::NORMAL_START || refDataMsg.command.command==roboteam_msgs::RefereeCommand::FORCE_START
+    || refDataMsg.command.command==roboteam_msgs::RefereeCommand::STOP || refDataMsg.command.command==roboteam_msgs::RefereeCommand::HALT) {
+        this->refereeCommand = refDataMsg.command.command;
+
+    }
+}
 
 
 void Publisher::refreshRobotCommand() {
     roboteam_msgs::RobotCommand emptyCmd;
-    emptyCmd.use_angle = 1; // TODO 0 or 1?
+    emptyCmd.use_angle = 1;
     emptyCmd.id = Constants::ROBOT_ID;
-    emptyCmd.geneva_state = 3; // TODO what is this
+    emptyCmd.geneva_state = 3;
     command = emptyCmd;
 }
 
 void Publisher::ioManagerPublishRobotCommand() {
 
     if (! control->paused) {
-        if (true) { // TODO remove if?
-
-            // the geneva cannot be received from world, so we set it when it gets sent.
-
-//            if (robot) {
-//                robot->setGenevaState(command.geneva_state);
-//                robot->setDribblerState(command.dribbler);
-//            }
-            // sometimes trees are terminated without having a role assigned.
-            // It is then possible that a skill gets terminated with an empty robot: and then the id can be for example -1.
-            if (command.id >= 0 && command.id < 16) {
-                robotCommandPublisher.publish(command); //
-            }
-        }
-        else {
-            ROS_ERROR("Joystick demo has the robot taken over ID:   %s", std::to_string(command.id).c_str());
+        if (command.id >= 0 && command.id < 16) {
+            robotCommandPublisher.publish(command); //
         }
     }
     else {
@@ -60,7 +70,7 @@ void Publisher::ioManagerPublishRobotCommand() {
 }
 
 void Publisher::skillpublishRobotCommand(Control control) { // this one calls the iomanager one
-    std::cout << command.x_vel << std::endl;
+    std::cout << " sending x vel: " << command.x_vel << std::endl;
     ros::NodeHandle nh;
     std::string ourSideParam;
     nh.getParam("our_side", ourSideParam);

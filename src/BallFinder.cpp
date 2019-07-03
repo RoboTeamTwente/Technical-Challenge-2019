@@ -110,7 +110,8 @@ void BallFinder::findBallInterceptionVector() {
     // TODO fix this (angle is wrong)
 
     if (ballVelocityVectorAsPoint.x >= 0) {
-        interceptPos = topDownBallMeanPoint;
+        interceptPos.x = topDownBallMeanPoint.x;
+        interceptPos.y = topDownBallMeanPoint.y;
     } else {
         float timeWhereBallXisZero = -topDownBallMeanPoint.x / ballVelocityVectorAsPoint.x;
         float ballYwhereBallXisZero = timeWhereBallXisZero * ballVelocityVectorAsPoint.y + topDownBallMeanPoint.y;

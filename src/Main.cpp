@@ -8,6 +8,8 @@
 #include "Connection.h"
 #include "Publisher.h"
 #include <ros/ros.h>
+#include <roboteam_msgs/RefereeCommand.h>
+#include <roboteam_msgs/RefereeData.h>
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "technical_challenge_2019");
@@ -26,11 +28,14 @@ int main(int argc, char **argv) {
     }
 
     // START LOOP
-    while (true) {
+    while (ros::ok()) {
+        ros::spinOnce();
         bool captureSuccess = cameraObject.captureImage();
         if (!captureSuccess) {
             std::cout << "Camera not available" << std::endl;
             break;
+        } else {
+//            cameraObject.cap->set(CV_CAP_PROP_FPS, 25);
         }
 
         // Convert camera image to single channel image with only the ball remaining in it
@@ -46,43 +51,61 @@ int main(int argc, char **argv) {
         ballFinderObject.findBallSpeedVector(cameraObject);
         ballFinderObject.findBallInterceptionVector();
 
-        if (Settings::ENABLE_DRAWING && ballFindSuccess) {
-            interfaceObject.drawContourAndBallTrailOnCameraView(cameraObject, imageProcessorObject);
-            interfaceObject.drawTopDownView(ballFinderObject, imageProcessorObject);
-            interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
+
+        if (Settings::ENABLE_DRAWING) {
+
+            if (ballFindSuccess) {
+                interfaceObject.drawContourAndBallTrailOnCameraView(cameraObject, imageProcessorObject);
+                interfaceObject.drawTopDownView(ballFinderObject, imageProcessorObject);
+                interfaceObject.displayMatsAndDrawText(cameraObject, imageProcessorObject, ballFinderObject);
+            }
+
+            if (cv::waitKey(40) == 27) { // TODO improve performance here
+                std::cout << "esc key pressed; ending program" << std::endl;
+                break;
+            }
         }
 
 
 
-        if (Settings::ENABLE_CONNECTION){
+        if (Settings::ENABLE_CONNECTION ){
             // TODO update robot object! Get newest values
 
-//            float velocity= ballFinderObject.topDownBallMeanPoint.x;
-//            std::cout << velocity << std::endl;
-            if (!ballFindSuccess) {
+            if  (publisher.refereeCommand==roboteam_msgs::RefereeCommand::NORMAL_START || publisher.refereeCommand==roboteam_msgs::RefereeCommand::FORCE_START){
 
-                // TODO if ball was very close recently
-                //
-                //  else
-                //      send stop command
-                if (control.ballIsClose) {
-                    control.sentZero = false;
-                    control.takeBallGoBackwards(publisher);
-                } else {
-                    if (!control.sentZero) {
-                        publisher.command = control.makeSimpleCommand(0, 0, 0);
+    //            float velocity= ballFinderObject.topDownBallMeanPoint.x;
+    //            std::cout << velocity << std::endl;
+                if (!ballFindSuccess || imageProcessorObject.cameraImageBallRadius < 5) {
+
+                    // TODO if ball was very close recently
+                    //
+                    //  else
+                    //      send stop command
+                    if (ballFinderObject.topDownBallMeanPoint.x < 20 && control.sentZero == false) { // If ball within 30 cm
+                        control.takeBallGoBackwards(publisher);
                         control.sentZero = true;
-                        publisher.skillpublishRobotCommand(control);
+
+                    } else {
+
+                            publisher.command = control.makeSimpleCommand(0, 0, 0);
+                            publisher.skillpublishRobotCommand(control);
+                            control.sentZero = true;
+
                     }
+
+
+
+                } else {
+
+                    control.sentZero = false;
+                    float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
+                    publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
+                    publisher.skillpublishRobotCommand(control);
                 }
-
-
-
             } else {
+                publisher.command = control.makeSimpleCommand(0, 0, 0);
 
-                control.sentZero = false;
-                float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
-                publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
+                control.sentZero = true;
                 publisher.skillpublishRobotCommand(control);
             }
 
@@ -99,10 +122,6 @@ int main(int argc, char **argv) {
 
         // TODO software should listen to robot STOP commands etc
 
-        if (cv::waitKey(30) == 27) { // TODO improve performance here
-            std::cout << "esc key pressed; ending program" << std::endl;
-            break;
-        }
 
     }
 

@@ -3,15 +3,24 @@
 //
 
 
+#include <QtCore/QTime>
 #include "Camera.h"
 
 bool Camera::captureImage(){
     startFrameTime = std::chrono::steady_clock::now();
-    // TODO implement a circular buffer for frame times to replace frameDurationInSeconds which is not that accurate
 
     // get image from camera and save to the Mat
 
-    captureSuccess = cap->read(cameraImageBGR);
+    int delay=0;
+    QTime h;
+    while(delay<15)// This is to get the latest image, not from buffer
+    {
+        h.start();//Start the chronometer
+        captureSuccess = cap->read(cameraImageBGR); //Declarations not included in this example
+        delay=h.elapsed(); //Compute delay in ms since the start commande
+    }
+
+
 
     // check if this worked
     if (!captureSuccess) {
@@ -36,6 +45,9 @@ Camera::Camera() {
         std::cout << "webcam failure; is another openCV program running?" << std::endl;
         working=false;
     } else {
+        cap->set(cv::CAP_PROP_BUFFERSIZE, 1);
+    cap->set(cv::CAP_PROP_FPS, 25);
+
         working=true;
     }
 

@@ -1,3 +1,5 @@
+#include <roboteam_msgs/RefereeData.h>
+
 ///*
 // * Created by mrlukasbos on 19-9-18.
 // *
@@ -19,21 +21,7 @@
 //namespace io {
 //    std::mutex IOManager::mutex;
 //
-//IOManager::IOManager(bool subscribe, bool advertise) {
-//    if (subscribe) {
-//        // subscribe to all topics
-//        this->subscribeToWorldState();
-//        this->subscribeToGeometryData();
-//        this->subscribeToRoleFeedback();
-//        this->subscribeToRefereeData();
-//        this->subscribeToDemoInfo();
-//    }
-//
-//    if (advertise) {
-//        // set up advertisement to publish robotcommands
-//        robotCommandPublisher = nodeHandle.advertise<roboteam_msgs::RobotCommand>(rtt::TOPIC_COMMANDS, 100);
-//    }
-//}
+
 //
 //void IOManager::subscribeToWorldState() {
 //    worldSubscriber = nodeHandle.subscribe<roboteam_msgs::World>(
@@ -66,16 +54,7 @@
 //    );
 //}
 //
-//void IOManager::subscribeToRefereeData() {
-//    //TODO: This constant TOPIC_REFEREE was not used consistently by the previous team, so if stuff goes wrong check if you are reading the correct topic.
-//    refereeSubscriber = nodeHandle.subscribe<roboteam_msgs::RefereeData>(
-//            "vision_refbox", //vision_referee or vision_refbox
-//            100,
-//            &IOManager::handleRefereeData,
-//            this,
-//            ros::TransportHints().reliable().tcpNoDelay()
-//    );
-//}
+
 //
 //void IOManager::subscribeToDemoInfo() {
 //    demoInfoSubscriber = nodeHandle.subscribe<roboteam_msgs::DemoRobot>(
@@ -111,11 +90,7 @@
 //    this->demoInfoMsg = *demoInfo;
 //}
 //
-//void IOManager::handleRefereeData(const roboteam_msgs::RefereeDataConstPtr &refData) {
-//    std::lock_guard<std::mutex> lock(mutex);
-//    this->refDataMsg = *refData;
-//    GameStateManager::setRefereeData(this->refDataMsg);
-//}
+
 //
 //const roboteam_msgs::World &IOManager::getWorldState() {
 //    std::lock_guard<std::mutex> lock(mutex);
@@ -132,10 +107,7 @@
 //    return this->roleFeedbackMsg;
 //}
 //
-//const roboteam_msgs::RefereeData &IOManager::getRefereeData() {
-//    std::lock_guard<std::mutex> lock(mutex);
-//    return this->refDataMsg;
-//}
+
 //
 //void IOManager::publishRobotCommand(roboteam_msgs::RobotCommand cmd) {
 //    if (! pause->getPause()) {

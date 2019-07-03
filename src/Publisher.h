@@ -13,6 +13,7 @@ class Control;
 #include <src/lib/Robot.h>
 #include <ros/node_handle.h>
 #include "Control.h"
+#include <roboteam_msgs/RefereeData.h>
 
 
 
@@ -21,7 +22,10 @@ public:
     explicit Publisher(Control inputControl);// inputControl);
     Control* control;
 
+    roboteam_msgs::RefereeData refDataMsg;
+    int refereeCommand;
 
+    ros::Subscriber refereeSubscriber;
     ros::NodeHandle nodeHandle;
     ros::Publisher robotCommandPublisher;
     roboteam_msgs::RobotCommand command;
@@ -52,6 +56,9 @@ public:
 //            , chipper_vel(0.0)
 //            , geneva_state(0)  {
 
+    void subscribeToRefereeData();
+
+    void handleRefereeData(const roboteam_msgs::RefereeDataConstPtr &refData);
 };
 
 #endif //TECHNICAL_CHALLENGE_2019_PUBLISHER_H
