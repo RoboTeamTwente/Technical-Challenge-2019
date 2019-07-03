@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
                 if (!ballFindSuccess || imageProcessorObject.cameraImageBallRadius < 5) {
 
                     // TODO if ball was very close recently
-                    if (control.lastBallX < 40) { // If ball within 30 cm
+                    if (control.lastBallX < 9998) { // If ball within 30 cm
                         // ball disappeared; TAKE BALL GO BACKWARDS
                         publisher.lastCommandTime = cameraObject.startFrameTime;
                         control.takeBallGoBackwards(publisher);
