@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
                             control.lastBallX=9999;
 
                             publisher.lastCommandTime = cameraObject.startFrameTime;
-                            publisher.command = control.makeSimpleCommand(0, 0, 1);
+                            publisher.command = control.makeSimpleCommand(0, 0, 0.1);
                             publisher.skillpublishRobotCommand(control);
                         } else {
                             if (true) {
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
                                 control.lastBallX=9999;
 
                                 publisher.lastCommandTime = cameraObject.startFrameTime;
-                                publisher.command = control.makeSimpleCommand(0, 0, 1);
+                                publisher.command = control.makeSimpleCommand(0, 0, 0.1);
                                 publisher.skillpublishRobotCommand(control);
 
                             }
