@@ -40,14 +40,15 @@ roboteam_msgs::RobotCommand Control::limitRobotCommand(roboteam_msgs::RobotComma
         command.y_vel = -Settings::MAX_VEL;
     }
 
+
     if (command.w > Settings::MAX_VEL) {
         command.w = Settings::MAX_VEL;
     }
     if (command.w < -Settings::MAX_VEL) {
         command.w = -Settings::MAX_VEL;
     }
-    command.w = 0; // TODO change this after Simen fixes angle stuff
-    command.y_vel=0;
+//    command.w = 0; // TODO change this after Simen fixes angle stuff
+//    command.y_vel=0;
     return command;
 }
 
