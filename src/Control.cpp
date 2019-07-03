@@ -85,6 +85,9 @@ roboteam_msgs::RobotCommand Control::makeSimpleCommand(float x, float y, float a
     if (angle !=0) {robotAngle = -angle;} else {robotAngle = 0;}
 
     roboteam_msgs::RobotCommand command;
+    command.use_angle = 1;
+    command.id = Constants::ROBOT_ID;
+    command.geneva_state = 3;
     command.x_vel = robotXdist;
     command.y_vel = robotYdist;
     command.w=robotAngle;
