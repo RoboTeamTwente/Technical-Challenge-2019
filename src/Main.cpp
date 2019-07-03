@@ -94,14 +94,14 @@ int main(int argc, char **argv) {
                         publisher.skillpublishRobotCommand(control);
 
                     } else {
-                        if (timeSinceBallSeenInSeconds > 1.5 && timeSinceLastZeroCommandInSeconds>1) {
+                        if (timeSinceBallSeenInSeconds > 1.5 ) {
                             // rotate because no ball seen in more than 1.5s
 
                             publisher.lastCommandTime = cameraObject.startFrameTime;
                             publisher.command = control.makeSimpleCommand(0, 0, 1);
                             publisher.skillpublishRobotCommand(control);
                         } else {
-                            if (timeSinceLastZeroCommandInSeconds>1) {
+                            if (true) {
                                 // zero because no ball seen in past 1.5s
                                 publisher.lastCommandTime = cameraObject.startFrameTime;
                                 publisher.command = control.makeSimpleCommand(0, 0, 0);
@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
                 }
             } else {
                 // zero, because ref has paused
-                if (timeSinceLastZeroCommandInSeconds>1) {
+                if (true) {
                     publisher.lastCommandTime = cameraObject.startFrameTime;
                         publisher.command = control.makeSimpleCommand(0, 0, 0);
                         publisher.skillpublishRobotCommand(control);
