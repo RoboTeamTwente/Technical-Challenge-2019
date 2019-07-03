@@ -48,6 +48,7 @@ public:
     void drawTopDownView(BallFinder ballFinderObject, ImageProcessor imageProcessorObject);
     void displayMatsAndDrawText(Camera cameraObject, ImageProcessor imageProcessorObject, BallFinder ballFinderObject);
 
+    cv::Point_<float> interceptPosForDrawing;
 };
 
 

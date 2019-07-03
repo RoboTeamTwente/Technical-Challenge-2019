@@ -20,6 +20,7 @@ Control::Control() {
     forwardPID = new PID(1,0,0,0);
     sidewaysPID = new PID(0.1,0,0,0);
     rotationPID = new PID(1,0,0,0);
+    lastBallSeenTime = std::chrono::steady_clock::now();
 }
 
 

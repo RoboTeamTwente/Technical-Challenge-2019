@@ -69,9 +69,13 @@ int main(int argc, char **argv) {
 
 
         if (Settings::ENABLE_CONNECTION ){
+
             // TODO update robot object! Get newest values
 
             if  (publisher.refereeCommand==roboteam_msgs::RefereeCommand::NORMAL_START || publisher.refereeCommand==roboteam_msgs::RefereeCommand::FORCE_START){
+                auto timeSinceBallSeen = (control.lastBallSeenTime - cameraObject.startFrameTime);
+
+                double timeSinceBallSeenInSeconds = std::chrono::duration<double>(timeSinceBallSeen).count(); //convert to seconds
 
     //            float velocity= ballFinderObject.topDownBallMeanPoint.x;
     //            std::cout << velocity << std::endl;
@@ -86,10 +90,17 @@ int main(int argc, char **argv) {
                         control.sentZero = true;
 
                     } else {
-
+                        if (timeSinceBallSeenInSeconds > 1.5) {
+                            control.lastBallSeenTime = cameraObject.startFrameTime;
+                            publisher.command = control.makeSimpleCommand(0, 0, 1);
+                            publisher.skillpublishRobotCommand(control);
+                        } else {
+                            control.lastBallSeenTime = cameraObject.startFrameTime;
                             publisher.command = control.makeSimpleCommand(0, 0, 0);
                             publisher.skillpublishRobotCommand(control);
                             control.sentZero = true;
+                        }
+
 
                     }
 

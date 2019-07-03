@@ -109,28 +109,31 @@ void BallFinder::findBallInterceptionVector() {
     // TODO refactor this (and other methods) for efficiency?
     // TODO fix this (angle is wrong)
 
-    if (ballVelocityVectorAsPoint.x >= 0) {
+    if (ballVelocityVectorAsPoint.x <= 0) {
         interceptPos.x = topDownBallMeanPoint.x;
         interceptPos.y = topDownBallMeanPoint.y;
     } else {
-        float timeWhereBallXisZero = -topDownBallMeanPoint.x / ballVelocityVectorAsPoint.x;
-        float ballYwhereBallXisZero = timeWhereBallXisZero * ballVelocityVectorAsPoint.y + topDownBallMeanPoint.y;
-
-        if (ballYwhereBallXisZero > 0) {
-            // right hand
-            cv::Point_<float> interceptSpeed = cv::Point_<float>(-ballVelocityVectorAsPoint.y,
-                                                                 ballVelocityVectorAsPoint.x);
-            float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - ballVelocityVectorAsPoint.x);
-            interceptPos = cv::Point_<float>(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
-        } else if (ballYwhereBallXisZero < 0) {
-            // left hand
-            cv::Point_<float> interceptSpeed = cv::Point_<float>(ballVelocityVectorAsPoint.y,
-                                                                 -ballVelocityVectorAsPoint.x);
-            float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - ballVelocityVectorAsPoint.x);
-            interceptPos = cv::Point_<float>(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
-            //determine interceptpos
-        } else if (ballYwhereBallXisZero == 0) {
-            interceptPos = topDownBallMeanPoint;
-        }
+        // This is not stable
+        interceptPos.x = topDownBallMeanPoint.x -(ballVelocityVectorAsPoint.x * 1);
+        interceptPos.y = topDownBallMeanPoint.y -  (ballVelocityVectorAsPoint.y * 1);
+//        float timeWhereBallXisZero = -topDownBallMeanPoint.x / ballVelocityVectorAsPoint.x;
+//        float ballYwhereBallXisZero = timeWhereBallXisZero * ballVelocityVectorAsPoint.y + topDownBallMeanPoint.y;
+//
+//        if (ballYwhereBallXisZero > 0) {
+//            // right hand
+//            cv::Point_<float> interceptSpeed = cv::Point_<float>(-ballVelocityVectorAsPoint.y,
+//                                                                 ballVelocityVectorAsPoint.x);
+//            float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - ballVelocityVectorAsPoint.x);
+//            interceptPos = cv::Point_<float>(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
+//        } else if (ballYwhereBallXisZero < 0) {
+//            // left hand
+//            cv::Point_<float> interceptSpeed = cv::Point_<float>(ballVelocityVectorAsPoint.y,
+//                                                                 -ballVelocityVectorAsPoint.x);
+//            float intersectTime = topDownBallMeanPoint.x / (interceptSpeed.x - ballVelocityVectorAsPoint.x);
+//            interceptPos = cv::Point_<float>(interceptSpeed.x * intersectTime, interceptSpeed.y * intersectTime);
+//            //determine interceptpos
+//        } else if (ballYwhereBallXisZero == 0) {
+//            interceptPos = topDownBallMeanPoint;
+//        }
     }
 }

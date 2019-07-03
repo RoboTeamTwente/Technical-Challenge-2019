@@ -78,12 +78,15 @@ void Interface::drawTopDownView(BallFinder ballFinderObject, ImageProcessor imag
     topDownBallPositionForDrawing.x = 100 + ballFinderObject.topDownBallMeanPoint.x * 5;
     topDownBallPositionForDrawing.y = 240 + ballFinderObject.topDownBallMeanPoint.y * 5;
 
+    interceptPosForDrawing.x = 100 + ballFinderObject.interceptPos.x * 5;
+    interceptPosForDrawing.y = 240 + ballFinderObject.interceptPos.y * 5;
+
     circle(topDownDrawingMat, topDownBallPositionForDrawing, (int) 5, orange, 2, 8, 0); // draw orange ball
 
     if (ballFinderObject.ballSpeed > 0) {
     line(topDownDrawingMat, topDownBallPositionForDrawing,
-         (topDownBallPositionForDrawing + (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
-        line(topDownDrawingMat, topDownCameraPositionPoint, topDownCameraPositionPoint + (ballFinderObject.interceptPos * 1), bluegray, 2); //speed line
+         (topDownBallPositionForDrawing - (ballFinderObject.ballVelocityVectorAsPoint * 1)), orange, 2); //speed line
+        line(topDownDrawingMat, topDownCameraPositionPoint, interceptPosForDrawing,  bluegray, 2); //speed line
 
     }
     // END OF TOP DOWN INIT //
