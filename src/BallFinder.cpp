@@ -114,8 +114,17 @@ void BallFinder::findBallInterceptionVector() {
         interceptPos.y = topDownBallMeanPoint.y;
     } else {
         // This is not stable
-        interceptPos.x = topDownBallMeanPoint.x -(ballVelocityVectorAsPoint.x * 1);
-        interceptPos.y = topDownBallMeanPoint.y -  (ballVelocityVectorAsPoint.y * 1);
+//        ballX = topDownBallMeanPoint.x;
+//        ballY= topDownBallMeanPoint.y;
+//        ballXt = -ballVelocityVectorAsPoint.x;
+//        ballYt = -ballVelocityVectorAsPoint.y;
+//        robotX = 0;
+//        robotY = 0;
+//        robotXt = -ballVelocityVectorAsPoint.x;
+//        robotYt = ballVelocityVectorAsPoint.x;
+        interceptPos.x = topDownBallMeanPoint.x -(ballVelocityVectorAsPoint.x * 0.1);
+        interceptPos.y = topDownBallMeanPoint.y -  (ballVelocityVectorAsPoint.y * 0.1);
+
 //        float timeWhereBallXisZero = -topDownBallMeanPoint.x / ballVelocityVectorAsPoint.x;
 //        float ballYwhereBallXisZero = timeWhereBallXisZero * ballVelocityVectorAsPoint.y + topDownBallMeanPoint.y;
 //

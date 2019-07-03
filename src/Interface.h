@@ -17,13 +17,13 @@ class Interface {
 
 
 public:
-    int LOW_HUE = 6;// 0;
-    int HIGH_HUE = 12;//5;
+    int LOW_HUE = 0;// 0;
+    int HIGH_HUE = 9;//5;
 
-    int LOW_SATURATION = 125;
+    int LOW_SATURATION = 50;
     int HIGH_SATURATION = 255;
 
-    int LOW_VALUE = 173;// 92;
+    int LOW_VALUE = 200;// 92;
     int HIGH_VALUE = 255;
 
     // CONSTRUCTOR
