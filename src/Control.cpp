@@ -46,9 +46,9 @@ roboteam_msgs::RobotCommand Control::limitRobotCommand(roboteam_msgs::RobotComma
     if (command.w < -Settings::MAX_VEL) {
         command.w = -Settings::MAX_VEL;
     }
-    command.w = 0; // TODO change this after Simen fixes angle stuff
-    command.y_vel=0;
-    return command;
+//    command.w = 0; // TODO change this after Simen fixes angle stuff
+//    command.y_vel=0;
+//    return command;
 }
 
 roboteam_msgs::RobotCommand Control::takeBallGoBackwards(Publisher publisher){

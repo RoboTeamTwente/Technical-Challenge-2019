@@ -118,7 +118,8 @@ int main(int argc, char **argv) {
                     // move
                     control.lastBallSeenTime = cameraObject.startFrameTime;
                     float meanAngle = std::atan2(ballFinderObject.topDownBallMeanPoint.y, ballFinderObject.topDownBallMeanPoint.x);
-                    publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
+                    publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, 0);
+//                    publisher.command = control.makeSimpleCommand(ballFinderObject.topDownBallMeanPoint.x, ballFinderObject.topDownBallMeanPoint.y, meanAngle);
                     publisher.skillpublishRobotCommand(control);
                 }
             } else {
